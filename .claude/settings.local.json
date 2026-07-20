@@ -21,7 +21,9 @@
       "Bash(./node_modules/.bin/tsc --noEmit)",
       "Bash(npm run *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(npx kill-port *)",
+      "Bash(taskkill //F //PID 23756)"
     ]
   }
 }
