@@ -4,7 +4,7 @@ export default function Logo() {
       <span
         className="text-transparent"
         style={{
-          background: "linear-gradient(to bottom right, #60a5fa, #22d3ee)",
+          background: "linear-gradient(to bottom right, #c084fc, #22d3ee)",
           WebkitBackgroundClip: "text",
           backgroundClip: "text",
         }}

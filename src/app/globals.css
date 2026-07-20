@@ -4,7 +4,7 @@
   --color-bg: #0a0a0f;
   --color-surface: #0d0d14;
   --color-deep: #06060a;
-  --color-blue: #3b82f6;
+  --color-purple: #a855f7;
   --color-cyan: #06b6d4;
   --color-text-primary: #ffffff;
   --color-text-secondary: #9090a0;
@@ -16,7 +16,7 @@
   --color-kyno-bg: var(--color-bg);
   --color-kyno-surface: var(--color-surface);
   --color-kyno-deep: var(--color-deep);
-  --color-kyno-blue: var(--color-blue);
+  --color-kyno-purple: var(--color-purple);
   --color-kyno-cyan: var(--color-cyan);
   --color-kyno-text-primary: var(--color-text-primary);
   --color-kyno-text-secondary: var(--color-text-secondary);
@@ -29,7 +29,7 @@ body {
 }
 
 /* Subtle light blob animations */
-@keyframes blob-float-blue {
+@keyframes blob-float-purple {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -30px) scale(1.05); }
   66% { transform: translate(-20px, 20px) scale(0.95); }
@@ -41,8 +41,8 @@ body {
   66% { transform: translate(20px, 25px) scale(1.05); }
 }
 
-.animate-blob-blue {
-  animation: blob-float-blue 8s ease-in-out infinite;
+.animate-blob-purple {
+  animation: blob-float-purple 8s ease-in-out infinite;
 }
 
 .animate-blob-cyan {
