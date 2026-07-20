@@ -1,10 +1,11 @@
 import { services } from "@/data/site";
 import SectionHeader from "./SectionHeader";
 import ServiceCard from "./ServiceCard";
+import AnimatedSection from "./AnimatedSection";
 
 export default function ServicesSection() {
   return (
-    <section id="services" className="bg-[#0a0a0f] px-6 py-24">
+    <AnimatedSection id="services" className="bg-[#0a0a0f] px-6 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           label="What We Do"
@@ -12,11 +13,11 @@ export default function ServicesSection() {
           subtitle="Every product we ship goes through rigorous design and development to ensure it meets the highest standards."
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service) => (
-            <ServiceCard key={service.title} service={service} />
+          {services.map((service, i) => (
+            <ServiceCard key={service.title} service={service} index={i} />
           ))}
         </div>
       </div>
-    </section>
+    </AnimatedSection>
   );
 }

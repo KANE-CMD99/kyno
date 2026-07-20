@@ -1,6 +1,10 @@
+"use client";
+
+import AnimatedSection from "./AnimatedSection";
+
 export default function CTASection() {
   return (
-    <section
+    <AnimatedSection
       id="contact"
       className="bg-gradient-to-br from-[#110526] to-[#0a1020] px-6 py-28 text-center"
     >
@@ -16,6 +20,6 @@ export default function CTASection() {
       >
         Get in Touch
       </a>
-    </section>
+    </AnimatedSection>
   );
 }

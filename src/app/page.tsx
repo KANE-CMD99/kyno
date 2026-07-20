@@ -1,7 +1,21 @@
-export default function Home() {
+import Nav from "@/components/Nav";
+import HeroSection from "@/components/HeroSection";
+import ServicesSection from "@/components/ServicesSection";
+import ProductsSection from "@/components/ProductsSection";
+import CTASection from "@/components/CTASection";
+import Footer from "@/components/Footer";
+
+export default function HomePage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
-      <h1 className="text-4xl font-bold">Kyno Technology</h1>
-    </main>
+    <>
+      <Nav />
+      <main>
+        <HeroSection />
+        <ServicesSection />
+        <ProductsSection />
+        <CTASection />
+      </main>
+      <Footer />
+    </>
   );
 }
