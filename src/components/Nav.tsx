@@ -40,7 +40,7 @@ export default function Nav() {
           ))}
           <a
             href="#contact"
-            className="rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            className="rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
           >
             Get Started
           </a>
@@ -87,7 +87,7 @@ export default function Nav() {
             <a
               href="#contact"
               onClick={closeMenu}
-              className="rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 px-4 py-2.5 text-center text-sm font-medium text-white"
+              className="rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 px-4 py-2.5 text-center text-sm font-medium text-white"
             >
               Get Started
             </a>

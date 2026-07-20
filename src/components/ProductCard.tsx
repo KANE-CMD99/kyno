@@ -21,7 +21,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
         <span className="text-3xl select-none">&#x1F4E6;</span>
       </div>
       <div className="p-5">
-        <span className="text-xs font-medium uppercase tracking-wider text-purple-400">
+        <span className="text-xs font-medium uppercase tracking-wider text-blue-400">
           {product.category}
         </span>
         <h3 className="mt-1 text-base font-semibold text-white">

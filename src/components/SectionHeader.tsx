@@ -11,7 +11,7 @@ export default function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <div className="mb-12">
-      <span className="mb-3 inline-block text-xs font-medium uppercase tracking-[0.2em] text-purple-400">
+      <span className="mb-3 inline-block text-xs font-medium uppercase tracking-[0.2em] text-blue-400">
         {label}
       </span>
       <h2 className="text-3xl font-bold text-white md:text-4xl">{heading}</h2>

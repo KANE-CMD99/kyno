@@ -16,7 +16,7 @@ export default function CTASection() {
       </p>
       <a
         href="mailto:hello@kyno.tech"
-        className="mt-8 inline-block rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 px-10 py-3 text-base font-medium text-white transition-opacity hover:opacity-90"
+        className="mt-8 inline-block rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 px-10 py-3 text-base font-medium text-white transition-opacity hover:opacity-90"
       >
         Get in Touch
       </a>
