@@ -23,7 +23,13 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(npx kill-port *)",
-      "Bash(taskkill //F //PID 23756)"
+      "Bash(taskkill //F //PID 23756)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001)",
+      "Bash(cmd.exe /c \"netstat -ano | findstr :300\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3002)",
+      "Bash(taskkill //F //PID 39932)",
+      "Bash(rm -rf \"E:/KYNO/web/web -mian/.next\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3003)"
     ]
   }
 }

@@ -16,7 +16,14 @@ export default function HeroSection() {
 
       <div className="relative z-10 text-center">
         <h1 className="text-5xl font-black leading-[1.08] tracking-tight text-white md:text-7xl">
-          <span className="bg-gradient-to-br from-purple-300 to-cyan-300 bg-clip-text text-transparent">
+          <span
+            className="text-transparent"
+            style={{
+              background: "linear-gradient(to bottom right, #d8b4fe, #67e8f9)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+            }}
+          >
             Digital
           </span>
           <br />

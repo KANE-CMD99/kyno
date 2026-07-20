@@ -2,7 +2,14 @@ export default function Logo() {
   return (
     <div className="select-none">
       <span className="text-2xl font-black tracking-tight text-white">
-        <span className="bg-gradient-to-br from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+        <span
+          className="text-transparent"
+          style={{
+            background: "linear-gradient(to bottom right, #c084fc, #22d3ee)",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+          }}
+        >
           K
         </span>
         YNO
