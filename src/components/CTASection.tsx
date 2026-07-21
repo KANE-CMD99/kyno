@@ -6,20 +6,23 @@ export default function CTASection() {
   return (
     <AnimatedSection
       id="contact"
-      className="bg-gradient-to-br from-[#110526] to-[#0a1020] px-6 py-28 text-center"
+      className="bg-neutral-100 px-6 py-28 text-center"
     >
-      <h2 className="text-3xl font-bold text-white md:text-4xl">
-        Ready to Elevate Your Work?
+      <h2 className="text-3xl font-bold text-neutral-900 md:text-4xl">
+        Ready to create?
       </h2>
-      <p className="mx-auto mt-4 max-w-md text-base text-gray-400">
-        Join thousands of creators using Kyno products worldwide.
+      <p className="mx-auto mt-4 max-w-md text-base text-neutral-500">
+        Start building with premium assets trusted by thousands of creators.
       </p>
       <a
-        href="mailto:hello@kyno.tech"
-        className="mt-8 inline-block rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 px-10 py-3 text-base font-medium text-white transition-opacity hover:opacity-90"
+        href="#products"
+        className="mt-8 inline-block rounded-lg bg-blue-600 px-10 py-3 text-base font-medium text-white transition-colors hover:bg-blue-700"
       >
-        Get in Touch
+        Browse All Products
       </a>
+      <p className="mt-4 text-sm text-neutral-400">
+        No subscriptions. Pay once, own forever.
+      </p>
     </AnimatedSection>
   );
 }
