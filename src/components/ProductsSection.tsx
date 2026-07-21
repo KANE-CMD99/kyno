@@ -21,9 +21,11 @@ export default function ProductsSection() {
               </p>
 
               {/* Product Grid */}
-              <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-8 flex flex-wrap justify-center gap-5">
                 {sectionProducts.map((product, i) => (
-                  <ProductCard key={product.id} product={product} index={i} />
+                  <div key={product.id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
+                    <ProductCard product={product} index={i} />
+                  </div>
                 ))}
               </div>
 
