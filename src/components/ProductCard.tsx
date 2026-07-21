@@ -44,8 +44,8 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       </div>
 
       {/* Info */}
-      <div className="mt-2.5 px-0.5">
-        <div className="flex items-center gap-2">
+      <div className="mt-2.5 px-0.5 text-center">
+        <div className="flex items-center justify-center gap-2">
           {hasSale && (
             <span className="rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-bold text-green-700">
               25% OFF
@@ -60,7 +60,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
           <span className="mx-1 text-neutral-300">·</span>
           in {product.category}
         </p>
-        <div className="mt-1.5 flex items-center gap-2">
+        <div className="mt-1.5 flex items-center justify-center gap-2">
           <span className="text-sm font-bold text-neutral-900">{product.price}</span>
           {hasSale && (
             <span className="text-xs text-neutral-400 line-through">{product.originalPrice}</span>
