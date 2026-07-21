@@ -1,21 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-geist",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "Kyno Technology — Digital Products for Creators",
+  title: "Kyno — Premium Digital Assets for Creators",
   description:
-    "Premium templates, courses & assets crafted for the global creator economy.",
+    "Premium stock photos, templates, icons, and fonts crafted for the global creator economy.",
 };
 
 export default function RootLayout({
@@ -24,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${geist.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en">
+      <body className={`${inter.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>
