@@ -29,7 +29,13 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3002)",
       "Bash(taskkill //F //PID 39932)",
       "Bash(rm -rf \"E:/KYNO/web/web -mian/.next\")",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3003)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3003)",
+      "Bash(git revert *)",
+      "Bash(bash \"C:/Users/于凯/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"E:/KYNO/web/web -mian/docs/superpowers/plans/2026-07-21-kyno-swiss-redesign.md\" 1)",
+      "Bash(git -C \"E:/KYNO/web/web -mian\" rev-parse --short HEAD)",
+      "Bash(bash \"C:/Users/于凯/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"E:/KYNO/web/web -mian/docs/superpowers/plans/2026-07-21-kyno-swiss-redesign.md\" 2)",
+      "Bash(bash \"C:/Users/于凯/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/task-brief\" \"E:/KYNO/web/web -mian/docs/superpowers/plans/2026-07-21-kyno-swiss-redesign.md\" 3)",
+      "Bash(bash \"C:/Users/于凯/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development/scripts/review-package\" cd332b9 HEAD)"
     ]
   }
 }
