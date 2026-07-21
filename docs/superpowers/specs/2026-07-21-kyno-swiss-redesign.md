@@ -80,6 +80,8 @@ Redesign the Kyno homepage from a dark SaaS aesthetic to a light Swiss-minimalis
 ├──────────────────────────┤
 │     Social Proof         │  Stats row + optional quotes
 ├──────────────────────────┤
+│      Ad Slot             │  Reserved banner for Google Ads (placeholder)
+├──────────────────────────┤
 │          CTA             │  Centered banner, light gray bg
 ├──────────────────────────┤
 │         Footer           │  Minimal — logo, copyright, 3 links
@@ -133,7 +135,16 @@ Redesign the Kyno homepage from a dark SaaS aesthetic to a light Swiss-minimalis
 - Vertical dividers between stats
 - Optional: 2-3 short customer quotes below stats
 
-### 6. CTA
+### 6. Ad Slot (Placeholder)
+
+- Purpose: reserved horizontal banner slot for future Google AdSense / Ad Manager integration
+- Position: between Social Proof and CTA, full-width within `max-w-6xl` container
+- Layout: centered banner, `h-24` or `h-32`, `bg-neutral-100`, dashed border `border border-dashed border-neutral-300`
+- Placeholder content: light gray text "Advertisement" centered, subtle — not distracting
+- Hidden by default when no ad is configured (conditionally rendered or CSS hidden)
+- Implementation: wrap in a `<div id="ad-slot" />` that Google Ads can target; the placeholder state is pure CSS, the real ads are injected via Google's `<script>` tag later
+
+### 7. CTA
 
 - Light gray background
 - Centered layout
@@ -142,7 +153,7 @@ Redesign the Kyno homepage from a dark SaaS aesthetic to a light Swiss-minimalis
 - Blue solid button: "Browse All Products"
 - Micro-copy below: "No subscriptions. Pay once, own forever."
 
-### 7. Footer
+### 8. Footer
 
 - White or `#FAFAFA` background
 - Top border `border-t border-neutral-200`
@@ -167,6 +178,7 @@ Layout
 │   └── ProductCard (×6)
 ├── SocialProofSection
 │   └── StatsRow + optional quotes
+├── AdSlot (placeholder for Google Ads)
 ├── CTASection
 └── Footer
 ```
@@ -197,6 +209,7 @@ Layout
 |-----------|---------|
 | `ProductMosaic.tsx` | Hero right-side thumbnail grid |
 | `CategoryCard.tsx` | Category browsing card (can repurpose ServiceCard) |
+| `AdSlot.tsx` | Reserved Google Ads banner placeholder, hidden when no ad active |
 
 ### Components to Remove
 
