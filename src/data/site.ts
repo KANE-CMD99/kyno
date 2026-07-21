@@ -40,6 +40,7 @@ export const navLinks: NavLink[] = [
 
 export const categoryPills: NavLink[] = [
   { label: "Photos", href: "#photos" },
+  { label: "Fonts", href: "#fonts" },
   { label: "Templates", href: "#templates" },
 ];
 
@@ -49,6 +50,13 @@ export const categories: CategoryItem[] = [
     title: "Stock Photos",
     description: "High-resolution photo presets and image collections for your projects.",
     emoji: String.fromCodePoint(0x1F4F7),
+    href: "#",
+  },
+  {
+    id: "fonts",
+    title: "Fonts",
+    description: "Curated typefaces and font families for distinctive design.",
+    emoji: String.fromCodePoint(0x1F524),
     href: "#",
   },
   {
@@ -67,6 +75,11 @@ export const services: ServiceItem[] = [
     emoji: String.fromCodePoint(0x1F4F7),
   },
   {
+    title: "Fonts",
+    description: "Premium typefaces and font families for modern design projects.",
+    emoji: String.fromCodePoint(0x1F524),
+  },
+  {
     title: "Templates",
     description: "Professional design templates for websites, UI, and presentations.",
     emoji: String.fromCodePoint(0x1F4D0),
@@ -78,14 +91,20 @@ export const products: ProductItem[] = [
   { id: "1", name: "Photo Presets Bundle", category: "Photos", price: "$39", originalPrice: "$59", creator: "Kyno" },
   { id: "2", name: "Aerial Landscapes Pack", category: "Photos", price: "$27", originalPrice: "$39", creator: "Kyno" },
   { id: "3", name: "Minimal Backgrounds", category: "Photos", price: "$22", creator: "Kyno" },
+  // Fonts
+  { id: "4", name: "Modern Sans Serif", category: "Fonts", price: "$24", creator: "Kyno" },
+  { id: "5", name: "Handwritten Script", category: "Fonts", price: "$18", creator: "Kyno" },
+  { id: "6", name: "Display Typeface", category: "Fonts", price: "$32", originalPrice: "$45", creator: "Kyno" },
   // Templates
-  { id: "4", name: "Ultimate UI Kit", category: "Templates", price: "$49", originalPrice: "$79", creator: "Kyno" },
-  { id: "5", name: "Design System Pro", category: "Templates", price: "$99", creator: "Kyno" },
-  { id: "6", name: "Portfolio Template", category: "Templates", price: "$34", originalPrice: "$49", creator: "Kyno" },
+  { id: "7", name: "Ultimate UI Kit", category: "Templates", price: "$49", originalPrice: "$79", creator: "Kyno" },
+  { id: "8", name: "Design System Pro", category: "Templates", price: "$99", creator: "Kyno" },
+  { id: "9", name: "Portfolio Template", category: "Templates", price: "$34", originalPrice: "$49", creator: "Kyno" },
+  { id: "10", name: "Landing Page Kit", category: "Templates", price: "$44", originalPrice: "$59", creator: "Kyno" },
 ];
 
 export const productSections = [
   { title: "Popular Photos", category: "Photos", href: "#" },
+  { title: "Popular Fonts", category: "Fonts", href: "#" },
   { title: "Popular Templates", category: "Templates", href: "#" },
 ];
 
@@ -94,6 +113,7 @@ export const footerColumns = [
     title: "Products",
     links: [
       { label: "Photos", href: "#" },
+      { label: "Fonts", href: "#" },
       { label: "Templates", href: "#" },
       { label: "Free Downloads", href: "#" },
     ],
@@ -118,7 +138,7 @@ export const footerColumns = [
 ];
 
 export const stats: StatItem[] = [
-  { value: "6", label: "Digital Products" },
+  { value: "10", label: "Digital Products" },
   { value: "1k+", label: "Happy Customers" },
   { value: "4.8", label: "Average Rating" },
 ];
