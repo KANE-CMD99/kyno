@@ -2,12 +2,12 @@ import { stats } from "@/data/site";
 import StatsRow from "./StatsRow";
 
 const placeholders = [
+  { label: "Photo Presets", emoji: String.fromCodePoint(0x1F4F7) },
+  { label: "Sans Serif", emoji: String.fromCodePoint(0x1F524) },
   { label: "UI Kit", emoji: String.fromCodePoint(0x1F4D0) },
-  { label: "Icons", emoji: String.fromCodePoint(0x2728) },
-  { label: "Photos", emoji: String.fromCodePoint(0x1F4F7) },
-  { label: "Fonts", emoji: String.fromCodePoint(0x1F524) },
-  { label: "3D", emoji: String.fromCodePoint(0x1F3A8) },
-  { label: "Presets", emoji: String.fromCodePoint(0x1F39A) },
+  { label: "Backgrounds", emoji: String.fromCodePoint(0x1F5BC) },
+  { label: "Script Font", emoji: String.fromCodePoint(0x270F) },
+  { label: "Landing Page", emoji: String.fromCodePoint(0x1F4C4) },
 ];
 
 const offsets = [
@@ -26,15 +26,15 @@ export default function HeroSection() {
         {/* Left: Text */}
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-5xl font-extrabold leading-[1.08] tracking-tight text-neutral-900 md:text-7xl">
-            Premium assets
+            Premium
             <br />
-            for creators
+            Stock Photos,
             <br />
-            who ship
+            Fonts &amp; Templates
           </h1>
 
           <p className="mx-auto mt-6 max-w-md text-lg leading-relaxed text-neutral-500 md:mx-0">
-            High-quality stock photos, templates, icons, and fonts — crafted for
+            High-quality stock photos, fonts, and templates — crafted for
             designers and content creators.
           </p>
 
@@ -49,12 +49,12 @@ export default function HeroSection() {
               href="#"
               className="rounded-lg border border-neutral-300 px-8 py-3 text-base font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:text-neutral-900"
             >
-              Free Downloads
+              View Showcase
             </a>
           </div>
 
           <p className="mt-4 text-sm text-neutral-400">
-            Free updates &middot; Lifetime access &middot; 50+ products
+            Free updates &middot; Lifetime access &middot; 10+ products
           </p>
 
           <div className="mt-16">
