@@ -1,7 +1,6 @@
 import Nav from "@/components/Nav";
 import HeroSection from "@/components/HeroSection";
 import ProductsSection from "@/components/ProductsSection";
-import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
 export default function HomePage() {
@@ -11,7 +10,6 @@ export default function HomePage() {
       <main>
         <HeroSection />
         <ProductsSection />
-        <CTASection />
       </main>
       <Footer />
     </>
