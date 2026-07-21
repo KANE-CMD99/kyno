@@ -1,59 +1,53 @@
 import { stats } from "@/data/site";
 import StatsRow from "./StatsRow";
+import ProductMosaic from "./ProductMosaic";
 
 export default function HeroSection() {
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pb-24 pt-32">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#07071a] via-[#110526] to-[#0a1020]" />
+    <section className="flex min-h-[90vh] items-center bg-[#FAFAFA] px-6 pb-24 pt-32">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-16 md:flex-row md:gap-12">
+        {/* Left: Text */}
+        <div className="flex-1 text-center md:text-left">
+          <h1 className="text-5xl font-extrabold leading-[1.08] tracking-tight text-neutral-900 md:text-7xl">
+            Premium assets
+            <br />
+            for creators
+            <br />
+            who ship
+          </h1>
 
-      <div className="animate-blob-purple absolute -top-24 -right-16 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-purple-500/30 to-transparent blur-3xl" />
+          <p className="mx-auto mt-6 max-w-md text-lg leading-relaxed text-neutral-500 md:mx-0">
+            High-quality stock photos, templates, icons, and fonts — crafted for
+            designers and content creators.
+          </p>
 
-      <div className="animate-blob-cyan absolute -bottom-20 -left-12 h-[300px] w-[300px] rounded-full bg-gradient-to-br from-cyan-400/25 to-transparent blur-3xl" />
+          <div className="mt-8 flex items-center justify-center gap-3 md:justify-start">
+            <a
+              href="#products"
+              className="rounded-lg bg-blue-600 px-8 py-3 text-base font-medium text-white transition-colors hover:bg-blue-700"
+            >
+              Browse Products
+            </a>
+            <a
+              href="#categories"
+              className="rounded-lg border border-neutral-300 px-8 py-3 text-base font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:text-neutral-900"
+            >
+              View Categories
+            </a>
+          </div>
 
-      <div className="absolute left-[8%] top-[15%] h-20 w-20 rotate-[15deg] rounded-2xl border border-purple-400/10" />
+          <p className="mt-4 text-sm text-neutral-400">
+            Free updates &middot; Lifetime access &middot; 50+ products
+          </p>
 
-      <div className="absolute right-[18%] top-[25%] h-6 w-6 rotate-45 rounded-md bg-purple-400/10" />
-
-      <div className="relative z-10 text-center">
-        <h1 className="text-5xl font-black leading-[1.08] tracking-tight text-white md:text-7xl">
-          <span
-            className="text-transparent"
-            style={{
-              background: "linear-gradient(to bottom right, #d8b4fe, #67e8f9)",
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-            }}
-          >
-            Digital
-          </span>
-          <br />
-          Products for
-          <br />
-          Creators
-        </h1>
-
-        <p className="mx-auto mt-6 max-w-lg text-lg leading-relaxed text-gray-400">
-          Premium templates, courses &amp; assets crafted for the global creator
-          economy.
-        </p>
-
-        <div className="mt-8 flex items-center justify-center gap-4">
-          <a
-            href="#products"
-            className="rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 px-8 py-3 text-base font-medium text-white transition-opacity hover:opacity-90"
-          >
-            Explore Products
-          </a>
-          <a
-            href="#services"
-            className="rounded-lg border border-white/20 px-8 py-3 text-base font-medium text-gray-300 transition-colors hover:border-white/40 hover:text-white"
-          >
-            View Showcase &rarr;
-          </a>
+          <div className="mt-16">
+            <StatsRow stats={stats} />
+          </div>
         </div>
 
-        <div className="mt-16">
-          <StatsRow stats={stats} />
+        {/* Right: Product mosaic */}
+        <div className="w-full max-w-md flex-1 md:max-w-none">
+          <ProductMosaic />
         </div>
       </div>
     </section>
