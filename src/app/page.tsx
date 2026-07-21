@@ -1,9 +1,12 @@
 import Nav from "@/components/Nav";
 import HeroSection from "@/components/HeroSection";
-import ServicesSection from "@/components/ServicesSection";
+import CategorySection from "@/components/CategorySection";
 import ProductsSection from "@/components/ProductsSection";
+import StatsRow from "@/components/StatsRow";
+import AdSlot from "@/components/AdSlot";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import { stats } from "@/data/site";
 
 export default function HomePage() {
   return (
@@ -11,8 +14,14 @@ export default function HomePage() {
       <Nav />
       <main>
         <HeroSection />
-        <ServicesSection />
+        <CategorySection />
         <ProductsSection />
+        <section className="bg-neutral-100 px-6 py-16">
+          <div className="mx-auto max-w-6xl">
+            <StatsRow stats={stats} />
+          </div>
+        </section>
+        <AdSlot />
         <CTASection />
       </main>
       <Footer />
