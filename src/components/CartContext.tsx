@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 
 export interface CartItem {
   id: string;
@@ -22,8 +22,33 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | null>(null);
 
+function loadCart(): CartItem[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem("kyno-cart");
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function saveCart(items: CartItem[]) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("kyno-cart", JSON.stringify(items));
+  } catch {}
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setItems(loadCart());
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated) saveCart(items);
+  }, [items, hydrated]);
 
   const addItem = useCallback((item: Omit<CartItem, "quantity">) => {
     setItems((prev) => {
@@ -51,7 +76,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  const clearCart = useCallback(() => setItems([]), []);
+  const clearCart = useCallback(() => {
+    setItems([]);
+    localStorage.removeItem("kyno-cart");
+  }, []);
 
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);

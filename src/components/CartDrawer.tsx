@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { useCart, type CartItem } from "./CartContext";
 
 interface CartDrawerProps {
@@ -91,13 +92,13 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 <p className="mt-1 text-xs text-neutral-400">
                   Taxes calculated at checkout
                 </p>
-                <a
+                <Link
                   href="/checkout"
                   onClick={onClose}
                   className="mt-4 block rounded-lg bg-blue-600 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700"
                 >
                   Checkout — ${subtotal}
-                </a>
+                </Link>
                 <button
                   onClick={clearCart}
                   className="mt-2 block w-full text-center text-xs text-neutral-400 transition-colors hover:text-neutral-600"
