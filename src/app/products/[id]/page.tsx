@@ -37,7 +37,7 @@ export default async function ProductPage({ params }: PageProps) {
 
         {/* Hero: 2-col */}
         <section className="mx-auto max-w-7xl px-6 py-12">
-          <div className="grid gap-12 md:grid-cols-2">
+          <div className="grid gap-12 lg:grid-cols-2">
             {/* Left: Preview placeholder */}
             <div className="aspect-[4/3] rounded-xl bg-neutral-100 flex items-center justify-center">
               <div className="text-center">
@@ -106,7 +106,7 @@ export default async function ProductPage({ params }: PageProps) {
         {/* Features + Includes */}
         <section className="bg-neutral-50 px-6 py-16">
           <div className="mx-auto max-w-7xl">
-            <div className="grid gap-12 md:grid-cols-2">
+            <div className="grid gap-12 lg:grid-cols-2">
               {/* Features */}
               <div>
                 <h2 className="text-lg font-bold text-neutral-900">Features</h2>

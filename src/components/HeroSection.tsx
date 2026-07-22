@@ -25,7 +25,7 @@ export default function HeroSection() {
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-16 md:flex-row md:gap-12">
         {/* Left: Text */}
         <div className="flex-1 text-center md:text-left">
-          <h1 className="text-5xl font-extrabold leading-[1.08] tracking-tight text-neutral-900 md:text-7xl">
+          <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-neutral-900 md:text-7xl">
             Premium
             <br />
             Stock Photos,
@@ -38,16 +38,16 @@ export default function HeroSection() {
             designers and content creators.
           </p>
 
-          <div className="mt-8 flex items-center justify-center gap-3 md:justify-start">
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row md:justify-start">
             <a
               href="#products"
-              className="rounded-lg bg-blue-600 px-8 py-3 text-base font-medium text-white transition-colors hover:bg-blue-700"
+              className="w-full rounded-lg bg-blue-600 px-8 py-3 text-center text-base font-medium text-white transition-colors hover:bg-blue-700 sm:w-auto"
             >
               Browse Products
             </a>
             <a
               href="#"
-              className="rounded-lg border border-neutral-300 px-8 py-3 text-base font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:text-neutral-900"
+              className="w-full rounded-lg border border-neutral-300 px-8 py-3 text-center text-base font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:text-neutral-900 sm:w-auto"
             >
               View Showcase
             </a>
