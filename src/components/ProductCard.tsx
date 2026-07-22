@@ -21,7 +21,7 @@ const categoryEmoji: Record<string, string> = {
 export default function ProductCard({ product, index }: ProductCardProps) {
   const hasSale = !!product.originalPrice;
   const emoji = categoryEmoji[product.category] ?? String.fromCodePoint(0x1F4E6);
-  const { addItem } = useCart();
+  const { addItem, openCart } = useCart();
 
   const priceNum = parseInt(product.price.replace("$", ""), 10);
 
@@ -29,6 +29,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
     addItem({ id: product.id, name: product.name, price: priceNum, category: product.category });
+    openCart();
   };
 
   return (

@@ -14,8 +14,7 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
-  const [cartOpen, setCartOpen] = useState(false);
-  const { itemCount } = useCart();
+  const { itemCount, openCart, closeCart, isOpen: cartOpen } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -57,7 +56,7 @@ export default function Nav() {
 
             {/* Cart */}
             <button
-              onClick={() => setCartOpen(true)}
+              onClick={() => openCart()}
               className="relative rounded-md p-1.5 text-neutral-300 transition-colors hover:text-white"
               aria-label="Open cart"
             >
@@ -132,7 +131,7 @@ export default function Nav() {
       </div>
 
       <AuthModal isOpen={authOpen} initialMode={authMode} onClose={() => setAuthOpen(false)} />
-      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      <CartDrawer isOpen={cartOpen} onClose={closeCart} />
     </>
   );
 }

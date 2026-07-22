@@ -11,11 +11,11 @@ interface AddToCartButtonProps {
 }
 
 export default function AddToCartButton({ id, name, price, category, className }: AddToCartButtonProps) {
-  const { addItem } = useCart();
+  const { addItem, openCart } = useCart();
 
   return (
     <button
-      onClick={() => addItem({ id, name, price, category })}
+      onClick={() => { addItem({ id, name, price, category }); openCart(); }}
       className={className}
     >
       Add to Cart — ${price}

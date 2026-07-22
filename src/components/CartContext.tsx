@@ -19,6 +19,9 @@ interface CartContextType {
   itemCount: number;
   subtotal: number;
   hydrated: boolean;
+  isOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -41,6 +44,7 @@ function saveCart(items: CartItem[]) {
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setItems(loadCart());
@@ -82,12 +86,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("kyno-cart");
   }, []);
 
+  const openCart = useCallback(() => setIsOpen(true), []);
+  const closeCart = useCallback(() => setIsOpen(false), []);
+
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, updateQuantity, clearCart, itemCount, subtotal, hydrated }}
+      value={{ items, addItem, removeItem, updateQuantity, clearCart, itemCount, subtotal, hydrated, isOpen, openCart, closeCart }}
     >
       {children}
     </CartContext.Provider>
