@@ -34,7 +34,7 @@ export interface StatItem {
 
 export const navLinks: NavLink[] = [
   { label: "Products", href: "#products" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export const categoryPills: NavLink[] = [
@@ -128,8 +128,8 @@ export const footerColumns = [
   {
     title: "Company",
     links: [
-      { label: "About", href: "#" },
-      { label: "Contact", href: "#contact" },
+      { label: "About", href: "/about" },
+      { label: "Contact", href: "/contact" },
       { label: "Twitter", href: "#" },
       { label: "Dribbble", href: "#" },
     ],
