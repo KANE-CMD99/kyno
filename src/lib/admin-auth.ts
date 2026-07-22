@@ -6,7 +6,7 @@ const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "kyno-admin-token-secure";
 const COOKIE_NAME = "kyno_admin_session";
 
 export function validateAdminCredentials(email: string, password: string): boolean {
-  return email === ADMIN_EMAIL && password === ADMIN_PASSWORD;
+  return email.trim().toLowerCase() === ADMIN_EMAIL && password.trim() === ADMIN_PASSWORD;
 }
 
 export async function setAdminSession() {
