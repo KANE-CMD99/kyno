@@ -46,10 +46,10 @@ export default function HeroSection() {
               Browse Products
             </a>
             <a
-              href="#"
+              href="/free-downloads"
               className="w-full rounded-lg border border-neutral-300 px-8 py-3 text-center text-base font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:text-neutral-900 sm:w-auto"
             >
-              View Showcase
+              Free Downloads
             </a>
           </div>
 
