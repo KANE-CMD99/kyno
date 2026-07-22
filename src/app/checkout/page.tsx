@@ -7,11 +7,23 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 export default function CheckoutPage() {
-  const { items, subtotal, itemCount } = useCart();
+  const { items, subtotal, itemCount, hydrated } = useCart();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  if (!hydrated) {
+    return (
+      <>
+        <Nav />
+        <main className="flex min-h-[80vh] items-center justify-center bg-[#FAFAFA] pt-[105px]">
+          <p className="text-sm text-neutral-500">Loading cart...</p>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   if (items.length === 0) {
     return (
