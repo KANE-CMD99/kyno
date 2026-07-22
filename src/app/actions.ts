@@ -3,6 +3,7 @@
 import crypto from "crypto";
 import { getUserByEmail, createUser } from "@/db/storage";
 import { setSessionCookie } from "@/lib/auth";
+import { validateAdminCredentials, setAdminSession } from "@/lib/admin-auth";
 
 function hashPassword(password: string): string {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -46,7 +47,16 @@ export async function loginAction(email: string, password: string) {
     return { success: false, error: "Email and password are required." };
   }
 
-  const user = getUserByEmail(email.toLowerCase().trim());
+  const normalizedEmail = email.toLowerCase().trim();
+
+  // Admin login — redirect to admin dashboard
+  if (validateAdminCredentials(normalizedEmail, password)) {
+    await setAdminSession();
+    return { success: true, isAdmin: true };
+  }
+
+  // Regular user login
+  const user = getUserByEmail(normalizedEmail);
   if (!user) {
     return { success: false, error: "Invalid email or password." };
   }

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { registerAction, loginAction } from "@/app/actions";
 
 interface AuthModalProps {
@@ -15,6 +16,7 @@ export default function AuthModal({ isOpen, initialMode = "signin", onClose, onS
   const [mode, setMode] = useState<"signin" | "signup">(initialMode);
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const switchMode = () => {
     setError("");
@@ -40,7 +42,11 @@ export default function AuthModal({ isOpen, initialMode = "signin", onClose, onS
 
       if (result.success) {
         onClose();
-        onSuccess?.();
+        if ((result as { isAdmin?: boolean }).isAdmin) {
+          router.push("/admin/dashboard");
+        } else {
+          onSuccess?.();
+        }
       } else {
         setError(result.error || "Something went wrong.");
       }
