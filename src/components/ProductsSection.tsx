@@ -1,14 +1,63 @@
+"use client";
+
+import { useState, useMemo } from "react";
 import { products, productSections } from "@/data/site";
 import ProductCard from "./ProductCard";
 import AnimatedSection from "./AnimatedSection";
+import SearchBar from "./SearchBar";
 import Link from "next/link";
 
 export default function ProductsSection() {
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState("default");
+
+  const filterAndSort = (items: typeof products) => {
+    let filtered = items;
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      filtered = items.filter(
+        (p) => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
+      );
+    }
+    const sorted = [...filtered];
+    switch (sort) {
+      case "price-asc": sorted.sort((a, b) => parseFloat(a.price.slice(1)) - parseFloat(b.price.slice(1))); break;
+      case "price-desc": sorted.sort((a, b) => parseFloat(b.price.slice(1)) - parseFloat(a.price.slice(1))); break;
+      case "name-asc": sorted.sort((a, b) => a.name.localeCompare(b.name)); break;
+      case "name-desc": sorted.sort((a, b) => b.name.localeCompare(a.name)); break;
+    }
+    return sorted;
+  };
+
+  // Check if any section is empty after filtering
+  const hasAnyResults = useMemo(() => {
+    return productSections.some((section) => {
+      const filtered = filterAndSort(products.filter((p) => p.category === section.category));
+      return filtered.length > 0;
+    });
+  }, [query, sort]);
+
   return (
     <AnimatedSection id="products" className="bg-[#FAFAFA] px-6 py-20">
-      <div className="mx-auto max-w-7xl space-y-24">
+      <div className="mx-auto max-w-7xl space-y-12">
+        {/* Search + Sort */}
+        <div className="mx-auto max-w-2xl">
+          <SearchBar
+            onSearch={(q, s) => { setQuery(q); setSort(s); }}
+            placeholder="Search products..."
+          />
+        </div>
+
+        {!hasAnyResults && query.trim() && (
+          <p className="py-12 text-center text-sm text-neutral-400">
+            No products found for &ldquo;{query}&rdquo;
+          </p>
+        )}
+
         {productSections.map((section) => {
           const sectionProducts = products.filter((p) => p.category === section.category);
+          const filtered = filterAndSort(sectionProducts);
+          if (filtered.length === 0 && query.trim()) return null;
           if (sectionProducts.length === 0) return null;
 
           return (
@@ -23,7 +72,7 @@ export default function ProductsSection() {
 
               {/* Product Grid */}
               <div className="mt-8 flex flex-wrap justify-center gap-5">
-                {sectionProducts.map((product, i) => (
+                {filtered.map((product, i) => (
                   <div key={product.id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
                     <Link href={`/products/${product.id}`} className="block">
                       <ProductCard product={product} index={i} />
@@ -33,12 +82,14 @@ export default function ProductsSection() {
               </div>
 
               {/* Explore link below grid */}
-              <a
-                href={section.href}
-                className="mt-6 inline-block text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
-              >
-                Explore {section.category} &rarr;
-              </a>
+              {!query.trim() && (
+                <a
+                  href={section.href}
+                  className="mt-6 inline-block text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+                >
+                  Explore {section.category} &rarr;
+                </a>
+              )}
             </div>
           );
         })}
