@@ -141,3 +141,32 @@ export const stats: StatItem[] = [
   { value: "1k+", label: "Happy Customers" },
   { value: "4.8", label: "Average Rating" },
 ];
+
+export interface TestimonialItem {
+  name: string;
+  role: string;
+  quote: string;
+}
+
+export const testimonials: TestimonialItem[] = [
+  {
+    name: "Sarah Chen",
+    role: "Product Designer",
+    quote: "Kyno's UI kit saved me weeks of design work. The components are thoughtfully built and easy to customize. My go-to resource for every new project.",
+  },
+  {
+    name: "Marcus Rivera",
+    role: "Frontend Developer",
+    quote: "The font collection is incredible. Clean licensing, beautiful typefaces, and the web font kit just works out of the box. Highly recommended.",
+  },
+  {
+    name: "Emily Park",
+    role: "Content Creator",
+    quote: "I use their photo presets on every shoot. Consistent, professional look in one click. My clients keep asking how I edit my photos.",
+  },
+  {
+    name: "James Wilson",
+    role: "Creative Director",
+    quote: "Kyno templates are the best investment we made this year. From landing pages to design systems, everything is polished and production-ready.",
+  },
+];
