@@ -7,32 +7,11 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
 export default function CheckoutPage() {
-  const { items, subtotal, clearCart, itemCount } = useCart();
-  const [submitted, setSubmitted] = useState(false);
-
-  if (submitted) {
-    return (
-      <>
-        <Nav />
-        <main className="flex min-h-[80vh] items-center justify-center bg-[#FAFAFA] pt-[105px]">
-          <div className="text-center px-6">
-            <span className="text-6xl select-none">{String.fromCodePoint(0x2705)}</span>
-            <h1 className="mt-6 text-3xl font-bold text-neutral-900">Order confirmed!</h1>
-            <p className="mt-3 text-neutral-500 max-w-sm mx-auto">
-              Thank you for your purchase. Your download links have been sent to your email.
-            </p>
-            <Link
-              href="/"
-              className="mt-8 inline-block rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-            >
-              Back to Store
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </>
-    );
-  }
+  const { items, subtotal, itemCount } = useCart();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (items.length === 0) {
     return (
@@ -55,6 +34,39 @@ export default function CheckoutPage() {
       </>
     );
   }
+
+  const handleCheckout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((item) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+          })),
+          email,
+          name,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setError(data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    }
+    setLoading(false);
+  };
 
   return (
     <>
@@ -89,11 +101,7 @@ export default function CheckoutPage() {
             {/* Form */}
             <div className="lg:col-span-3">
               <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  clearCart();
-                  setSubmitted(true);
-                }}
+                onSubmit={handleCheckout}
                 className="rounded-xl border border-neutral-200 bg-white p-6"
               >
                 <h2 className="text-sm font-bold text-neutral-900">Contact Information</h2>
@@ -104,6 +112,8 @@ export default function CheckoutPage() {
                       id="name"
                       type="text"
                       required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       placeholder="Your name"
                     />
@@ -114,24 +124,44 @@ export default function CheckoutPage() {
                       id="email"
                       type="email"
                       required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       placeholder="you@example.com"
                     />
                     <p className="mt-1 text-xs text-neutral-400">
-                      Download links will be sent to this email.
+                      Download links and receipt will be sent to this email.
                     </p>
                   </div>
                 </div>
 
+                {error && (
+                  <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-xs text-red-600">{error}</p>
+                )}
+
                 <button
                   type="submit"
-                  className="mt-6 w-full rounded-lg bg-blue-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+                  disabled={loading}
+                  className="mt-6 w-full rounded-lg bg-blue-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-60"
                 >
-                  Complete Purchase — ${subtotal}
+                  {loading ? "Redirecting to checkout..." : `Pay with Stripe — $${subtotal}`}
                 </button>
+
                 <p className="mt-3 text-center text-xs text-neutral-400">
-                  This is a demo — no real payment will be processed.
+                  You will be redirected to Stripe to complete your payment securely. All sales are final per our{" "}
+                  <Link href="/terms" className="text-blue-600 hover:text-blue-700">Refund Policy</Link>.
                 </p>
+
+                <div className="mt-4 flex items-center justify-center gap-3 text-xs text-neutral-400">
+                  <span className="flex items-center gap-1">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    Secure checkout
+                  </span>
+                  <span>Powered by Stripe</span>
+                </div>
               </form>
             </div>
           </div>
