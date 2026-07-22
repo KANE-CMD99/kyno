@@ -120,9 +120,9 @@ export const footerColumns = [
   {
     title: "Resources",
     links: [
-      { label: "Blog", href: "#" },
-      { label: "Help Center", href: "#" },
-      { label: "License", href: "#" },
+      { label: "Free Downloads", href: "/free-downloads" },
+      { label: "License", href: "/license" },
+      { label: "Help Center", href: "/contact" },
     ],
   },
   {
@@ -132,6 +132,14 @@ export const footerColumns = [
       { label: "Contact", href: "/contact" },
       { label: "Twitter", href: "#" },
       { label: "Dribbble", href: "#" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+      { label: "License", href: "/license" },
     ],
   },
 ];
