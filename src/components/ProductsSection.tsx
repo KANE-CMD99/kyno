@@ -1,6 +1,7 @@
 import { products, productSections } from "@/data/site";
 import ProductCard from "./ProductCard";
 import AnimatedSection from "./AnimatedSection";
+import Link from "next/link";
 
 export default function ProductsSection() {
   return (
@@ -24,7 +25,9 @@ export default function ProductsSection() {
               <div className="mt-8 flex flex-wrap justify-center gap-5">
                 {sectionProducts.map((product, i) => (
                   <div key={product.id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
-                    <ProductCard product={product} index={i} />
+                    <Link href={`/products/${product.id}`} className="block">
+                      <ProductCard product={product} index={i} />
+                    </Link>
                   </div>
                 ))}
               </div>

@@ -1,0 +1,22 @@
+{
+  "id": "5",
+  "name": "Handwritten Script",
+  "category": "Fonts",
+  "price": 18,
+  "creator": "Kyno",
+  "description": "A graceful handwritten script font with natural flowing letterforms. Perfect for wedding invitations, greeting cards, logo design, and social media graphics. Includes contextual alternates for realistic handwriting feel.",
+  "features": [
+    "Natural handwritten style with varied baselines",
+    "Contextual alternates for realistic letter combinations",
+    "Swashes and ligatures for decorative flair",
+    "Multilingual character set",
+    "Web font formats included"
+  ],
+  "includes": [
+    "Script font files (OTF, TTF, WOFF2)",
+    "Swash & ligature guide PDF",
+    "Web font CSS kit",
+    "Personal & commercial license"
+  ],
+  "previewImages": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "8",
+  "name": "Design System Pro",
+  "category": "Templates",
+  "price": 99,
+  "creator": "Kyno",
+  "description": "An enterprise-grade design system with advanced components, accessibility-first patterns, and a scalable token architecture. Ideal for teams building complex, multi-platform products that need consistency at scale.",
+  "features": [
+    "800+ production-ready components",
+    "WCAG 2.1 AA compliant patterns",
+    "Advanced token system (Figma variables)",
+    "Component variants for every state (hover, focus, disabled, error)",
+    "Documentation template included for developer handoff"
+  ],
+  "includes": [
+    "Figma design system file",
+    "Token export (JSON for code integration)",
+    "Accessibility audit checklist",
+    "Developer handoff documentation"
+  ],
+  "previewImages": []
+}
