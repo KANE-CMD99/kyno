@@ -5,6 +5,7 @@ import Link from "next/link";
 import Logo from "./Logo";
 import AuthModal from "./AuthModal";
 import CartDrawer from "./CartDrawer";
+import UserMenu from "./UserMenu";
 import { useCart } from "./CartContext";
 import { navLinks, categoryPills } from "@/data/site";
 
@@ -51,18 +52,8 @@ export default function Nav() {
                 {link.label}
               </a>
             ))}
-            <button
-              onClick={() => openAuth("signup")}
-              className="text-sm font-medium text-green-500 transition-colors hover:text-green-400"
-            >
-              Join
-            </button>
-            <button
-              onClick={() => openAuth("signin")}
-              className="rounded-lg border border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:border-neutral-400 hover:text-white"
-            >
-              Sign In
-            </button>
+
+            <UserMenu onOpenAuth={openAuth} />
 
             {/* Cart */}
             <button
