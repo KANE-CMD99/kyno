@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import Logo from "./Logo";
 import AuthModal from "./AuthModal";
 import CartDrawer from "./CartDrawer";
@@ -128,13 +129,13 @@ export default function Nav() {
       <div className="fixed top-[53px] z-40 w-full border-b border-neutral-800 bg-neutral-900 px-6 py-2.5">
         <div className="mx-auto flex max-w-7xl items-center gap-1.5 overflow-x-auto">
           {categoryPills.map((pill) => (
-            <a
+            <Link
               key={pill.href}
               href={pill.href}
               className="shrink-0 rounded-full border border-neutral-700 px-4 py-1.5 text-xs font-medium text-neutral-300 transition-colors hover:border-neutral-400 hover:text-white"
             >
               {pill.label}
-            </a>
+            </Link>
           ))}
         </div>
       </div>

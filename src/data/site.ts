@@ -38,9 +38,9 @@ export const navLinks: NavLink[] = [
 ];
 
 export const categoryPills: NavLink[] = [
-  { label: "Photos", href: "#photos" },
-  { label: "Fonts", href: "#fonts" },
-  { label: "Templates", href: "#templates" },
+  { label: "Photos", href: "/categories/photos" },
+  { label: "Fonts", href: "/categories/fonts" },
+  { label: "Templates", href: "/categories/templates" },
 ];
 
 export const categories: CategoryItem[] = [
