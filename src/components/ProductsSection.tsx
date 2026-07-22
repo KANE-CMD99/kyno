@@ -74,9 +74,7 @@ export default function ProductsSection() {
               <div className="mt-8 flex flex-wrap justify-center gap-5">
                 {filtered.map((product, i) => (
                   <div key={product.id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
-                    <Link href={`/products/${product.id}`} className="block">
-                      <ProductCard product={product} index={i} />
-                    </Link>
+                    <ProductCard product={product} index={i} />
                   </div>
                 ))}
               </div>

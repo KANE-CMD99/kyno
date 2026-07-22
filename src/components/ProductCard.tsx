@@ -33,28 +33,35 @@ export default function ProductCard({ product, index }: ProductCardProps) {
 
   return (
     <motion.div
-      className="group cursor-pointer"
+      className="group"
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
-      {/* Image / Placeholder */}
-      <div className="relative aspect-[3/2] overflow-hidden rounded-lg bg-neutral-100">
-        <div className="flex h-full items-center justify-center text-5xl">
-          {product.thumbnail ?? emoji}
-        </div>
+      {/* Image / Placeholder — wraps in a Link to product detail */}
+      <a href={`/products/${product.id}`} className="block cursor-pointer">
+        <div className="relative aspect-[3/2] overflow-hidden rounded-lg bg-neutral-100">
+          <div className="flex h-full items-center justify-center text-5xl">
+            {product.thumbnail ?? emoji}
+          </div>
 
-        {/* Add to Cart overlay on hover */}
-        <div className="absolute inset-0 flex items-end p-3 opacity-0 transition-opacity group-hover:opacity-100">
-          <button
-            onClick={handleAddToCart}
-            className="w-full rounded-md bg-neutral-900/90 py-2 text-xs font-semibold text-white backdrop-blur-sm transition-colors hover:bg-neutral-900"
-          >
-            Add to Cart
-          </button>
+          {/* Hover overlay — "View Details" */}
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-neutral-900/0 transition-colors group-hover:bg-neutral-900/10">
+            <span className="rounded-lg bg-white/90 px-4 py-2 text-xs font-semibold text-neutral-900 opacity-0 transition-opacity group-hover:opacity-100 shadow-sm">
+              View Details
+            </span>
+          </div>
         </div>
-      </div>
+      </a>
+
+      {/* Add to Cart button — outside the Link */}
+      <button
+        onClick={handleAddToCart}
+        className="mt-3 w-full rounded-lg border border-neutral-300 bg-white py-2 text-xs font-semibold text-neutral-700 transition-all hover:border-neutral-900 hover:text-neutral-900"
+      >
+        Add to Cart
+      </button>
 
       {/* Info */}
       <div className="mt-2.5 px-0.5 text-center">
