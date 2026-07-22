@@ -2,11 +2,14 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Logo from "./Logo";
+import AuthModal from "./AuthModal";
 import { navLinks, categoryPills } from "@/data/site";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -15,6 +18,11 @@ export default function Nav() {
   }, []);
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
+
+  const openAuth = (mode: "signin" | "signup") => {
+    setAuthMode(mode);
+    setAuthOpen(true);
+  };
 
   return (
     <>
@@ -38,18 +46,18 @@ export default function Nav() {
                 {link.label}
               </a>
             ))}
-            <a
-              href="#"
+            <button
+              onClick={() => openAuth("signup")}
               className="text-sm font-medium text-green-500 transition-colors hover:text-green-400"
             >
               Join
-            </a>
-            <a
-              href="#"
+            </button>
+            <button
+              onClick={() => openAuth("signin")}
               className="rounded-lg border border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:border-neutral-400 hover:text-white"
             >
               Sign In
-            </a>
+            </button>
           </div>
 
           <button
@@ -88,8 +96,8 @@ export default function Nav() {
                   {link.label}
                 </a>
               ))}
-              <a href="#" onClick={closeMenu} className="text-sm font-medium text-green-500">Join</a>
-              <a href="#" onClick={closeMenu} className="rounded-lg border border-neutral-600 px-4 py-2.5 text-center text-sm font-medium text-neutral-200">Sign In</a>
+              <button onClick={() => { closeMenu(); openAuth("signup"); }} className="text-left text-sm font-medium text-green-500">Join</button>
+              <button onClick={() => { closeMenu(); openAuth("signin"); }} className="rounded-lg border border-neutral-600 px-4 py-2.5 text-center text-sm font-medium text-neutral-200">Sign In</button>
             </div>
           </div>
         )}
@@ -109,6 +117,8 @@ export default function Nav() {
           ))}
         </div>
       </div>
+
+      <AuthModal isOpen={authOpen} initialMode={authMode} onClose={() => setAuthOpen(false)} />
     </>
   );
 }
