@@ -111,10 +111,10 @@ export const footerColumns = [
   {
     title: "Products",
     links: [
-      { label: "Photos", href: "#" },
-      { label: "Fonts", href: "#" },
-      { label: "Templates", href: "#" },
-      { label: "Free Downloads", href: "#" },
+      { label: "Photos", href: "/categories/photos" },
+      { label: "Fonts", href: "/categories/fonts" },
+      { label: "Templates", href: "/categories/templates" },
+      { label: "Free Downloads", href: "/free-downloads" },
     ],
   },
   {
