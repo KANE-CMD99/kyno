@@ -25,4 +25,5 @@ yarn-error.log*
 .vercel
 
 # local runtime data
-/data/
+/data/users.json
+/data/orders.json
