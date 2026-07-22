@@ -47,7 +47,12 @@
       "Bash(rm -rf .next)",
       "Bash(powershell -Command \"Get-Process -Name node -ErrorAction SilentlyContinue | Select-Object Id, ProcessName\")",
       "Bash(powershell -Command \"Get-Process -Name node -ErrorAction SilentlyContinue | Stop-Process -Force\")",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(tasklist //FI \"IMAGENAME eq npm.cmd\")",
+      "Bash(tasklist //FI \"IMAGENAME eq node.exe\")",
+      "Bash(rm -f src/db/schema.ts src/db/index.ts src/db/migrate.ts src/db/storage.ts src/components/UserInfo.tsx)",
+      "Bash(rm -rf \"E:/KYNO/web/web -mian/node_modules/@types/bcryptjs\" \"E:/KYNO/web/web -mian/node_modules/@types/better-sqlite3\")",
+      "Bash(rm -f src/db/schema.ts src/db/index.ts src/db/migrate.ts src/components/UserInfo.tsx)"
     ]
   }
 }
