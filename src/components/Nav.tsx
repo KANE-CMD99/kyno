@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import Logo from "./Logo";
 import AuthModal from "./AuthModal";
+import CartDrawer from "./CartDrawer";
+import { useCart } from "./CartContext";
 import { navLinks, categoryPills } from "@/data/site";
 
 export default function Nav() {
@@ -10,6 +12,8 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const [cartOpen, setCartOpen] = useState(false);
+  const { itemCount } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -57,6 +61,23 @@ export default function Nav() {
               className="rounded-lg border border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:border-neutral-400 hover:text-white"
             >
               Sign In
+            </button>
+
+            {/* Cart */}
+            <button
+              onClick={() => setCartOpen(true)}
+              className="relative rounded-md p-1.5 text-neutral-300 transition-colors hover:text-white"
+              aria-label="Open cart"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              {itemCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
+                  {itemCount > 9 ? "9+" : itemCount}
+                </span>
+              )}
             </button>
           </div>
 
@@ -119,6 +140,7 @@ export default function Nav() {
       </div>
 
       <AuthModal isOpen={authOpen} initialMode={authMode} onClose={() => setAuthOpen(false)} />
+      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useCart } from "./CartContext";
 import type { ProductItem } from "@/data/site";
 
 interface ProductCardProps {
@@ -20,6 +21,15 @@ const categoryEmoji: Record<string, string> = {
 export default function ProductCard({ product, index }: ProductCardProps) {
   const hasSale = !!product.originalPrice;
   const emoji = categoryEmoji[product.category] ?? String.fromCodePoint(0x1F4E6);
+  const { addItem } = useCart();
+
+  const priceNum = parseInt(product.price.replace("$", ""), 10);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({ id: product.id, name: product.name, price: priceNum, category: product.category });
+  };
 
   return (
     <motion.div
@@ -37,7 +47,10 @@ export default function ProductCard({ product, index }: ProductCardProps) {
 
         {/* Add to Cart overlay on hover */}
         <div className="absolute inset-0 flex items-end p-3 opacity-0 transition-opacity group-hover:opacity-100">
-          <button className="w-full rounded-md bg-neutral-900/90 py-2 text-xs font-semibold text-white backdrop-blur-sm transition-colors hover:bg-neutral-900">
+          <button
+            onClick={handleAddToCart}
+            className="w-full rounded-md bg-neutral-900/90 py-2 text-xs font-semibold text-white backdrop-blur-sm transition-colors hover:bg-neutral-900"
+          >
             Add to Cart
           </button>
         </div>

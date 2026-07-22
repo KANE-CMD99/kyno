@@ -4,6 +4,7 @@ import { getProductDetail } from "@/data/product-detail";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import AddToCartButton from "@/components/AddToCartButton";
 import { products } from "@/data/site";
 
 interface PageProps {
@@ -83,9 +84,13 @@ export default async function ProductPage({ params }: PageProps) {
               </div>
 
               <div className="mt-6 flex gap-3">
-                <button className="rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700">
-                  Add to Cart — ${detail.price}
-                </button>
+                <AddToCartButton
+                  id={detail.id}
+                  name={detail.name}
+                  price={detail.price}
+                  category={detail.category}
+                  className="rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+                />
                 <button className="rounded-lg border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400">
                   Save
                 </button>
