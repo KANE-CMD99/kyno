@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getProductDetail } from "@/data/product-detail";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -9,6 +10,21 @@ import { products } from "@/data/site";
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const detail = getProductDetail(id);
+  if (!detail) return { title: "Not Found" };
+  return {
+    title: detail.name,
+    description: detail.description.slice(0, 160),
+    openGraph: {
+      title: `${detail.name} — Kyno`,
+      description: detail.description.slice(0, 160),
+      type: "article",
+    },
+  };
 }
 
 export default async function ProductPage({ params }: PageProps) {
