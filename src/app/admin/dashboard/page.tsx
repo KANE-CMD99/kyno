@@ -5,9 +5,13 @@ import { useRouter } from "next/navigation";
 import type { ProductRecord } from "@/db/products-store";
 import AdminProductList from "../AdminProductList";
 import AdminProductForm from "../AdminProductForm";
+import AdminAffiliates from "../AdminAffiliates";
+
+type Tab = "products" | "affiliates";
 
 export default function AdminDashboardPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
+  const [tab, setTab] = useState<Tab>("products");
   const [view, setView] = useState<"list" | { mode: "create" } | { mode: "edit"; product: ProductRecord }>("list");
   const router = useRouter();
 
@@ -33,9 +37,22 @@ export default function AdminDashboardPage() {
     <div className="min-h-screen bg-neutral-100">
       <div className="border-b border-neutral-200 bg-white px-6 py-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <div>
+          <div className="flex items-center gap-6">
             <h1 className="text-lg font-bold text-neutral-900">Admin Panel</h1>
-            <p className="text-xs text-neutral-500">Product management</p>
+            <div className="flex rounded-lg bg-neutral-100 p-1">
+              <button
+                onClick={() => { setTab("products"); setView("list"); }}
+                className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${tab === "products" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-700"}`}
+              >
+                Products
+              </button>
+              <button
+                onClick={() => setTab("affiliates")}
+                className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${tab === "affiliates" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-700"}`}
+              >
+                Affiliates
+              </button>
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <a href="/" className="text-xs text-blue-600 hover:text-blue-700">View Site</a>
@@ -50,7 +67,9 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="mx-auto max-w-6xl px-6 py-8">
-        {view === "list" ? (
+        {tab === "affiliates" ? (
+          <AdminAffiliates />
+        ) : view === "list" ? (
           <AdminProductList
             onEdit={(product) => setView({ mode: "edit", product })}
             onAdd={() => setView({ mode: "create" })}

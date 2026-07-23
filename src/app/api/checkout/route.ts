@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createOrder } from "@/db/storage";
+import { convertClick } from "@/db/affiliates";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder");
 
@@ -32,6 +33,7 @@ export async function POST(req: Request) {
         metadata: {
           customer_name: name || "",
           product_ids: items.map((i: { id: string }) => i.id).join(","),
+          aff_code: req.headers.get("cookie")?.match(/kyno_affiliate=([^;]+)/)?.[1] || "",
         },
         line_items: lineItems,
         payment_method_types: ["card"],
@@ -55,6 +57,14 @@ export async function POST(req: Request) {
             createdAt: now,
           });
         }
+
+        // Record affiliate commission in demo mode
+        const affCode = req.headers.get("cookie")?.match(/kyno_affiliate=([^;]+)/)?.[1];
+        if (affCode) {
+          const total = items.reduce((sum: number, i: { price: number }) => sum + i.price, 0);
+          convertClick(affCode, 0, total);
+        }
+
         return NextResponse.json({ url: `${origin}/checkout/success?demo=true` });
       }
       throw stripeErr;

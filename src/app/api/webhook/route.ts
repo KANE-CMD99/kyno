@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createOrder } from "@/db/storage";
-import { getAllProducts } from "@/db/products-store";
+import { convertClick } from "@/db/affiliates";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder");
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
@@ -50,6 +50,14 @@ export async function POST(req: Request) {
     }
 
     console.log(`Orders created for ${email} — ${lineItems.length} items`);
+
+    // Record affiliate commission
+    const affCode = session.metadata?.aff_code;
+    if (affCode) {
+      const total = session.amount_total ? session.amount_total / 100 : 0;
+      convertClick(affCode, 0, total);
+      console.log(`Affiliate commission recorded for code: ${affCode}`);
+    }
   } catch (err) {
     console.error("Failed to create orders:", err);
   }
