@@ -63,7 +63,8 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/privacy)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/terms)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/license)",
-      "Bash(taskkill //F //PID 40452)"
+      "Bash(taskkill //F //PID 40452)",
+      "Bash(curl -s -X POST http://localhost:3000/api/checkout -H 'Content-Type: application/json' -d '{\"items\":[{\"id\":\"1\",\"name\":\"Photo Presets Bundle\",\"price\":39,\"quantity\":1}],\"email\":\"test@kyno.dev\",\"name\":\"Test User\"}')"
     ]
   }
 }
