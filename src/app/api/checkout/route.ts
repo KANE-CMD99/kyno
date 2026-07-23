@@ -31,6 +31,7 @@ export async function POST(req: Request) {
       customer_email: email || undefined,
       metadata: {
         customer_name: name || "",
+        product_ids: items.map((i: { id: string }) => i.id).join(","),
       },
       line_items: lineItems,
       payment_method_types: ["card"],

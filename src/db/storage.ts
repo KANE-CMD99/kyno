@@ -33,6 +33,8 @@ export interface OrderRecord {
   productId: string;
   productName: string;
   price: number;
+  customerEmail?: string;
+  customerName?: string;
   createdAt: string;
 }
 

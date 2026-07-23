@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import crypto from "crypto";
+import { createOrder } from "@/db/storage";
+import { getAllProducts } from "@/db/products-store";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder");
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
@@ -17,13 +18,40 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const email = session.customer_details?.email || session.customer_email;
-    const name = session.metadata?.customer_name || "";
+  if (event.type !== "checkout.session.completed") {
+    return NextResponse.json({ received: true });
+  }
 
-    console.log(` Order completed for ${email} — ${session.amount_total ? session.amount_total / 100 : 0} USD`);
-    // TODO: trigger email with download links
+  const session = event.data.object as Stripe.Checkout.Session;
+  const email = session.customer_details?.email || session.customer_email || "";
+  const name = session.metadata?.customer_name || "";
+
+  console.log(`Order completed for ${email} — $${session.amount_total ? session.amount_total / 100 : 0}`);
+
+  try {
+    // Retrieve the full session with line items
+    const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+      expand: ["line_items.data.price.product"],
+    });
+
+    const lineItems = fullSession.line_items?.data ?? [];
+    const productIdsRaw = (session.metadata?.product_ids ?? "").split(",").filter(Boolean);
+
+    for (const item of lineItems) {
+      createOrder({
+        userId: 0,
+        productId: productIdsRaw.shift() ?? "unknown",
+        productName: item.description ?? "Product",
+        price: item.amount_total / 100,
+        customerEmail: email,
+        customerName: name,
+        createdAt: new Date().toISOString(),
+      });
+    }
+
+    console.log(`Orders created for ${email} — ${lineItems.length} items`);
+  } catch (err) {
+    console.error("Failed to create orders:", err);
   }
 
   return NextResponse.json({ received: true });
