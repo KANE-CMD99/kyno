@@ -48,8 +48,8 @@ export async function POST(req: Request) {
       creator.passwordHash = `${salt}:${hash}`;
     }
     saveCreators(creators);
-    return NextResponse.json({ success: true, creator: { id: creator.id, username: creator.username, name: creator.name } });
-    return NextResponse.json({ success: true, creator: { id: creator.id, username: creator.username, name: creator.name } });
+    const result = { id: creator.id, username: creator.username, name: creator.name };
+    return NextResponse.json({ success: true, creator: result });
   }
 
   // Create new
