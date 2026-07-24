@@ -74,7 +74,9 @@
       "Bash(curl -s \"http://localhost:55789/api/downloads?email=test@kyno.dev\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:55789/checkout/success?demo=true&email=test@kyno.dev\")",
       "Bash(rm -rf \"E:/KYNO/web/web -mian/src/app/@[username]\" 2>/dev/null; echo \"cleaned\")",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:3000/admin/dashboard\" -H \"Cookie: kyno_admin_session=kyno-admin-token-secure\")"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:3000/admin/dashboard\" -H \"Cookie: kyno_admin_session=kyno-admin-token-secure\")",
+      "Bash(curl -s -X POST http://localhost:3000/admin/api/creators -H 'Content-Type: application/json' -H 'Cookie: kyno_admin_session=kyno-admin-token-secure' -d '{\"id\":\"663154\",\"name\":\"高从松\",\"username\":\"songgao\",\"email\":\"153963592@qq.com\",\"bio\":\"优秀设计师\",\"commission\":20,\"status\":\"active\",\"permissions\":{\"canUpload\":true,\"canEdit\":true,\"canDelete\":true,\"canViewAnalytics\":true}}')",
+      "Bash(curl -s -X POST http://localhost:3000/admin/api/creators -H 'Content-Type: application/json' -H 'Cookie: kyno_admin_session=kyno-admin-token-secure' -d '{\"id\":\"663154\",\"name\":\"高从松\",\"username\":\"songgao\",\"email\":\"153963592@qq.com\",\"password\":\"newpass123\",\"bio\":\"优秀设计师\",\"commission\":20,\"status\":\"active\",\"permissions\":{\"canUpload\":true,\"canEdit\":true,\"canDelete\":true,\"canViewAnalytics\":true}}')"
     ]
   }
 }
