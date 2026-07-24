@@ -45,6 +45,8 @@ export default function AuthModal({ isOpen, initialMode = "signin", onClose, onS
         onClose();
         if ((result as { isAdmin?: boolean }).isAdmin) {
           router.push("/admin/dashboard");
+        } else if ((result as { isCreator?: boolean }).isCreator) {
+          router.push("/creator/dashboard");
         } else {
           onSuccess?.();
         }

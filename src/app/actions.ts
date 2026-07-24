@@ -2,8 +2,10 @@
 
 import crypto from "crypto";
 import { getUserByEmail, createUser } from "@/db/storage";
+import { getCreatorByEmail, verifyCreatorPassword } from "@/db/creators";
 import { setSessionCookie } from "@/lib/auth";
 import { validateAdminCredentials, setAdminSession } from "@/lib/admin-auth";
+import { setCreatorSession } from "@/lib/creator-auth";
 
 function hashPassword(password: string): string {
   const salt = crypto.randomBytes(16).toString("hex");
