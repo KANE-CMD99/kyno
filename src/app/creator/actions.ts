@@ -1,5 +1,7 @@
 "use server";
 
+"use server";
+
 import { getCreatorByEmail, verifyCreatorPassword } from "@/db/creators";
 import { setCreatorSession } from "@/lib/creator-auth";
 
