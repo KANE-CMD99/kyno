@@ -1,6 +1,3 @@
-import { stats } from "@/data/site";
-import StatsRow from "./StatsRow";
-
 const placeholders = [
   { label: "Photo Presets", emoji: String.fromCodePoint(0x1F4F7) },
   { label: "Sans Serif", emoji: String.fromCodePoint(0x1F524) },
@@ -54,12 +51,8 @@ export default function HeroSection() {
           </div>
 
           <p className="mt-4 text-sm text-neutral-400">
-            Free updates &middot; Lifetime access &middot; 10+ products
+            Free updates &middot; Lifetime access
           </p>
-
-          <div className="mt-16">
-            <StatsRow stats={stats} />
-          </div>
         </div>
 
         {/* Right: Product mosaic */}
