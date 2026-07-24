@@ -157,6 +157,7 @@ export default function AuthModal({ isOpen, initialMode = "signin", onClose, onS
                     type={showPassword ? "text" : "password"}
                     required
                     minLength={6}
+                    autoComplete={mode === "signup" ? "new-password" : "current-password"}
                     className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 pr-10 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                     placeholder="••••••••"
                   />
