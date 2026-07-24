@@ -56,12 +56,14 @@ export default function PrivacyPage() {
               your data.
             </p>
 
-            <h2 className="mt-8 text-lg font-bold text-neutral-900">6. Your Rights (CCPA)</h2>
+            <h2 className="mt-8 text-lg font-bold text-neutral-900">6. Your Rights (GDPR &amp; CCPA)</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-              If you are a California resident, you have the right to: know what personal information we
-              have collected about you, request deletion of your data, and opt out of the sale of your
-              personal information. Kyno does not sell personal information. To exercise these rights,
-              email us at hello@kyno.dev.
+              <strong>CCPA (California):</strong> You have the right to know what personal information we have
+              collected about you, request deletion of your data, and opt out of the sale of your personal
+              information. Kyno does not sell personal information.{" "}
+              <strong>GDPR (EU/EEA):</strong> You have the right to access, rectify, erase, restrict processing,
+              and data portability. Our lawful basis for processing is contract performance (orders) and consent
+              (newsletter). To exercise any of these rights, email us at hello@kyno.dev. We respond within 30 days.
             </p>
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">7. Children&apos;s Privacy</h2>

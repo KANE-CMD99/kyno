@@ -160,7 +160,8 @@ export default function CheckoutPage() {
                 </button>
 
                 <p className="mt-3 text-center text-xs text-neutral-400">
-                  You will be redirected to Stripe to complete your payment securely. All sales are final per our{" "}
+                  You will be redirected to Stripe to complete your payment securely. Prices shown do not include
+                  local sales tax, VAT, or GST where applicable. All sales are final per our{" "}
                   <Link href="/terms" className="text-blue-600 hover:text-blue-700">Refund Policy</Link>.
                 </p>
 

@@ -21,9 +21,8 @@ export default function CookieBanner() {
     <div className="fixed bottom-0 left-0 right-0 z-[300] border-t border-neutral-200 bg-white px-6 py-4 shadow-lg">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-center sm:flex-row sm:text-left">
         <p className="text-sm text-neutral-600">
-          This site uses essential cookies for sessions and shopping cart functionality.
-          By continuing, you agree to our{" "}
-          <a href="/privacy" className="text-blue-600 underline hover:text-blue-700">Privacy Policy</a>.
+          We use essential cookies for authentication, shopping cart, and language preferences. No third-party tracking.{" "}
+          <a href="/privacy" className="text-blue-600 underline hover:text-blue-700">Learn more</a>
         </p>
         <button
           onClick={accept}
