@@ -36,6 +36,7 @@ export async function POST(req: Request) {
     if (!creator) return NextResponse.json({ success: false, error: "Creator not found" }, { status: 404 });
 
     creator.name = name;
+    creator.username = username.toLowerCase();
     creator.email = email.toLowerCase().trim();
     creator.bio = bio || "";
     creator.commission = commission || 20;
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
       creator.passwordHash = `${salt}:${hash}`;
     }
     saveCreators(creators);
+    return NextResponse.json({ success: true, creator: { id: creator.id, username: creator.username, name: creator.name } });
     return NextResponse.json({ success: true, creator: { id: creator.id, username: creator.username, name: creator.name } });
   }
 

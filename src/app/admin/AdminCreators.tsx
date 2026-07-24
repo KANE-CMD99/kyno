@@ -104,7 +104,7 @@ export default function AdminCreators() {
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">Username</label>
-              <input value={username} onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ""))} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm font-mono outline-none focus:border-blue-500" placeholder="sarah" disabled={!!editingId} />
+              <input value={username} onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ""))} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm font-mono outline-none focus:border-blue-500" placeholder="sarah" />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">Email</label>
