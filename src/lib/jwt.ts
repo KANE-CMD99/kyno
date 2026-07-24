@@ -1,9 +1,7 @@
+import crypto from "crypto";
+
 function base64URL(str: string): string {
   return str.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-}
-
-function utf8ToBytes(str: string): Uint8Array<ArrayBuffer> {
-  return new TextEncoder().encode(str) as Uint8Array<ArrayBuffer>;
 }
 
 export async function sign(payload: object, secret: string): Promise<string> {
@@ -12,20 +10,18 @@ export async function sign(payload: object, secret: string): Promise<string> {
     Buffer.from(JSON.stringify({ ...payload, exp: Math.floor(Date.now() / 1000) + 12 * 3600 })).toString("base64")
   );
   const data = `${header}.${body}`;
-  const key = await crypto.subtle.importKey("raw", utf8ToBytes(secret) as BufferSource, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  const sig = base64URL(Buffer.from(await crypto.subtle.sign("HMAC", key, utf8ToBytes(data) as BufferSource)).toString("base64"));
+  const sig = base64URL(crypto.createHmac("sha256", secret).update(data).digest("base64"));
   return `${data}.${sig}`;
 }
 
 export async function verify(token: string, secret: string): Promise<Record<string, unknown> | null> {
   try {
-    const [, body] = token.split(".");
-    const key = await crypto.subtle.importKey("raw", utf8ToBytes(secret) as BufferSource, { name: "HMAC", hash: "SHA-256" }, false, ["verify"]);
-    const [headerB64, bodyB64, sigB64] = token.split(".");
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    const [headerB64, bodyB64, sigB64] = parts;
     const data = `${headerB64}.${bodyB64}`;
-    const sigBytes = new Uint8Array(Buffer.from(sigB64, "base64")) as BufferSource;
-    const valid = await crypto.subtle.verify("HMAC", key, sigBytes as BufferSource, utf8ToBytes(data) as BufferSource);
-    if (!valid) return null;
+    const expectedSig = base64URL(crypto.createHmac("sha256", secret).update(data).digest("base64"));
+    if (!crypto.timingSafeEqual(Buffer.from(sigB64, "base64"), Buffer.from(expectedSig, "base64"))) return null;
     const payload = JSON.parse(Buffer.from(bodyB64, "base64").toString());
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) return null;
     return payload;
