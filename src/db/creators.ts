@@ -15,6 +15,13 @@ export interface CreatorRecord {
   commission: number; // 20 = 20% to Kyno
   totalSales: number;
   totalEarnings: number;
+  status: "active" | "suspended";
+  permissions: {
+    canUpload: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
+    canViewAnalytics: boolean;
+  };
   createdAt: string;
 }
 
@@ -51,6 +58,8 @@ export function createCreator(data: {
   password: string;
   avatarUrl?: string;
   commission?: number;
+  status?: "active" | "suspended";
+  permissions?: { canUpload: boolean; canEdit: boolean; canDelete: boolean; canViewAnalytics: boolean };
 }): CreatorRecord {
   const creators = getCreators();
   const salt = crypto.randomBytes(16).toString("hex");
@@ -68,6 +77,8 @@ export function createCreator(data: {
     commission: data.commission || 20,
     totalSales: 0,
     totalEarnings: 0,
+    status: data.status || "active",
+    permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true },
     createdAt: new Date().toISOString(),
   };
   creators.push(creator);
