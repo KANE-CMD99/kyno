@@ -81,3 +81,16 @@ export async function PUT(req: Request) {
   saveCreators(creators);
   return NextResponse.json({ success: true });
 }
+
+export async function DELETE(req: Request) {
+  if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  if (!id) return NextResponse.json({ success: false, error: "Missing id" }, { status: 400 });
+
+  const creators = getCreators();
+  const filtered = creators.filter((c) => c.id !== id);
+  if (filtered.length === creators.length) return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });
+  saveCreators(filtered);
+  return NextResponse.json({ success: true });
+}

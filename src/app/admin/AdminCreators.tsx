@@ -82,6 +82,13 @@ export default function AdminCreators() {
     if (res.ok) load();
   };
 
+  const handleDelete = async (creator: Creator) => {
+    if (!confirm(`Delete "${creator.name}" permanently? This cannot be undone.`)) return;
+    const res = await fetch(`/admin/api/creators?id=${creator.id}`, { method: "DELETE" });
+    if (res.ok) load();
+    else setMsg("Delete failed");
+  };
+
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
@@ -195,6 +202,7 @@ export default function AdminCreators() {
                     </td>
                     <td className="px-5 py-3 text-right">
                       <button onClick={() => startEdit(c)} className="text-xs font-medium text-blue-600 hover:text-blue-700 mr-3">Edit</button>
+                      <button onClick={() => handleDelete(c)} className="text-xs font-medium text-red-500 hover:text-red-600">Delete</button>
                     </td>
                   </tr>
                 ))
