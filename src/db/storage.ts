@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 
@@ -35,6 +36,8 @@ export interface OrderRecord {
   price: number;
   customerEmail?: string;
   customerName?: string;
+  downloadToken: string;
+  downloadClaimed: boolean;
   createdAt: string;
 }
 
@@ -67,11 +70,29 @@ export function getOrders(userId: number): OrderRecord[] {
   return readJSON<OrderRecord[]>("orders.json", []).filter((o) => o.userId === userId);
 }
 
-export function createOrder(order: Omit<OrderRecord, "id">): OrderRecord {
+export function createOrder(order: Omit<OrderRecord, "id" | "downloadToken" | "downloadClaimed">): OrderRecord {
   const orders = readJSON<OrderRecord[]>("orders.json", []);
   const id = orders.length > 0 ? Math.max(...orders.map((o) => o.id)) + 1 : 1;
-  const newOrder: OrderRecord = { ...order, id };
+  const newOrder: OrderRecord = {
+    ...order,
+    id,
+    downloadToken: crypto.randomBytes(16).toString("hex"),
+    downloadClaimed: false,
+  };
   orders.push(newOrder);
   writeJSON("orders.json", orders);
   return newOrder;
+}
+
+export function getOrderByToken(token: string): OrderRecord | undefined {
+  return readJSON<OrderRecord[]>("orders.json", []).find((o) => o.downloadToken === token);
+}
+
+export function markOrderClaimed(orderId: number) {
+  const orders = readJSON<OrderRecord[]>("orders.json", []);
+  const order = orders.find((o) => o.id === orderId);
+  if (order) {
+    order.downloadClaimed = true;
+    writeJSON("orders.json", orders);
+  }
 }

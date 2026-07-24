@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createOrder } from "@/db/storage";
 import { convertClick } from "@/db/affiliates";
+import { sendDownloadEmail } from "@/lib/email";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder", {
+  timeout: 8000,
+});
 
 export async function POST(req: Request) {
   try {
@@ -46,8 +49,9 @@ export async function POST(req: Request) {
       // Stripe API unreachable (common in China) — fall through to demo mode
       if (err.type === "StripeConnectionError" || err.code === "ETIMEDOUT" || err.code === "ECONNREFUSED") {
         const now = new Date().toISOString();
+        const orders: Array<ReturnType<typeof createOrder>> = [];
         for (const item of items) {
-          createOrder({
+          const order = createOrder({
             userId: 0,
             productId: item.id,
             productName: item.name,
@@ -56,6 +60,7 @@ export async function POST(req: Request) {
             customerName: name || "",
             createdAt: now,
           });
+          orders.push(order);
         }
 
         // Record affiliate commission in demo mode
@@ -65,7 +70,12 @@ export async function POST(req: Request) {
           convertClick(affCode, 0, total);
         }
 
-        return NextResponse.json({ url: `${origin}/checkout/success?demo=true` });
+        // Send download email
+        if (orders.length > 0 && email) {
+          sendDownloadEmail(orders, email).catch((e) => console.error("Demo email failed:", e));
+        }
+
+        return NextResponse.json({ url: `${origin}/checkout/success?demo=true&email=${encodeURIComponent(email || "")}` });
       }
       throw stripeErr;
     }
