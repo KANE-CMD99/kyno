@@ -2,8 +2,7 @@
   "id": "9",
   "name": "Portfolio Template",
   "category": "Templates",
-  "price": 34,
-  "originalPrice": 49,
+  "price": 1,
   "creator": "Kyno",
   "description": "A modern portfolio website template built with Next.js and Tailwind CSS. Features smooth page transitions, project case studies, and a minimal aesthetic that lets your work take center stage. Deploy to Vercel in minutes.",
   "features": [
