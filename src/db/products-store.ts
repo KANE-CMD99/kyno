@@ -15,6 +15,8 @@ export interface ProductRecord {
   includes: string[];
   previewImages: string[];
   downloadFile?: { url: string; name: string; size: number };
+  creatorId?: string;
+  creatorName?: string;
 }
 
 export function getAllProducts(): ProductRecord[] {

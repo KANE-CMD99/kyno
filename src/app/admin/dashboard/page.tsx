@@ -6,8 +6,9 @@ import type { ProductRecord } from "@/db/products-store";
 import AdminProductList from "../AdminProductList";
 import AdminProductForm from "../AdminProductForm";
 import AdminAffiliates from "../AdminAffiliates";
+import AdminCreators from "../AdminCreators";
 
-type Tab = "products" | "affiliates";
+type Tab = "products" | "creators" | "affiliates";
 
 export default function AdminDashboardPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
@@ -56,6 +57,12 @@ export default function AdminDashboardPage() {
                 Products
               </button>
               <button
+                onClick={() => setTab("creators")}
+                className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${tab === "creators" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-700"}`}
+              >
+                Creators
+              </button>
+              <button
                 onClick={() => setTab("affiliates")}
                 className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${tab === "affiliates" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-700"}`}
               >
@@ -77,7 +84,9 @@ export default function AdminDashboardPage() {
 
       {/* Main content */}
       <div className="mx-auto max-w-7xl px-6 py-12">
-        {tab === "affiliates" ? (
+        {tab === "creators" ? (
+          <AdminCreators />
+        ) : tab === "affiliates" ? (
           <AdminAffiliates />
         ) : view === "list" ? (
           <AdminProductList
