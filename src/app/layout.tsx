@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CartProvider } from "@/components/CartContext";
+import ClientLayout from "@/components/ClientLayout";
 import CookieBanner from "@/components/CookieBanner";
 import "./globals.css";
 
@@ -45,11 +45,11 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <CartProvider>
+        <ClientLayout>
           <div id="main-content" tabIndex={-1} className="outline-none">
             {children}
           </div>
-        </CartProvider>
+        </ClientLayout>
         <CookieBanner />
       </body>
     </html>
