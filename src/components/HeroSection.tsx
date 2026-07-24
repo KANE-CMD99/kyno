@@ -26,11 +26,11 @@ export default function HeroSection() {
         {/* Left: Text */}
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-neutral-900 md:text-7xl">
-            Premium
+            Premium tools
             <br />
-            Stock Photos,
+            for people who
             <br />
-            Fonts &amp; Templates
+            make things
           </h1>
 
           <p className="mx-auto mt-6 max-w-md text-lg leading-relaxed text-neutral-500 md:mx-0">
