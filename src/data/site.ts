@@ -88,18 +88,18 @@ export const services: ServiceItem[] = [
 
 export const products: ProductItem[] = [
   // Photos
-  { id: "1", name: "Photo Presets Bundle", category: "Photos", price: "$39", originalPrice: "$59", creator: "Kyno" },
-  { id: "2", name: "Aerial Landscapes Pack", category: "Photos", price: "$27", originalPrice: "$39", creator: "Kyno" },
-  { id: "3", name: "Minimal Backgrounds", category: "Photos", price: "$22", creator: "Kyno" },
+  { id: "1", name: "Photo Presets Bundle", category: "Photos", price: "$1", creator: "Kyno" },
+  { id: "2", name: "Aerial Landscapes Pack", category: "Photos", price: "$1", creator: "Kyno" },
+  { id: "3", name: "Minimal Backgrounds", category: "Photos", price: "$1", creator: "Kyno" },
   // Fonts
-  { id: "4", name: "Modern Sans Serif", category: "Fonts", price: "$24", creator: "Kyno" },
-  { id: "5", name: "Handwritten Script", category: "Fonts", price: "$18", creator: "Kyno" },
-  { id: "6", name: "Display Typeface", category: "Fonts", price: "$32", originalPrice: "$45", creator: "Kyno" },
+  { id: "4", name: "Modern Sans Serif", category: "Fonts", price: "$1", creator: "Kyno" },
+  { id: "5", name: "Handwritten Script", category: "Fonts", price: "$1", creator: "Kyno" },
+  { id: "6", name: "Display Typeface", category: "Fonts", price: "$1", creator: "Kyno" },
   // Templates
-  { id: "7", name: "Ultimate UI Kit", category: "Templates", price: "$49", originalPrice: "$79", creator: "Kyno" },
-  { id: "8", name: "Design System Pro", category: "Templates", price: "$99", creator: "Kyno" },
-  { id: "9", name: "Portfolio Template", category: "Templates", price: "$34", originalPrice: "$49", creator: "Kyno" },
-  { id: "10", name: "Landing Page Kit", category: "Templates", price: "$44", originalPrice: "$59", creator: "Kyno" },
+  { id: "7", name: "Ultimate UI Kit", category: "Templates", price: "$1", creator: "Kyno" },
+  { id: "8", name: "Design System Pro", category: "Templates", price: "$1", creator: "Kyno" },
+  { id: "9", name: "Portfolio Template", category: "Templates", price: "$1", creator: "Kyno" },
+  { id: "10", name: "Landing Page Kit", category: "Templates", price: "$1", creator: "Kyno" },
 ];
 
 export const productSections = [
