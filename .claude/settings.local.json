@@ -72,7 +72,9 @@
       "Bash(node -e \"var c=require\\('crypto'\\);var f=require\\('fs'\\);var o={id:1,userId:0,productId:'1',productName:'Photo Presets Bundle',price:39,customerEmail:'test@kyno.dev',customerName:'Test Buyer',downloadToken:c.randomBytes\\(16\\).toString\\('hex'\\),downloadClaimed:false,createdAt:new Date\\(\\).toISOString\\(\\)};f.mkdirSync\\('data',{recursive:true}\\);f.writeFileSync\\('data/orders.json',JSON.stringify\\([o],null,2\\)\\);console.log\\('token='+o.downloadToken\\);\")",
       "Bash(curl -s \"http://localhost:55789/download/f3e991a9015d63bb3a66b8734f287c7c\")",
       "Bash(curl -s \"http://localhost:55789/api/downloads?email=test@kyno.dev\")",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:55789/checkout/success?demo=true&email=test@kyno.dev\")"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:55789/checkout/success?demo=true&email=test@kyno.dev\")",
+      "Bash(rm -rf \"E:/KYNO/web/web -mian/src/app/@[username]\" 2>/dev/null; echo \"cleaned\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:3000/admin/dashboard\" -H \"Cookie: kyno_admin_session=kyno-admin-token-secure\")"
     ]
   }
 }
