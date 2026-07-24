@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
+import { DATA_DIR } from "@/lib/data-dir";
 
-const AFFILIATE_FILE = path.join(process.cwd(), "data", "affiliates.json");
+const AFFILIATE_FILE = path.join(DATA_DIR, "affiliates.json");
 
 export interface Affiliate {
   id: string;
@@ -53,7 +54,7 @@ export function createAffiliate(data: Omit<Affiliate, "id" | "totalEarnings" | "
   return newAffiliate;
 }
 
-const CLICKS_FILE = path.join(process.cwd(), "data", "affiliate-clicks.json");
+const CLICKS_FILE = path.join(DATA_DIR, "affiliate-clicks.json");
 
 export function recordClick(code: string) {
   const clicks: AffiliateClick[] = (() => {

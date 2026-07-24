@@ -1,8 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-
-const DATA_DIR = path.join(process.cwd(), "data");
+import { DATA_DIR } from "@/lib/data-dir";
 
 function readJSON<T>(file: string, fallback: T): T {
   try {

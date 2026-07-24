@@ -1,8 +1,9 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import { DATA_DIR } from "@/lib/data-dir";
 
-const CREATORS_FILE = path.join(process.cwd(), "data", "creators.json");
+const CREATORS_FILE = path.join(DATA_DIR, "creators.json");
 
 export interface CreatorRecord {
   id: string;

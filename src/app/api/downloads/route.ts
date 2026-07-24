@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { DATA_DIR } from "@/lib/data-dir";
 
 function readOrders() {
   try {
-    const p = path.join(process.cwd(), "data", "orders.json");
+    const p = path.join(DATA_DIR, "orders.json");
     if (!fs.existsSync(p)) return [];
     return JSON.parse(fs.readFileSync(p, "utf-8"));
   } catch { return []; }

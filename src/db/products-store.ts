@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
+import { DATA_DIR } from "@/lib/data-dir";
 
-const STORE_PATH = path.join(process.cwd(), "data", "products-store.json");
+const STORE_PATH = path.join(DATA_DIR, "products-store.json");
 
 export interface ProductRecord {
   id: string;

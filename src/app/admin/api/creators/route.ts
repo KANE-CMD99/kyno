@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
 import { getCreators, createCreator } from "@/db/creators";
+import { DATA_DIR } from "@/lib/data-dir";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 
-const CREATORS_FILE = path.join(process.cwd(), "data", "creators.json");
+const CREATORS_FILE = path.join(DATA_DIR, "creators.json");
 
 function saveCreators(creators: unknown) {
   const dir = path.dirname(CREATORS_FILE);
