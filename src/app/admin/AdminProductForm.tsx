@@ -7,14 +7,15 @@ import type { ProductRecord } from "@/db/products-store";
 
 interface AdminProductFormProps {
   product: ProductRecord | null;
+  defaultCategory?: string;
   onSaved: () => void;
 }
 
 const CATEGORIES = ["Photos", "Fonts", "Templates"];
 
-export default function AdminProductForm({ product, onSaved }: AdminProductFormProps) {
+export default function AdminProductForm({ product, defaultCategory, onSaved }: AdminProductFormProps) {
   const [name, setName] = useState(product?.name || "");
-  const [category, setCategory] = useState(product?.category || "Photos");
+  const [category, setCategory] = useState(product?.category || defaultCategory || "Photos");
   const [price, setPrice] = useState(product?.price?.toString() || "");
   const [originalPrice, setOriginalPrice] = useState(product?.originalPrice?.toString() || "");
   const [creator, setCreator] = useState(product?.creator || "Kyno");

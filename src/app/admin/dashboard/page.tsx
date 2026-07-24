@@ -12,7 +12,11 @@ type Tab = "products" | "affiliates";
 export default function AdminDashboardPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
   const [tab, setTab] = useState<Tab>("products");
-  const [view, setView] = useState<"list" | { mode: "create" } | { mode: "edit"; product: ProductRecord }>("list");
+  const [view, setView] = useState<
+    "list"
+    | { mode: "create"; category?: string }
+    | { mode: "edit"; product: ProductRecord }
+  >("list");
   const router = useRouter();
 
   useEffect(() => {
@@ -33,10 +37,15 @@ export default function AdminDashboardPage() {
     );
   }
 
+  const handleAdd = (category?: string) => {
+    setView({ mode: "create", category });
+  };
+
   return (
-    <div className="min-h-screen bg-neutral-100">
-      <div className="border-b border-neutral-200 bg-white px-6 py-4">
-        <div className="mx-auto flex max-w-6xl items-center justify-between">
+    <div className="min-h-screen bg-[#FAFAFA]">
+      {/* Top bar — same style as homepage Nav */}
+      <div className="sticky top-0 z-50 border-b border-neutral-200 bg-white px-6 py-3">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div className="flex items-center gap-6">
             <h1 className="text-lg font-bold text-neutral-900">Admin Panel</h1>
             <div className="flex rounded-lg bg-neutral-100 p-1">
@@ -66,13 +75,14 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-6 py-8">
+      {/* Main content */}
+      <div className="mx-auto max-w-7xl px-6 py-12">
         {tab === "affiliates" ? (
           <AdminAffiliates />
         ) : view === "list" ? (
           <AdminProductList
             onEdit={(product) => setView({ mode: "edit", product })}
-            onAdd={() => setView({ mode: "create" })}
+            onAdd={handleAdd}
           />
         ) : (
           <div>
@@ -80,10 +90,11 @@ export default function AdminDashboardPage() {
               onClick={() => setView("list")}
               className="mb-6 text-sm text-blue-600 hover:text-blue-700"
             >
-              &larr; Back to product list
+              &larr; Back to products
             </button>
             <AdminProductForm
               product={view.mode === "edit" ? view.product : null}
+              defaultCategory={view.mode === "create" ? view.category : undefined}
               onSaved={() => setView("list")}
             />
           </div>
