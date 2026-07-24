@@ -27,3 +27,6 @@ yarn-error.log*
 # local runtime data
 /data/users.json
 /data/orders.json
+
+# user-uploaded content
+/public/uploads/
