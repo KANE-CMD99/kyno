@@ -22,11 +22,45 @@ export default function AdminProductForm({ product, defaultCategory, onSaved }: 
   const [description, setDescription] = useState(product?.description || "");
   const [features, setFeatures] = useState<string[]>(product?.features || [""]);
   const [includes, setIncludes] = useState<string[]>(product?.includes || [""]);
+  const [uploadedImages, setUploadedImages] = useState<string[]>(product?.previewImages || []);
+  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
   const isEditing = !!product?.id;
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Only image files are allowed");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image must be under 5MB");
+      return;
+    }
+
+    setUploading(true);
+    setError("");
+    const form = new FormData();
+    form.append("file", file);
+
+    const res = await fetch("/admin/api/upload", { method: "POST", body: form });
+    const data = await res.json();
+    if (data.url) {
+      setUploadedImages((prev) => [...prev, data.url]);
+    } else {
+      setError(data.error || "Upload failed");
+    }
+    setUploading(false);
+  };
+
+  const removeImage = (url: string) => {
+    setUploadedImages((prev) => prev.filter((u) => u !== url));
+  };
 
   const addLine = (setter: React.Dispatch<React.SetStateAction<string[]>>) => {
     setter((prev) => [...prev, ""]);
@@ -56,7 +90,7 @@ export default function AdminProductForm({ product, defaultCategory, onSaved }: 
       description,
       features: features.filter((f) => f.trim()),
       includes: includes.filter((f) => f.trim()),
-      previewImages: [],
+      previewImages: uploadedImages,
     };
 
     const result = isEditing
@@ -121,6 +155,49 @@ export default function AdminProductForm({ product, defaultCategory, onSaved }: 
           <label className="block text-xs font-medium text-neutral-700">Description</label>
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none" />
         </div>
+      </div>
+
+      {/* Product Images */}
+      <div className="rounded-xl border border-neutral-200 bg-white p-6 space-y-4">
+        <h3 className="text-sm font-semibold text-neutral-900">Product Images</h3>
+
+        {/* Existing images */}
+        {uploadedImages.length > 0 && (
+          <div className="flex flex-wrap gap-3">
+            {uploadedImages.map((url) => (
+              <div key={url} className="group relative h-24 w-24 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
+                <img src={url} alt="" className="h-full w-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removeImage(url)}
+                  className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                >
+                  <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                    <path d="M5 5l10 10M15 5L5 15" />
+                  </svg>
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Upload area */}
+        <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-neutral-300 bg-neutral-50 px-6 py-8 text-neutral-400 transition-colors hover:border-blue-400 hover:text-blue-600">
+          {uploading ? (
+            <span className="text-sm">Uploading...</span>
+          ) : (
+            <>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span className="text-sm font-medium">Click to upload image</span>
+              <span className="text-xs">PNG, JPG or WebP · Max 5MB</span>
+            </>
+          )}
+          <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading} />
+        </label>
       </div>
 
       {/* Features */}
