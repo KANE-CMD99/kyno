@@ -23,44 +23,51 @@ export default function AdminProductForm({ product, defaultCategory, onSaved }: 
   const [features, setFeatures] = useState<string[]>(product?.features || [""]);
   const [includes, setIncludes] = useState<string[]>(product?.includes || [""]);
   const [uploadedImages, setUploadedImages] = useState<string[]>(product?.previewImages || []);
+  const [downloadFile, setDownloadFile] = useState<{ url: string; name: string; size: number } | undefined>(product?.downloadFile);
   const [uploading, setUploading] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
   const isEditing = !!product?.id;
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const ALLOWED_FILE_TYPES = [
+    "application/zip", "application/x-zip-compressed",
+    "font/otf", "font/ttf", "font/woff2",
+    "application/pdf",
+    "application/octet-stream", // .xmp, .lrtemplate etc
+  ];
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      setError("Only image files are allowed");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setError("Image must be under 5MB");
-      return;
-    }
-
-    setUploading(true);
-    setError("");
-    const form = new FormData();
-    form.append("file", file);
-
+    if (!file.type.startsWith("image/")) { setError("Only image files allowed for preview"); return; }
+    if (file.size > 5 * 1024 * 1024) { setError("Image must be under 5MB"); return; }
+    setUploading(true); setError("");
+    const form = new FormData(); form.append("file", file);
     const res = await fetch("/admin/api/upload", { method: "POST", body: form });
     const data = await res.json();
-    if (data.url) {
-      setUploadedImages((prev) => [...prev, data.url]);
-    } else {
-      setError(data.error || "Upload failed");
-    }
+    if (data.url) setUploadedImages((prev) => [...prev, data.url]);
+    else setError(data.error || "Upload failed");
     setUploading(false);
   };
 
-  const removeImage = (url: string) => {
-    setUploadedImages((prev) => prev.filter((u) => u !== url));
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 200 * 1024 * 1024) { setError("File must be under 200MB"); return; }
+    setUploadingFile(true); setError("");
+    const form = new FormData(); form.append("file", file);
+    const res = await fetch("/admin/api/upload", { method: "POST", body: form });
+    const data = await res.json();
+    if (data.url) setDownloadFile({ url: data.url, name: file.name, size: file.size });
+    else setError(data.error || "Upload failed");
+    setUploadingFile(false);
   };
+
+  const removeImage = (url: string) => setUploadedImages((prev) => prev.filter((u) => u !== url));
+  const removeFile = () => setDownloadFile(undefined);
 
   const addLine = (setter: React.Dispatch<React.SetStateAction<string[]>>) => {
     setter((prev) => [...prev, ""]);
@@ -91,6 +98,7 @@ export default function AdminProductForm({ product, defaultCategory, onSaved }: 
       features: features.filter((f) => f.trim()),
       includes: includes.filter((f) => f.trim()),
       previewImages: uploadedImages,
+      ...(downloadFile ? { downloadFile } : {}),
     };
 
     const result = isEditing
@@ -157,47 +165,73 @@ export default function AdminProductForm({ product, defaultCategory, onSaved }: 
         </div>
       </div>
 
-      {/* Product Images */}
+      {/* Preview Images */}
       <div className="rounded-xl border border-neutral-200 bg-white p-6 space-y-4">
-        <h3 className="text-sm font-semibold text-neutral-900">Product Images</h3>
+        <div>
+          <h3 className="text-sm font-semibold text-neutral-900">Preview Images</h3>
+          <p className="mt-0.5 text-xs text-neutral-500">Shown on storefront as product thumbnails</p>
+        </div>
 
-        {/* Existing images */}
         {uploadedImages.length > 0 && (
           <div className="flex flex-wrap gap-3">
             {uploadedImages.map((url) => (
               <div key={url} className="group relative h-24 w-24 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-100">
                 <img src={url} alt="" className="h-full w-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => removeImage(url)}
-                  className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                >
-                  <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-                    <path d="M5 5l10 10M15 5L5 15" />
-                  </svg>
+                <button type="button" onClick={() => removeImage(url)}
+                  className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                  <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M5 5l10 10M15 5L5 15" /></svg>
                 </button>
               </div>
             ))}
           </div>
         )}
 
-        {/* Upload area */}
-        <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-neutral-300 bg-neutral-50 px-6 py-8 text-neutral-400 transition-colors hover:border-blue-400 hover:text-blue-600">
-          {uploading ? (
-            <span className="text-sm">Uploading...</span>
-          ) : (
-            <>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              <span className="text-sm font-medium">Click to upload image</span>
-              <span className="text-xs">PNG, JPG or WebP · Max 5MB</span>
-            </>
-          )}
-          <input type="file" accept="image/*" onChange={handleUpload} className="hidden" disabled={uploading} />
+        <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-neutral-300 bg-neutral-50 px-6 py-6 text-neutral-400 transition-colors hover:border-blue-400 hover:text-blue-600">
+          {uploading ? <span className="text-sm">Uploading...</span> : (<>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" />
+            </svg>
+            <span className="text-sm font-medium">Upload preview images</span>
+            <span className="text-xs">PNG, JPG, WebP · Max 5MB each</span>
+          </>)}
+          <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
         </label>
+      </div>
+
+      {/* Digital Product File */}
+      <div className="rounded-xl border border-neutral-200 bg-white p-6 space-y-4">
+        <div>
+          <h3 className="text-sm font-semibold text-neutral-900">Digital Product File</h3>
+          <p className="mt-0.5 text-xs text-neutral-500">The actual downloadable file customers receive after purchase</p>
+        </div>
+
+        {downloadFile ? (
+          <div className="flex items-center justify-between rounded-lg border border-neutral-200 bg-neutral-50 px-4 py-3">
+            <div className="flex items-center gap-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-blue-600">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+              </svg>
+              <div>
+                <p className="text-sm font-medium text-neutral-900">{downloadFile.name}</p>
+                <p className="text-xs text-neutral-400">{(downloadFile.size / 1024 / 1024).toFixed(1)} MB</p>
+              </div>
+            </div>
+            <button type="button" onClick={removeFile} className="rounded p-1 text-neutral-400 transition-colors hover:text-red-500">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 5l10 10M15 5L5 15" /></svg>
+            </button>
+          </div>
+        ) : (
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-neutral-300 bg-neutral-50 px-6 py-6 text-neutral-400 transition-colors hover:border-blue-400 hover:text-blue-600">
+            {uploadingFile ? <span className="text-sm">Uploading...</span> : (<>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              <span className="text-sm font-medium">Upload product file</span>
+              <span className="text-xs">ZIP, OTF, TTF, WOFF2, PDF · Max 200MB</span>
+            </>)}
+            <input type="file" onChange={handleFileUpload} className="hidden" disabled={uploadingFile} />
+          </label>
+        )}
       </div>
 
       {/* Features */}

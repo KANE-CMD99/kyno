@@ -14,6 +14,7 @@ export interface ProductRecord {
   features: string[];
   includes: string[];
   previewImages: string[];
+  downloadFile?: { url: string; name: string; size: number };
 }
 
 export function getAllProducts(): ProductRecord[] {
