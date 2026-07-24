@@ -50,8 +50,9 @@ export default function AdminCreators() {
   };
 
   const startEdit = (c: Creator) => {
-    setName(c.name); setUsername(c.username); setEmail(c.email); setBio(c.bio);
-    setCommission(c.commission); setStatus(c.status); setPerms(c.permissions);
+    setName(c.name || ""); setUsername(c.username || ""); setEmail(c.email || ""); setBio(c.bio || "");
+    setCommission(c.commission || 20); setStatus(c.status || "active");
+    setPerms(c.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true });
     setEditingId(c.id); setShowForm(true); setPassword("");
   };
 
@@ -71,7 +72,8 @@ export default function AdminCreators() {
   };
 
   const toggleStatus = async (creator: Creator) => {
-    const newStatus = creator.status === "active" ? "suspended" : "active";
+    const current = creator.status || "active";
+    const newStatus = current === "active" ? "suspended" : "active";
     const res = await fetch("/admin/api/creators", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -180,10 +182,10 @@ export default function AdminCreators() {
                     <td className="px-5 py-3">
                       <button
                         onClick={() => toggleStatus(c)}
-                        className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${c.status === "active" ? "bg-green-100 text-green-700 hover:bg-red-100 hover:text-red-700" : "bg-red-100 text-red-700 hover:bg-green-100 hover:text-green-700"}`}
+                        className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${(c.status || "active") === "active" ? "bg-green-100 text-green-700 hover:bg-red-100 hover:text-red-700" : "bg-red-100 text-red-700 hover:bg-green-100 hover:text-green-700"}`}
                         title="Click to toggle"
                       >
-                        {c.status === "active" ? "Active" : "Suspended"}
+                        {(c.status || "active") === "active" ? "Active" : "Suspended"}
                       </button>
                     </td>
                     <td className="px-5 py-3 text-neutral-600">{c.commission}%</td>

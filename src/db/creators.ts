@@ -28,7 +28,14 @@ export interface CreatorRecord {
 export function getCreators(): CreatorRecord[] {
   try {
     if (!fs.existsSync(CREATORS_FILE)) return [];
-    return JSON.parse(fs.readFileSync(CREATORS_FILE, "utf-8"));
+    const raw = JSON.parse(fs.readFileSync(CREATORS_FILE, "utf-8")) as CreatorRecord[];
+    let migrated = false;
+    for (const c of raw) {
+      if (!c.status) { c.status = "active"; migrated = true; }
+      if (!c.permissions) { c.permissions = { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }; migrated = true; }
+    }
+    if (migrated) saveCreators(raw);
+    return raw;
   } catch { return []; }
 }
 
