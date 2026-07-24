@@ -57,6 +57,22 @@ export async function loginAction(email: string, password: string) {
     return { success: true, isAdmin: true };
   }
 
+  // Creator login — redirect to creator dashboard
+  const creator = getCreatorByEmail(normalizedEmail);
+  if (creator) {
+    if (!verifyCreatorPassword(creator, password)) {
+      return { success: false, error: "Invalid email or password." };
+    }
+    await setCreatorSession({
+      id: creator.id,
+      username: creator.username,
+      name: creator.name,
+      email: creator.email,
+      commission: creator.commission,
+    });
+    return { success: true, isCreator: true };
+  }
+
   // Regular user login
   const user = getUserByEmail(normalizedEmail);
   if (!user) {
