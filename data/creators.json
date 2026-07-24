@@ -1,0 +1,22 @@
+[
+  {
+    "id": "663154",
+    "username": "153963592qqcom",
+    "name": "高从松",
+    "email": "153963592@qq.com",
+    "bio": "一位优秀的设计师",
+    "avatarUrl": "",
+    "passwordHash": "b5fbb4afa76f882e3c62db8825cbda2a:a73e10cd23ec2e9e2e2858377c83ad4bf267088248f83a95b3a568ed4bb6eeeb92b70e5836e2d8da3c7759c0b9fa65e9cb46c552b6c03c2ea323d9f4267ec3e1",
+    "commission": 30,
+    "totalSales": 0,
+    "totalEarnings": 0,
+    "createdAt": "2026-07-24T07:37:43.154Z",
+    "status": "active",
+    "permissions": {
+      "canUpload": true,
+      "canEdit": true,
+      "canDelete": false,
+      "canViewAnalytics": true
+    }
+  }
+]
