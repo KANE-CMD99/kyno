@@ -1,13 +1,17 @@
 "use client";
 
-import { use } from "react";
-import { useState } from "react";
+import { use, useState, useEffect } from "react";
 import Link from "next/link";
-import { products, categories } from "@/data/site";
+import { categories } from "@/data/site";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import SearchBar from "@/components/SearchBar";
+
+interface SiteProduct {
+  id: string; name: string; category: string; price: string;
+  originalPrice?: string; creator: string; thumbnail?: string;
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -27,9 +31,17 @@ export default function CategoryPage({ params }: PageProps) {
   const category = slugToCategory(slug);
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("default");
+  const [allProducts, setAllProducts] = useState<SiteProduct[]>([]);
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then((d) => setAllProducts(d.products || []))
+      .catch(() => setAllProducts([]));
+  }, []);
 
   const categoryData = categories.find((c) => c.id === slug);
-  const categoryProducts = products.filter((p) => p.category === category);
+  const categoryProducts = allProducts.filter((p) => p.category === category);
 
   // Search + sort
   let filtered = categoryProducts;

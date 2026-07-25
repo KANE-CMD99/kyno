@@ -1,15 +1,36 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { products, productSections } from "@/data/site";
+import { useState, useMemo, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import AnimatedSection from "./AnimatedSection";
 import SearchBar from "./SearchBar";
 import Link from "next/link";
 
+interface SiteProduct {
+  id: string; name: string; category: string; price: string;
+  originalPrice?: string; creator: string; thumbnail?: string;
+}
+
 export default function ProductsSection() {
+  const [products, setProducts] = useState<SiteProduct[]>([]);
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("default");
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then((d) => setProducts(d.products || []))
+      .catch(() => setProducts([]));
+  }, []);
+
+  const productSections = useMemo(() => {
+    const categories = [...new Set(products.map((p) => p.category))];
+    return categories.map((c) => ({
+      title: `Popular ${c}`,
+      category: c,
+      href: `/categories/${c.toLowerCase()}`,
+    }));
+  }, [products]);
 
   const filterAndSort = (items: typeof products) => {
     let filtered = items;

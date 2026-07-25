@@ -83,3 +83,26 @@ export function toSiteProduct(p: ProductRecord) {
     creator: p.creator,
   };
 }
+
+export interface SiteProduct {
+  id: string;
+  name: string;
+  category: string;
+  price: string;
+  originalPrice?: string;
+  creator: string;
+  thumbnail?: string;
+}
+
+export function getSiteProducts(): SiteProduct[] {
+  return getAllProducts().map(toSiteProduct);
+}
+
+export function getProductSections(): { title: string; category: string; href: string }[] {
+  const categories = [...new Set(getAllProducts().map((p) => p.category))];
+  return categories.map((c) => ({
+    title: `Popular ${c}`,
+    category: c,
+    href: `/categories/${c.toLowerCase()}`,
+  }));
+}

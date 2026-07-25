@@ -1,8 +1,8 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { products } from "@/data/site";
 
 const categoryEmoji: Record<string, string> = {
   Photos: String.fromCodePoint(0x1F4F7),
@@ -11,7 +11,14 @@ const categoryEmoji: Record<string, string> = {
 };
 
 export default function ProductCarousel() {
-  const featured = products.slice(0, 6);
+  const [featured, setFeatured] = useState<Array<{ id: string; name: string; category: string; price: string; thumbnail?: string }>>([]);
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((r) => r.json())
+      .then((d) => setFeatured((d.products || []).slice(0, 6)))
+      .catch(() => {});
+  }, []);
 
   return (
     <section className="bg-white px-6 py-20">
