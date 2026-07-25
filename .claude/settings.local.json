@@ -76,7 +76,28 @@
       "Bash(rm -rf \"E:/KYNO/web/web -mian/src/app/@[username]\" 2>/dev/null; echo \"cleaned\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:3000/admin/dashboard\" -H \"Cookie: kyno_admin_session=kyno-admin-token-secure\")",
       "Bash(curl -s -X POST http://localhost:3000/admin/api/creators -H 'Content-Type: application/json' -H 'Cookie: kyno_admin_session=kyno-admin-token-secure' -d '{\"id\":\"663154\",\"name\":\"高从松\",\"username\":\"songgao\",\"email\":\"153963592@qq.com\",\"bio\":\"优秀设计师\",\"commission\":20,\"status\":\"active\",\"permissions\":{\"canUpload\":true,\"canEdit\":true,\"canDelete\":true,\"canViewAnalytics\":true}}')",
-      "Bash(curl -s -X POST http://localhost:3000/admin/api/creators -H 'Content-Type: application/json' -H 'Cookie: kyno_admin_session=kyno-admin-token-secure' -d '{\"id\":\"663154\",\"name\":\"高从松\",\"username\":\"songgao\",\"email\":\"153963592@qq.com\",\"password\":\"newpass123\",\"bio\":\"优秀设计师\",\"commission\":20,\"status\":\"active\",\"permissions\":{\"canUpload\":true,\"canEdit\":true,\"canDelete\":true,\"canViewAnalytics\":true}}')"
+      "Bash(curl -s -X POST http://localhost:3000/admin/api/creators -H 'Content-Type: application/json' -H 'Cookie: kyno_admin_session=kyno-admin-token-secure' -d '{\"id\":\"663154\",\"name\":\"高从松\",\"username\":\"songgao\",\"email\":\"153963592@qq.com\",\"password\":\"newpass123\",\"bio\":\"优秀设计师\",\"commission\":20,\"status\":\"active\",\"permissions\":{\"canUpload\":true,\"canEdit\":true,\"canDelete\":true,\"canViewAnalytics\":true}}')",
+      "Bash(curl -s http://localhost:3000/api/products)",
+      "Bash(node -e \"process.stdin.on\\('data',d=>{var j=JSON.parse\\(d\\);j.products.forEach\\(function\\(p,i\\){console.log\\(\\(i+1\\)+'. '+p.name+' \\('+p.category+'\\)'\\)}\\)}\\)\")",
+      "Bash(VERCEL=1 npm start)",
+      "Bash(curl -s -X POST http://localhost:3000/api/checkout -H \"Content-Type: application/json\" -d '{}')",
+      "Bash(curl -s http://localhost:3000/admin/api/check)",
+      "Bash(curl -s -X POST http://localhost:3000/admin/api/creators -H \"Content-Type: application/json\" -H \"Cookie: kyno_admin_session=kyno-admin-token-secure\" -d '{\"name\":\"TestVervercel\",\"username\":\"verceltest\",\"email\":\"test@vercel.dev\",\"password\":\"vercel123\",\"bio\":\"Testing Vercel deployment\",\"commission\":25}')",
+      "Bash(curl -s http://localhost:3000/admin/api/creators -H \"Cookie: kyno_admin_session=kyno-admin-token-secure\")",
+      "Bash(node -e \"process.stdin.on\\('data',d=>{var j=JSON.parse\\(d\\);console.log\\('Creators:', j.length||j.creators?.length||'unknown'\\)}\\)\")",
+      "Read(//e/tmp/data/**)",
+      "Bash(curl -s -X GET \"http://localhost:3000/admin/api/creators\" -H \"Cookie: kyno_admin_session=kyno-admin-token-secure\")",
+      "Bash(node -e \"process.stdin.on\\('data',d=>{var j=JSON.parse\\(d\\);var creators=j.creators||j;for\\(var i=0;i<creators.length;i++\\){if\\(creators[i].username==='verceltest'\\)console.log\\('DELETE ID:',creators[i].id\\)}}\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/songgao)",
+      "Bash(curl -s -X POST http://localhost:3000/admin/api/creators -H \"Content-Type: application/json\" -H \"Cookie: kyno_admin_session=kyno-admin-token-secure\" -d '{\"name\":\"Test\",\"username\":\"songgao\",\"email\":\"dup@test.dev\",\"password\":\"test123\",\"bio\":\"\",\"commission\":20}')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/categories/invalid)",
+      "Bash(node -e \"var c=JSON.parse\\(require\\('fs'\\).readFileSync\\('data/creators.json','utf-8'\\)\\);c.forEach\\(function\\(x\\){console.log\\('id='+x.id+' username='+x.username+' name='+x.name\\)}\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/153963592)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/33429296qqcom)",
+      "Bash(curl -sI http://localhost:3000/153963592)",
+      "Bash(curl -s http://localhost:3000/153963592)",
+      "Bash(npm start *)",
+      "Bash(node -e \"var fs=require\\('fs'\\); var c=JSON.parse\\(fs.readFileSync\\('data/creators.json','utf-8'\\)\\); c=c.filter\\(function\\(x\\){return x.username!=='songgao'}\\); fs.writeFileSync\\('data/creators.json',JSON.stringify\\(c,null,2\\)\\); console.log\\('Cleaned. Count:',c.length\\);\")"
     ]
   }
 }

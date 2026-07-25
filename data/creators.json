@@ -1,13 +1,13 @@
 [
   {
     "id": "663154",
-    "username": "153963592qqcom",
+    "username": "153963592",
     "name": "高从松",
     "email": "153963592@qq.com",
-    "bio": "一位优秀的设计师",
+    "bio": "good",
     "avatarUrl": "",
-    "passwordHash": "b5fbb4afa76f882e3c62db8825cbda2a:a73e10cd23ec2e9e2e2858377c83ad4bf267088248f83a95b3a568ed4bb6eeeb92b70e5836e2d8da3c7759c0b9fa65e9cb46c552b6c03c2ea323d9f4267ec3e1",
-    "commission": 30,
+    "passwordHash": "860ed885a77166fac08b72bcc0ee8ee5:96c90038ed3d519b333b47705333d3df41bb13ab495eb4efa4d8ee7216efcae2b2497844fc068c7060e14132b340d0586b0ba0ae4c3aed62977617bfea8e1b00",
+    "commission": 20,
     "totalSales": 0,
     "totalEarnings": 0,
     "createdAt": "2026-07-24T07:37:43.154Z",
@@ -15,8 +15,28 @@
     "permissions": {
       "canUpload": true,
       "canEdit": true,
-      "canDelete": false,
+      "canDelete": true,
       "canViewAnalytics": true
     }
+  },
+  {
+    "id": "274316",
+    "username": "33429296qqcom",
+    "name": "于凯",
+    "email": "33429296@qq.com",
+    "bio": "good",
+    "avatarUrl": "",
+    "passwordHash": "faa7d8b6dfac3f89da32175a5e7ab1c9:425013049b1e817ebc844cc17dbc585ec2d5331efd110415be107bdcdcd3aa120fa36e41b8a444c6f43a62ddebf58568439db8ae51598cd08b0da26c2d5f8864",
+    "commission": 100,
+    "totalSales": 0,
+    "totalEarnings": 0,
+    "status": "active",
+    "permissions": {
+      "canUpload": true,
+      "canEdit": true,
+      "canDelete": true,
+      "canViewAnalytics": true
+    },
+    "createdAt": "2026-07-25T00:11:14.316Z"
   }
 ]
