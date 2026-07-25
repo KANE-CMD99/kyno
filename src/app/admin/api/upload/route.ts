@@ -17,13 +17,11 @@ export async function POST(req: Request) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  // Generate unique filename
   const ext = file.name.split(".").pop() || "png";
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-  const uploadDir = path.join(UPLOAD_DIR);
-  if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
-  fs.writeFileSync(path.join(uploadDir, filename), buffer);
+  fs.writeFileSync(path.join(UPLOAD_DIR, filename), buffer);
 
   return NextResponse.json({
     success: true,

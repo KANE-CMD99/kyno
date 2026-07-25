@@ -14,6 +14,7 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const [loginKey, setLoginKey] = useState(0);
   const { itemCount, openCart, closeCart, isOpen: cartOpen } = useCart();
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function Nav() {
               </a>
             ))}
 
-            <UserMenu onOpenAuth={openAuth} />
+            <UserMenu key={loginKey} onOpenAuth={openAuth} />
 
             {/* Cart */}
             <button
@@ -108,7 +109,6 @@ export default function Nav() {
                   {link.label}
                 </a>
               ))}
-              <button onClick={() => { closeMenu(); openAuth("signup"); }} className="text-left text-sm font-medium text-green-500">Join</button>
               <button onClick={() => { closeMenu(); openAuth("signin"); }} className="rounded-lg border border-neutral-600 px-4 py-2.5 text-center text-sm font-medium text-neutral-200">Sign In</button>
             </div>
           </div>
@@ -130,7 +130,7 @@ export default function Nav() {
         </div>
       </div>
 
-      <AuthModal isOpen={authOpen} initialMode={authMode} onClose={() => setAuthOpen(false)} />
+      <AuthModal isOpen={authOpen} initialMode={authMode} onClose={() => setAuthOpen(false)} onSuccess={() => setLoginKey((k) => k + 1)} />
       <CartDrawer isOpen={cartOpen} onClose={closeCart} />
     </>
   );
