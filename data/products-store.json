@@ -218,47 +218,5 @@
       "30-day email support"
     ],
     "previewImages": []
-  },
-  {
-    "name": "gg",
-    "category": "Photos",
-    "price": 1,
-    "originalPrice": 1,
-    "creator": "于凯",
-    "creatorId": "274316",
-    "creatorName": "于凯",
-    "description": "gg",
-    "features": [],
-    "includes": [],
-    "previewImages": [
-      "/uploads/1785022376105-3g3cn3.jpeg"
-    ],
-    "downloadFile": {
-      "url": "/uploads/1785022389597-7ynf2x.jpg",
-      "name": "1.jpg",
-      "size": 223053
-    },
-    "id": "39391596"
-  },
-  {
-    "name": "gg1",
-    "category": "Photos",
-    "price": 1,
-    "originalPrice": 1,
-    "creator": "于凯",
-    "creatorId": "274316",
-    "creatorName": "于凯",
-    "description": "gg",
-    "features": [],
-    "includes": [],
-    "previewImages": [
-      "/uploads/1785022480888-u3bwmr.jpeg"
-    ],
-    "downloadFile": {
-      "url": "/uploads/1785022487736-p7sd3k.png",
-      "name": "3.png",
-      "size": 532757
-    },
-    "id": "22490618"
   }
 ]
