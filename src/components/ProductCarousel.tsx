@@ -39,7 +39,11 @@ export default function ProductCarousel() {
               transition={{ duration: 0.3, delay: i * 0.08 }}
             >
               <Link href={`/products/${product.id}`} className="flex h-full items-center justify-center text-6xl transition-transform group-hover:scale-110">
-                {product.thumbnail ?? (categoryEmoji[product.category] || String.fromCodePoint(0x1F4E6))}
+                {product.thumbnail && (product.thumbnail.startsWith("/") || product.thumbnail.startsWith("http")) ? (
+                  <img src={product.thumbnail} alt={product.name} className="h-full w-full object-cover" />
+                ) : (
+                  product.thumbnail ?? (categoryEmoji[product.category] || String.fromCodePoint(0x1F4E6))
+                )}
               </Link>
 
               {/* Overlay on hover */}
