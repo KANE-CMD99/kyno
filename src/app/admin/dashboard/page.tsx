@@ -73,7 +73,7 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-4">
             <a href="/" className="text-xs text-blue-600 hover:text-blue-700">View Site</a>
             <button
-              onClick={() => { document.cookie = "kyno_admin_session=; Max-Age=0; path=/"; router.push("/admin"); }}
+              onClick={() => { document.cookie = "kyno_admin_session=; Max-Age=0; path=/"; router.push("/"); }}
               className="text-xs text-neutral-500 hover:text-neutral-700"
             >
               Sign Out
