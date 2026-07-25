@@ -97,7 +97,8 @@
       "Bash(curl -sI http://localhost:3000/153963592)",
       "Bash(curl -s http://localhost:3000/153963592)",
       "Bash(npm start *)",
-      "Bash(node -e \"var fs=require\\('fs'\\); var c=JSON.parse\\(fs.readFileSync\\('data/creators.json','utf-8'\\)\\); c=c.filter\\(function\\(x\\){return x.username!=='songgao'}\\); fs.writeFileSync\\('data/creators.json',JSON.stringify\\(c,null,2\\)\\); console.log\\('Cleaned. Count:',c.length\\);\")"
+      "Bash(node -e \"var fs=require\\('fs'\\); var c=JSON.parse\\(fs.readFileSync\\('data/creators.json','utf-8'\\)\\); c=c.filter\\(function\\(x\\){return x.username!=='songgao'}\\); fs.writeFileSync\\('data/creators.json',JSON.stringify\\(c,null,2\\)\\); console.log\\('Cleaned. Count:',c.length\\);\")",
+      "Bash(node -e \"var fs=require\\('fs'\\);var p=JSON.parse\\(fs.readFileSync\\('data/products-store.json','utf-8'\\)\\);var i=0;p.forEach\\(function\\(x\\){i++;console.log\\(i+'. ['+x.id+'] '+x.name+' \\($'+x.price+'\\) by '+x.creator\\)}\\)\")"
     ]
   }
 }
