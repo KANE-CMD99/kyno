@@ -44,7 +44,11 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       <a href={`/products/${product.id}`} className="block cursor-pointer">
         <div className="relative aspect-[3/2] overflow-hidden rounded-lg bg-neutral-100">
           <div className="flex h-full items-center justify-center text-5xl">
-            {product.thumbnail ?? emoji}
+            {product.thumbnail && (product.thumbnail.startsWith("/") || product.thumbnail.startsWith("http")) ? (
+              <img src={product.thumbnail} alt={product.name} className="h-full w-full object-cover" />
+            ) : (
+              product.thumbnail ?? emoji
+            )}
           </div>
 
           {/* Hover overlay — "View Details" */}
