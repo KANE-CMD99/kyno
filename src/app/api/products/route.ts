@@ -5,8 +5,16 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const products = getAllProducts();
+  // Sort: category groups (Photos→Fonts→Templates), then alphabetically by name
+  const categoryOrder = ["Photos", "Fonts", "Templates"];
+  const sorted = [...products].sort((a, b) => {
+    const ca = categoryOrder.indexOf(a.category);
+    const cb = categoryOrder.indexOf(b.category);
+    if (ca !== cb) return (ca === -1 ? 99 : ca) - (cb === -1 ? 99 : cb);
+    return a.name.localeCompare(b.name);
+  });
   return NextResponse.json({
-    products: products.map((p) => ({
+    products: sorted.map((p) => ({
       id: p.id,
       name: p.name,
       category: p.category,
