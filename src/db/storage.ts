@@ -1,7 +1,9 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { DATA_DIR } from "@/lib/data-dir";
+import { DATA_DIR, ensureDataDir } from "@/lib/data-dir";
+
+ensureDataDir();
 
 function readJSON<T>(file: string, fallback: T): T {
   try {

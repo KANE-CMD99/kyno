@@ -1,7 +1,9 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { DATA_DIR } from "@/lib/data-dir";
+import { DATA_DIR, ensureDataDir } from "@/lib/data-dir";
+
+ensureDataDir();
 
 const CREATORS_FILE = path.join(DATA_DIR, "creators.json");
 
