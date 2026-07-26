@@ -28,12 +28,12 @@ export async function registerAction(name: string, email: string, password: stri
   }
 
   const normalizedEmail = email.toLowerCase().trim();
-  const existing = getUserByEmail(normalizedEmail);
+  const existing = await getUserByEmail(normalizedEmail);
   if (existing) {
     return { success: false, error: "An account with this email already exists." };
   }
 
-  const user = createUser({
+  const user = await createUser({
     name: name.trim(),
     email: normalizedEmail,
     passwordHash: hashPassword(password),
@@ -58,9 +58,9 @@ export async function loginAction(email: string, password: string) {
   }
 
   // Creator login — redirect to creator dashboard
-  const creator = getCreatorByEmail(normalizedEmail);
+  const creator = await getCreatorByEmail(normalizedEmail);
   if (creator) {
-    if (!verifyCreatorPassword(creator, password)) {
+    if (!await verifyCreatorPassword(creator, password)) {
       return { success: false, error: "Invalid email or password." };
     }
     await setCreatorSession({
@@ -74,7 +74,7 @@ export async function loginAction(email: string, password: string) {
   }
 
   // Regular user login
-  const user = getUserByEmail(normalizedEmail);
+  const user = await getUserByEmail(normalizedEmail);
   if (!user) {
     return { success: false, error: "Invalid email or password." };
   }

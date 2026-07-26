@@ -4,7 +4,7 @@ import { getAllProducts } from "@/db/products-store";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const products = getAllProducts();
+  const products = await getAllProducts();
   // Sort: category groups (Photos→Fonts→Templates), then alphabetically by name
   const categoryOrder = ["Photos", "Fonts", "Templates"];
   const sorted = [...products].sort((a, b) => {

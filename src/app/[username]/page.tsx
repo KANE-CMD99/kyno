@@ -12,10 +12,10 @@ interface PageProps {
 
 export default async function CreatorProfilePage({ params }: PageProps) {
   const { username } = await params;
-  const creator = getCreatorByUsername(username.toLowerCase());
+  const creator = await getCreatorByUsername(username.toLowerCase());
   if (!creator) notFound();
 
-  const products = getAllProducts().filter((p) => p.creatorId === creator.id);
+  const products = (await getAllProducts()).filter((p) => p.creatorId === creator.id);
 
   return (
     <>

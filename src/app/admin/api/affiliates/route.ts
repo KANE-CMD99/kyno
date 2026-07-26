@@ -4,7 +4,7 @@ import { getAffiliates, createAffiliate, getClicksForAffiliate } from "@/db/affi
 
 export async function GET() {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const affiliates = getAffiliates();
+  const affiliates = await getAffiliates();
   const recentClicks = affiliates.flatMap((a) => getClicksForAffiliate(a.code));
   return NextResponse.json({ affiliates, recentClicks });
 }
@@ -13,7 +13,8 @@ export async function POST(req: Request) {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { name, email, code, commission } = await req.json();
   if (!name || !email || !code) return NextResponse.json({ success: false, error: "All fields required" }, { status: 400 });
-  const existing = getAffiliates().find((a) => a.code === code.toUpperCase());
+  const all = await getAffiliates();
+  const existing = all.find((a: { code: string }) => a.code === code.toUpperCase());
   if (existing) return NextResponse.json({ success: false, error: "Code already taken" }, { status: 400 });
   createAffiliate({ name, email, code: code.toUpperCase(), commission: commission || 20 });
   return NextResponse.json({ success: true });

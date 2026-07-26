@@ -49,9 +49,9 @@ export async function POST(req: Request) {
       // Stripe API unreachable (common in China) — fall through to demo mode
       if (err.type === "StripeConnectionError" || err.code === "ETIMEDOUT" || err.code === "ECONNREFUSED") {
         const now = new Date().toISOString();
-        const orders: Array<ReturnType<typeof createOrder>> = [];
+        const orders = [];
         for (const item of items) {
-          const order = createOrder({
+          const order = await createOrder({
             userId: 0,
             productId: item.id,
             productName: item.name,

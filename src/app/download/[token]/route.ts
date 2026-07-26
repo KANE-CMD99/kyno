@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ token: string }> }
 ) {
   const { token } = await params
-  const order = getOrderByToken(token)
+  const order = await getOrderByToken(token)
 
   if (!order) {
     return NextResponse.json({ error: "Invalid or expired download link" }, { status: 404 })
@@ -17,7 +17,7 @@ export async function GET(
   }
 
   // Mark as claimed
-  markOrderClaimed(order.id)
+  await markOrderClaimed(order.id)
 
   // For now, return a placeholder response.
   // When real files exist, serve them with:

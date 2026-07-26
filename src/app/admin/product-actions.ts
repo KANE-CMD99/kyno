@@ -4,7 +4,7 @@ import { createProduct, updateProduct, deleteProduct, getAllProducts } from "@/d
 import { revalidatePath } from "next/cache";
 
 export async function adminGetProducts() {
-  return getAllProducts();
+  return await getAllProducts();
 }
 
 export async function adminCreateProduct(input: {
@@ -12,7 +12,7 @@ export async function adminCreateProduct(input: {
   creator: string; description: string; features: string[]; includes: string[];
 }) {
   try {
-    const product = createProduct({ ...input, previewImages: [] });
+    const product = await createProduct({ ...input, previewImages: [] });
     revalidatePath("/");
     revalidatePath("/admin/dashboard");
     return { success: true, id: product.id };
@@ -26,7 +26,7 @@ export async function adminUpdateProduct(id: string, input: {
   creator: string; description: string; features: string[]; includes: string[];
 }) {
   try {
-    const result = updateProduct(id, { ...input, previewImages: [] });
+    const result = await updateProduct(id, { ...input, previewImages: [] });
     if (!result) return { success: false, error: "Product not found" };
     revalidatePath("/");
     revalidatePath("/admin/dashboard");
@@ -38,7 +38,7 @@ export async function adminUpdateProduct(id: string, input: {
 
 export async function adminDeleteProduct(id: string) {
   try {
-    deleteProduct(id);
+    await deleteProduct(id);
     revalidatePath("/");
     revalidatePath("/admin/dashboard");
     return { success: true };

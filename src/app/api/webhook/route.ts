@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { createOrder } from "@/db/storage";
+import { createOrder, type OrderRecord } from "@/db/storage";
 import { convertClick } from "@/db/affiliates";
 import { sendDownloadEmail } from "@/lib/email";
 
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
   console.log(`Order completed for ${email} — $${session.amount_total ? session.amount_total / 100 : 0}`);
 
-  const orders = [];
+  const orders: OrderRecord[] = [];
   try {
     const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
       expand: ["line_items.data.price.product"],
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     const productIdsRaw = (session.metadata?.product_ids ?? "").split(",").filter(Boolean);
 
     for (const item of lineItems) {
-      const order = createOrder({
+      const order = await createOrder({
         userId: 0,
         productId: productIdsRaw.shift() ?? "unknown",
         productName: item.description ?? "Product",
