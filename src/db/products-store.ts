@@ -59,7 +59,7 @@ function mapRow(r: Record<string, unknown>): ProductRecord {
 
 export async function getAllProducts(): Promise<ProductRecord[]> {
   if (hasSupabase) {
-    const { data, error } = await supabaseAdmin.from("products").select("*").order("category").order("name");
+    const { data, error } = await supabaseAdmin().from("products").select("*").order("category").order("name");
     if (error) { console.error("Supabase getAllProducts:", error); return []; }
     return (data || []).map(mapRow);
   }
@@ -69,7 +69,7 @@ export async function getAllProducts(): Promise<ProductRecord[]> {
 export async function saveAllProducts(products: ProductRecord[]): Promise<void> {
   if (hasSupabase) {
     for (const p of products) {
-      await supabaseAdmin.from("products").upsert({
+      await supabaseAdmin().from("products").upsert({
         id: p.id, name: p.name, category: p.category, price: p.price,
         original_price: p.originalPrice || null, creator: p.creator,
         description: p.description, features: p.features, includes: p.includes,
@@ -84,7 +84,7 @@ export async function saveAllProducts(products: ProductRecord[]): Promise<void> 
 
 export async function getProductById(id: string): Promise<ProductRecord | undefined> {
   if (hasSupabase) {
-    const { data } = await supabaseAdmin.from("products").select("*").eq("id", id).single();
+    const { data } = await supabaseAdmin().from("products").select("*").eq("id", id).single();
     return data ? mapRow(data) : undefined;
   }
   return getJSON().find((p: ProductRecord) => p.id === id);
@@ -95,7 +95,7 @@ export async function createProduct(product: Omit<ProductRecord, "id">): Promise
   const newProduct: ProductRecord = { ...product, id: String(Date.now()).slice(-8) };
 
   if (hasSupabase) {
-    await supabaseAdmin.from("products").insert({
+    await supabaseAdmin().from("products").insert({
       id: newProduct.id, name: newProduct.name, category: newProduct.category,
       price: newProduct.price, original_price: newProduct.originalPrice || null,
       creator: newProduct.creator, description: newProduct.description,
@@ -116,7 +116,7 @@ export async function updateProduct(id: string, data: Omit<ProductRecord, "id">)
   const now = new Date().toISOString();
 
   if (hasSupabase) {
-    const { error } = await supabaseAdmin.from("products").update({
+    const { error } = await supabaseAdmin().from("products").update({
       name: data.name, category: data.category, price: data.price,
       original_price: data.originalPrice || null, creator: data.creator,
       description: data.description, features: data.features, includes: data.includes,
@@ -137,7 +137,7 @@ export async function updateProduct(id: string, data: Omit<ProductRecord, "id">)
 
 export async function deleteProduct(id: string): Promise<boolean> {
   if (hasSupabase) {
-    const { error } = await supabaseAdmin.from("products").delete().eq("id", id);
+    const { error } = await supabaseAdmin().from("products").delete().eq("id", id);
     return !error;
   }
   const all = getJSON();

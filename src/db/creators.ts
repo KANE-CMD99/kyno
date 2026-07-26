@@ -40,7 +40,7 @@ export interface CreatorRecord {
 
 export async function getCreators(): Promise<CreatorRecord[]> {
   if (hasSupabase) {
-    const { data, error } = await supabaseAdmin.from("creators").select("*");
+    const { data, error } = await supabaseAdmin().from("creators").select("*");
     if (error) { console.error("Supabase getCreators:", error); return []; }
     return (data || []).map((c: Record<string, unknown>) => ({
       id: c.id as string,
@@ -65,7 +65,7 @@ export async function saveCreators(creators: CreatorRecord[]): Promise<void> {
   if (hasSupabase) {
     // Upsert each creator individually
     for (const c of creators) {
-      await supabaseAdmin.from("creators").upsert({
+      await supabaseAdmin().from("creators").upsert({
         id: c.id, username: c.username, name: c.name, email: c.email,
         bio: c.bio, avatar_url: c.avatarUrl, password_hash: c.passwordHash,
         commission: c.commission, total_sales: c.totalSales, total_earnings: c.totalEarnings,
@@ -79,7 +79,7 @@ export async function saveCreators(creators: CreatorRecord[]): Promise<void> {
 
 export async function getCreatorByUsername(username: string): Promise<CreatorRecord | undefined> {
   if (hasSupabase) {
-    const { data } = await supabaseAdmin.from("creators").select("*").eq("username", username.toLowerCase()).single();
+    const { data } = await supabaseAdmin().from("creators").select("*").eq("username", username.toLowerCase()).single();
     if (!data) return undefined;
     return { id: data.id, username: data.username, name: data.name, email: data.email, bio: data.bio || "", avatarUrl: data.avatar_url || "", passwordHash: data.password_hash, commission: data.commission, totalSales: data.total_sales || 0, totalEarnings: data.total_earnings || 0, status: data.status || "active", permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }, createdAt: data.created_at };
   }
@@ -88,7 +88,7 @@ export async function getCreatorByUsername(username: string): Promise<CreatorRec
 
 export async function getCreatorByEmail(email: string): Promise<CreatorRecord | undefined> {
   if (hasSupabase) {
-    const { data } = await supabaseAdmin.from("creators").select("*").eq("email", email.toLowerCase().trim()).single();
+    const { data } = await supabaseAdmin().from("creators").select("*").eq("email", email.toLowerCase().trim()).single();
     if (!data) return undefined;
     return { id: data.id, username: data.username, name: data.name, email: data.email, bio: data.bio || "", avatarUrl: data.avatar_url || "", passwordHash: data.password_hash, commission: data.commission, totalSales: data.total_sales || 0, totalEarnings: data.total_earnings || 0, status: data.status || "active", permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }, createdAt: data.created_at };
   }
@@ -97,7 +97,7 @@ export async function getCreatorByEmail(email: string): Promise<CreatorRecord | 
 
 export async function getCreatorById(id: string): Promise<CreatorRecord | undefined> {
   if (hasSupabase) {
-    const { data } = await supabaseAdmin.from("creators").select("*").eq("id", id).single();
+    const { data } = await supabaseAdmin().from("creators").select("*").eq("id", id).single();
     if (!data) return undefined;
     return { id: data.id, username: data.username, name: data.name, email: data.email, bio: data.bio || "", avatarUrl: data.avatar_url || "", passwordHash: data.password_hash, commission: data.commission, totalSales: data.total_sales || 0, totalEarnings: data.total_earnings || 0, status: data.status || "active", permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }, createdAt: data.created_at };
   }
@@ -127,7 +127,7 @@ export async function createCreator(data: {
   };
 
   if (hasSupabase) {
-    await supabaseAdmin.from("creators").insert({
+    await supabaseAdmin().from("creators").insert({
       id: creator.id, username: creator.username, name: creator.name, email: creator.email,
       bio: creator.bio, avatar_url: creator.avatarUrl, password_hash: creator.passwordHash,
       commission: creator.commission, total_sales: 0, total_earnings: 0,
@@ -152,9 +152,9 @@ export async function verifyCreatorPassword(creator: CreatorRecord, password: st
 
 export async function updateCreatorStats(creatorId: string, salePrice: number) {
   if (hasSupabase) {
-    const { data } = await supabaseAdmin.from("creators").select("*").eq("id", creatorId).single();
+    const { data } = await supabaseAdmin().from("creators").select("*").eq("id", creatorId).single();
     if (data) {
-      await supabaseAdmin.from("creators").update({
+      await supabaseAdmin().from("creators").update({
         total_sales: (data.total_sales || 0) + 1,
         total_earnings: (data.total_earnings || 0) + salePrice,
       }).eq("id", creatorId);
@@ -167,7 +167,7 @@ export async function updateCreatorStats(creatorId: string, salePrice: number) {
 }
 
 export async function deleteCreator(id: string): Promise<boolean> {
-  if (hasSupabase) { const { error } = await supabaseAdmin.from("creators").delete().eq("id", id); return !error; }
+  if (hasSupabase) { const { error } = await supabaseAdmin().from("creators").delete().eq("id", id); return !error; }
   const all = getCreatorsJSON(); const filtered = all.filter((c: CreatorRecord) => c.id !== id);
   if (filtered.length === all.length) return false;
   saveCreatorsJSON(filtered); return true;

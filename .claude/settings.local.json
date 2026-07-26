@@ -104,7 +104,10 @@
       "Bash(git stash *)",
       "Bash(node -e \"process.stdin.on\\('data',d=>{var j=JSON.parse\\(d\\);console.log\\('Products from API:',j.products.length\\);j.products.slice\\(0,3\\).forEach\\(function\\(p\\){console.log\\(' - '+p.name+' \\($'+p.price+'\\)'\\)}\\)}\\)\")",
       "Bash(curl -s -X POST http://localhost:3000/creator -H 'Content-Type: application/json' -d '{\"email\":\"creator@kyno.dev\",\"password\":\"creator2025\"}')",
-      "Bash(curl -s -X POST http://localhost:3000/admin -H 'Content-Type: application/json' -d '{\"email\":\"admin@kyno.dev\",\"password\":\"kyno-admin-2025\"}')"
+      "Bash(curl -s -X POST http://localhost:3000/admin -H 'Content-Type: application/json' -d '{\"email\":\"admin@kyno.dev\",\"password\":\"kyno-admin-2025\"}')",
+      "Bash(curl -s http://localhost:3000/admin/dashboard -o /dev/null -w \"%{http_code}\" -H \"Cookie: kyno_admin_session=kyno-admin-token-secure\")",
+      "Bash(curl -s -X POST http://localhost:3000/admin -H 'Content-Type: application/x-www-form-urlencoded' -d 'email=admin@kyno.dev&password=kyno-admin-2025' -o /dev/null -w 'Redirect: %{redirect_url}\\\\nHTTP: %{http_code}\\\\n')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/admin)"
     ]
   }
 }
