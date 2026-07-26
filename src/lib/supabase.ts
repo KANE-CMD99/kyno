@@ -12,8 +12,8 @@ function getServiceKey(): string {
   return process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 }
 
-// Check if Supabase is configured
-export const hasSupabase = !!(getUrl() && getAnonKey());
+// Check if Supabase is configured — works with NEXT_PUBLIC_ vars OR service key alone
+export const hasSupabase = !!(getUrl() && (getAnonKey() || getServiceKey()));
 
 // Lazy-init to avoid "supabaseKey is required" crash when env vars are missing
 let _cached: SupabaseClient | null = null;
