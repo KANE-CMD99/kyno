@@ -1,10 +1,11 @@
-// @ts-check
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
+import { defineConfig } from "eslint/config";
+import nextPlugin from "@next/eslint-plugin-next";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-export default nextConfig;
+export default defineConfig([
+  {
+    plugins: { "@next/next": nextPlugin },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+    },
+  },
+]);
