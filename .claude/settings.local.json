@@ -101,7 +101,10 @@
       "Bash(node -e \"var fs=require\\('fs'\\);var p=JSON.parse\\(fs.readFileSync\\('data/products-store.json','utf-8'\\)\\);var i=0;p.forEach\\(function\\(x\\){i++;console.log\\(i+'. ['+x.id+'] '+x.name+' \\($'+x.price+'\\) by '+x.creator\\)}\\)\")",
       "WebFetch(domain:www.kyno.top)",
       "Bash(git pull *)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "Bash(node -e \"process.stdin.on\\('data',d=>{var j=JSON.parse\\(d\\);console.log\\('Products from API:',j.products.length\\);j.products.slice\\(0,3\\).forEach\\(function\\(p\\){console.log\\(' - '+p.name+' \\($'+p.price+'\\)'\\)}\\)}\\)\")",
+      "Bash(curl -s -X POST http://localhost:3000/creator -H 'Content-Type: application/json' -d '{\"email\":\"creator@kyno.dev\",\"password\":\"creator2025\"}')",
+      "Bash(curl -s -X POST http://localhost:3000/admin -H 'Content-Type: application/json' -d '{\"email\":\"admin@kyno.dev\",\"password\":\"kyno-admin-2025\"}')"
     ]
   }
 }
