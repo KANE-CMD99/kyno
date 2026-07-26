@@ -5,6 +5,9 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://kyno.dev"),
+  icons: {
+    icon: "/favicon.svg",
+  },
   title: {
     default: "Kyno — Premium Digital Assets for Creators",
     template: "%s — Kyno",
