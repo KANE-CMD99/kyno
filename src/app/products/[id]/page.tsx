@@ -14,7 +14,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const detail = getProductDetail(id);
+  const detail = await getProductDetail(id);
   if (!detail) return { title: "Not Found" };
   return {
     title: detail.name,
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
-  const detail = getProductDetail(id);
+  const detail = await getProductDetail(id);
   if (!detail) notFound();
 
   const relatedProducts = products.filter(
