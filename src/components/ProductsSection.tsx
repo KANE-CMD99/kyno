@@ -56,20 +56,27 @@ export default function ProductsSection() {
             No products found for &ldquo;{query}&rdquo;
           </p>
         ) : (
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-neutral-900">Popular</h2>
-            <p className="mt-2 text-sm text-neutral-500">
-              Discover our most popular digital products
-            </p>
-
-            <div className="mt-8 flex flex-wrap justify-center gap-5">
-              {filtered.map((product, i) => (
-                <div key={product.id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
-                  <ProductCard product={product} index={i} />
+          <>
+            {(["Photos", "Fonts", "Templates"] as const).map((cat) => {
+              const items = filtered.filter((p) => p.category === cat);
+              if (items.length === 0) return null;
+              return (
+                <div key={cat} className="text-center">
+                  <h2 className="text-2xl font-bold text-neutral-900">Popular {cat}</h2>
+                  <p className="mt-2 text-sm text-neutral-500">
+                    Curated {cat.toLowerCase()} for your next project
+                  </p>
+                  <div className="mt-8 flex flex-wrap justify-center gap-5">
+                    {items.map((product, i) => (
+                      <div key={product.id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
+                        <ProductCard product={product} index={i} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              );
+            })}
+          </>
         )}
       </div>
     </AnimatedSection>
