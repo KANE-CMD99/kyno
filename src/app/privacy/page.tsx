@@ -63,7 +63,7 @@ export default function PrivacyPage() {
               information. Kyno does not sell personal information.{" "}
               <strong>GDPR (EU/EEA):</strong> You have the right to access, rectify, erase, restrict processing,
               and data portability. Our lawful basis for processing is contract performance (orders) and consent
-              (newsletter). To exercise any of these rights, email us at hello@kyno.dev. We respond within 30 days.
+              (newsletter). To exercise any of these rights, email us at 33429296@qq.com. We respond within 30 days.
             </p>
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">7. Children&apos;s Privacy</h2>
@@ -82,7 +82,7 @@ export default function PrivacyPage() {
             <h2 className="mt-8 text-lg font-bold text-neutral-900">9. Contact</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
               For privacy-related questions or to exercise your data rights, contact us at{" "}
-              <a href="mailto:hello@kyno.dev" className="text-blue-600 hover:text-blue-700">hello@kyno.dev</a>.
+              <a href="mailto:33429296@qq.com" className="text-blue-600 hover:text-blue-700">33429296@qq.com</a>.
             </p>
           </div>
         </section>

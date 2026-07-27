@@ -47,7 +47,7 @@ export default function TermsPage() {
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
               Due to the digital nature of our products, all sales are final. We do not offer refunds
               or exchanges once a product has been downloaded. If you experience technical issues with
-              a product, please contact us at hello@kyno.dev and we will work to resolve the problem.
+              a product, please contact us at 33429296@qq.com and we will work to resolve the problem.
               Exceptions may be made at our sole discretion in cases of duplicate purchases or
               demonstrable product defects.
             </p>
@@ -82,7 +82,7 @@ export default function TermsPage() {
             <h2 className="mt-8 text-lg font-bold text-neutral-900">9. Contact</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
               For questions about these terms, contact{" "}
-              <a href="mailto:hello@kyno.dev" className="text-blue-600 hover:text-blue-700">hello@kyno.dev</a>.
+              <a href="mailto:33429296@qq.com" className="text-blue-600 hover:text-blue-700">33429296@qq.com</a>.
             </p>
           </div>
         </section>

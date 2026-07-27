@@ -60,7 +60,7 @@ export default function LicensePage() {
             <h2 className="mt-8 text-lg font-bold text-neutral-900">Questions</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
               Need a custom license or enterprise terms? Contact{" "}
-              <a href="mailto:hello@kyno.dev" className="text-blue-600 hover:text-blue-700">hello@kyno.dev</a>.
+              <a href="mailto:33429296@qq.com" className="text-blue-600 hover:text-blue-700">33429296@qq.com</a>.
             </p>
           </div>
         </section>

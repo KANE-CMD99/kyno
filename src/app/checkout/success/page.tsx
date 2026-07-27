@@ -72,7 +72,7 @@ function SuccessContent() {
             <div className="rounded-xl border border-neutral-200 bg-white p-6">
               <p className="text-sm text-neutral-500">
                 Download links will be sent to your email. If you don&apos;t see them, check spam or{" "}
-                <a href="mailto:hello@kyno.dev" className="text-blue-600 hover:text-blue-700">contact us</a>.
+                <a href="mailto:33429296@qq.com" className="text-blue-600 hover:text-blue-700">contact us</a>.
               </p>
             </div>
           )}
@@ -86,7 +86,7 @@ function SuccessContent() {
             Back to Store
           </Link>
           <a
-            href="mailto:hello@kyno.dev?subject=Order%20Issue"
+            href="mailto:33429296@qq.com?subject=Order%20Issue"
             className="text-sm text-neutral-500 transition-colors hover:text-neutral-900"
           >
             Need help? Contact us
