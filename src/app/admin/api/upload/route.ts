@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
-import fs from "fs";
-import path from "path";
+import { supabaseAdmin } from "@/lib/supabase";
 
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   if (!(await isAdmin())) {
@@ -14,17 +13,22 @@ export async function POST(req: Request) {
   const file = formData.get("file") as File | null;
   if (!file) return NextResponse.json({ error: "No file" }, { status: 400 });
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  const ext = file.name.split(".").pop() || "png";
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const ext = file.name.split(".").pop() || "bin";
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
-  fs.writeFileSync(path.join(UPLOAD_DIR, filename), buffer);
-
-  return NextResponse.json({
-    success: true,
-    url: `/uploads/${filename}`,
+  const { error } = await supabaseAdmin().storage.from("products").upload(filename, buffer, {
+    contentType: file.type || "application/octet-stream",
+    cacheControl: "3600",
+    upsert: false,
   });
+
+  if (error) {
+    console.error("Supabase upload error:", error.message);
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+  }
+
+  const { data: publicUrl } = supabaseAdmin().storage.from("products").getPublicUrl(filename);
+
+  return NextResponse.json({ success: true, url: publicUrl.publicUrl });
 }
