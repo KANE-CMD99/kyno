@@ -85,11 +85,11 @@ export async function loginAction(email: string, password: string) {
   // Regular user login
   const user = await getUserByEmail(key);
   if (!user) {
-    return { success: false, error: "Invalid email or password." };
+    return { success: false, error: "Invalid email or password. (v5)" };
   }
 
   if (!verifyPassword(password, user.passwordHash)) {
-    return { success: false, error: "Invalid email or password." };
+    return { success: false, error: "Invalid email or password. (v5)" };
   }
 
   await setSessionCookie({ id: user.id, name: user.name, email: user.email });
