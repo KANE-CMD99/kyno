@@ -2,9 +2,8 @@
 
 import crypto from "crypto";
 import { getUserByEmail, createUser } from "@/db/storage";
-import { getCreatorByEmail, verifyCreatorPassword } from "@/db/creators";
 import { setSessionCookie } from "@/lib/auth";
-import { validateAdminCredentials, setAdminSession } from "@/lib/admin-auth";
+import { validateAdminCredentials, setAdminSession, lookupBuiltinAccount } from "@/lib/admin-auth";
 import { setCreatorSession } from "@/lib/creator-auth";
 
 function hashPassword(password: string): string {
@@ -51,29 +50,26 @@ export async function loginAction(email: string, password: string) {
 
   const normalizedEmail = email.toLowerCase().trim();
 
-  // Admin login — redirect to admin dashboard
-  if (validateAdminCredentials(normalizedEmail, password)) {
-    await setAdminSession();
-    return { success: true, isAdmin: true };
-  }
-
-  // Creator login — redirect to creator dashboard
-  const creator = await getCreatorByEmail(normalizedEmail);
-  if (creator) {
-    if (!await verifyCreatorPassword(creator, password)) {
-      return { success: false, error: "Invalid email or password." };
+  // Builtin account login (admin + creators) — no db required
+  const builtin = lookupBuiltinAccount(normalizedEmail, password);
+  if (builtin) {
+    if (builtin.role === "admin") {
+      await setAdminSession();
+      return { success: true, isAdmin: true };
     }
-    await setCreatorSession({
-      id: creator.id,
-      username: creator.username,
-      name: creator.name,
-      email: creator.email,
-      commission: creator.commission,
-    });
-    return { success: true, isCreator: true };
+    if (builtin.role === "creator") {
+      await setCreatorSession({
+        id: builtin.creatorId || "demo01",
+        username: builtin.username || "creator01",
+        name: builtin.name,
+        email: normalizedEmail,
+        commission: builtin.commission || 20,
+      });
+      return { success: true, isCreator: true };
+    }
   }
 
-  // Regular user login
+  // Regular user login (optional — only if Supabase is configured)
   const user = await getUserByEmail(normalizedEmail);
   if (!user) {
     return { success: false, error: "Invalid email or password." };
