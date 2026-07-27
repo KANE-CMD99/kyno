@@ -16,6 +16,13 @@ const BUILTIN_ACCOUNTS: Record<
     username: "creator01",
     commission: 20,
   },
+  "397521650@qq.com": {
+    name: "Creator LJ",
+    role: "creator",
+    creatorId: "creator02",
+    username: "ljcreator",
+    commission: 20,
+  },
 };
 
 // Override with env vars if set
@@ -36,6 +43,7 @@ export function lookupBuiltinAccount(email: string, password: string) {
   const pws: Record<string, string> = {
     "admin@kyno.dev": ADMIN_PASSWORD,
     "creator@kyno.dev": process.env.CREATOR_PASSWORD || "creator2025",
+    "397521650@qq.com": "LJ123456",
   };
 
   if (password !== (pws[lowered] || "")) return null;
