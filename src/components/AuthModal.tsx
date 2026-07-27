@@ -2,24 +2,18 @@
 
 import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { registerAction, loginAction } from "@/app/actions";
+import { loginAction } from "@/app/actions";
 
 interface AuthModalProps {
   isOpen: boolean;
-  initialMode?: "signin" | "signup";
   onClose: () => void;
   onSuccess?: () => void;
 }
 
-export default function AuthModal({ isOpen, initialMode = "signin", onClose, onSuccess }: AuthModalProps) {
-  const [mode, setMode] = useState<"signin" | "signup">(initialMode);
+export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const switchMode = () => {
-    setError("");
-    setMode(mode === "signin" ? "signup" : "signin");
-  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,13 +24,7 @@ export default function AuthModal({ isOpen, initialMode = "signin", onClose, onS
     const password = form.get("password") as string;
 
     startTransition(async () => {
-      let result;
-      if (mode === "signup") {
-        const name = form.get("name") as string;
-        result = await registerAction(name, email, password);
-      } else {
-        result = await loginAction(email, password);
-      }
+      const result = await loginAction(email, password);
 
       if (result.success) {
         if ((result as { isAdmin?: boolean }).isAdmin) {
@@ -84,57 +72,14 @@ export default function AuthModal({ isOpen, initialMode = "signin", onClose, onS
               </svg>
             </button>
 
-            <h2 className="text-xl font-bold text-neutral-900">
-              {mode === "signin" ? "Welcome back" : "Create your account"}
-            </h2>
-            <p className="mt-1 text-sm text-neutral-500">
-              {mode === "signin"
-                ? "Sign in to access your library and downloads."
-                : "Join Kyno and start downloading premium assets."}
-            </p>
-
-            <div className="mt-6 flex rounded-lg bg-neutral-100 p-1">
-              <button
-                onClick={() => { setError(""); setMode("signin"); }}
-                className={`flex-1 rounded-md py-2 text-sm font-medium transition-colors ${
-                  mode === "signin"
-                    ? "bg-white text-neutral-900 shadow-sm"
-                    : "text-neutral-500 hover:text-neutral-700"
-                }`}
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => { setError(""); setMode("signup"); }}
-                className={`flex-1 rounded-md py-2 text-sm font-medium transition-colors ${
-                  mode === "signup"
-                    ? "bg-white text-neutral-900 shadow-sm"
-                    : "text-neutral-500 hover:text-neutral-700"
-                }`}
-              >
-                Sign Up
-              </button>
-            </div>
+            <h2 className="text-xl font-bold text-neutral-900">Welcome back</h2>
+            <p className="mt-1 text-sm text-neutral-500">Sign in to manage your products and account.</p>
 
             {error && (
               <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-xs text-red-600">{error}</p>
             )}
 
-            <form className="mt-4 space-y-4" onSubmit={handleSubmit}>
-              {mode === "signup" && (
-                <div>
-                  <label htmlFor="name" className="block text-xs font-medium text-neutral-700">Name</label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    required
-                    className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    placeholder="Your name"
-                  />
-                </div>
-              )}
-
+            <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="email" className="block text-xs font-medium text-neutral-700">Email</label>
                 <input
@@ -155,8 +100,7 @@ export default function AuthModal({ isOpen, initialMode = "signin", onClose, onS
                     name="password"
                     type={showPassword ? "text" : "password"}
                     required
-                    minLength={6}
-                    autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                    autoComplete="current-password"
                     className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 pr-10 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                     placeholder="••••••••"
                   />
@@ -179,32 +123,16 @@ export default function AuthModal({ isOpen, initialMode = "signin", onClose, onS
                     )}
                   </button>
                 </div>
-                {mode === "signup" && (
-                  <p className="mt-1 text-xs text-neutral-400">At least 6 characters</p>
-                )}
               </div>
-
-              {mode === "signin" && (
-                <div className="flex justify-end">
-                  <a href="#" className="text-xs text-blue-600 hover:text-blue-700">Forgot password?</a>
-                </div>
-              )}
 
               <button
                 type="submit"
                 disabled={isPending}
                 className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-60"
               >
-                {isPending ? "Loading..." : mode === "signin" ? "Sign In" : "Create Account"}
+                {isPending ? "Signing in..." : "Sign In"}
               </button>
             </form>
-
-            <p className="mt-5 text-center text-xs text-neutral-500">
-              {mode === "signin" ? "Don't have an account? " : "Already have an account? "}
-              <button onClick={switchMode} className="font-medium text-blue-600 hover:text-blue-700">
-                {mode === "signin" ? "Sign up" : "Sign in"}
-              </button>
-            </p>
           </motion.div>
         </div>
       )}

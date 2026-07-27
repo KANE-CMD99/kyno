@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 
 interface UserMenuProps {
-  onOpenAuth: (mode: "signin" | "signup") => void;
+  onOpenAuth: () => void;
 }
 
 export default function UserMenu({ onOpenAuth }: UserMenuProps) {
@@ -29,7 +29,7 @@ export default function UserMenu({ onOpenAuth }: UserMenuProps) {
     return (
       <div className="hidden items-center gap-3 md:flex">
         <button
-          onClick={() => onOpenAuth("signin")}
+          onClick={() => onOpenAuth()}
           className="rounded-lg border border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:border-neutral-400 hover:text-white"
         >
           Sign In
