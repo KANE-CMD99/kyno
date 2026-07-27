@@ -1,3 +1,5 @@
+// Server Action v2 — built-in accounts inline, no db dependency
+// Force Vercel recompile: 2026-07-28
 "use server";
 
 import crypto from "crypto";
