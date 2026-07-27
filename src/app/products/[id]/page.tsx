@@ -1,12 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getProductDetail } from "@/data/product-detail";
+import { getProductDetail, getRelatedProducts } from "@/data/product-detail";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import AddToCartButton from "@/components/AddToCartButton";
-import { products } from "@/data/site";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -32,9 +31,7 @@ export default async function ProductPage({ params }: PageProps) {
   const detail = await getProductDetail(id);
   if (!detail) notFound();
 
-  const relatedProducts = products.filter(
-    (p) => p.category === detail.category && p.id !== id
-  );
+  const relatedProducts = await getRelatedProducts(id);
 
   return (
     <>
@@ -167,11 +164,21 @@ export default async function ProductPage({ params }: PageProps) {
                 You might also like
               </p>
               <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                {relatedProducts.map((product, i) => (
-                  <Link key={product.id} href={`/products/${product.id}`}>
-                    <ProductCard product={product} index={i} />
-                  </Link>
-                ))}
+                {relatedProducts.map((product, i) => {
+                  const cardProduct = {
+                    id: product.id,
+                    name: product.name,
+                    category: product.category,
+                    price: `$${product.price}`,
+                    creator: product.creator,
+                    thumbnail: product.previewImages?.[0],
+                  };
+                  return (
+                    <Link key={product.id} href={`/products/${product.id}`}>
+                      <ProductCard product={cardProduct} index={i} />
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </section>
