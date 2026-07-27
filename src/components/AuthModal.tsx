@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
 import { registerAction, loginAction } from "@/app/actions";
 
 interface AuthModalProps {
@@ -17,8 +16,6 @@ export default function AuthModal({ isOpen, initialMode = "signin", onClose, onS
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
-
   const switchMode = () => {
     setError("");
     setMode(mode === "signin" ? "signup" : "signin");
@@ -43,13 +40,15 @@ export default function AuthModal({ isOpen, initialMode = "signin", onClose, onS
 
       if (result.success) {
         if ((result as { isAdmin?: boolean }).isAdmin) {
-          router.push("/admin/dashboard");
-        } else if ((result as { isCreator?: boolean }).isCreator) {
-          router.push("/creator/dashboard");
-        } else {
-          onClose();
-          onSuccess?.();
+          window.location.href = "/admin/dashboard";
+          return;
         }
+        if ((result as { isCreator?: boolean }).isCreator) {
+          window.location.href = "/creator/dashboard";
+          return;
+        }
+        onClose();
+        onSuccess?.();
       } else {
         setError(result.error || "Something went wrong.");
       }
