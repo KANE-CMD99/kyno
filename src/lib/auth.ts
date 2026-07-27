@@ -14,6 +14,12 @@ function base64URL(str: string): string {
   return str.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
 
+function fromBase64URL(str: string): string {
+  let s = str.replace(/-/g, "+").replace(/_/g, "/");
+  while (s.length % 4) s += "=";
+  return s;
+}
+
 function utf8ToBytes(str: string): Uint8Array {
   return new TextEncoder().encode(str);
 }
@@ -32,10 +38,10 @@ async function verifyJWT(token: string, secret: string): Promise<Record<string, 
     const [header, body, sig] = token.split(".");
     const data = `${header}.${body}`;
     const key = await crypto.subtle.importKey("raw", utf8ToBytes(secret), { name: "HMAC", hash: "SHA-256" }, false, ["verify"]);
-    const sigBytes = new Uint8Array(Buffer.from(sig, "base64"));
+    const sigBytes = new Uint8Array(Buffer.from(fromBase64URL(sig), "base64"));
     const valid = await crypto.subtle.verify("HMAC", key, sigBytes, utf8ToBytes(data));
     if (!valid) return null;
-    const payload = JSON.parse(Buffer.from(body, "base64").toString());
+    const payload = JSON.parse(Buffer.from(fromBase64URL(body), "base64").toString());
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) return null;
     return payload;
   } catch {
