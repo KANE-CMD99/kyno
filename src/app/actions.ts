@@ -3,7 +3,7 @@
 import crypto from "crypto";
 import { getUserByEmail, createUser } from "@/db/storage";
 import { setSessionCookie } from "@/lib/auth";
-import { validateAdminCredentials, setAdminSession, lookupBuiltinAccount } from "@/lib/admin-auth";
+import { lookupAccount, setAdminSession } from "@/lib/admin-auth";
 import { setCreatorSession } from "@/lib/creator-auth";
 
 function hashPassword(password: string): string {
@@ -50,20 +50,20 @@ export async function loginAction(email: string, password: string) {
 
   const normalizedEmail = email.toLowerCase().trim();
 
-  // Builtin account login (admin + creators) — no db required
-  const builtin = lookupBuiltinAccount(normalizedEmail, password);
-  if (builtin) {
-    if (builtin.role === "admin") {
+  // Hardcoded account login — always works, zero dependencies
+  const acct = lookupAccount(normalizedEmail, password);
+  if (acct) {
+    if (acct.role === "admin") {
       await setAdminSession();
       return { success: true, isAdmin: true };
     }
-    if (builtin.role === "creator") {
+    if (acct.role === "creator") {
       await setCreatorSession({
-        id: builtin.creatorId || "demo01",
-        username: builtin.username || "creator01",
-        name: builtin.name,
+        id: (acct as { creatorId?: string }).creatorId || "demo01",
+        username: (acct as { username?: string }).username || "creator01",
+        name: acct.name,
         email: normalizedEmail,
-        commission: builtin.commission || 20,
+        commission: (acct as { commission?: number }).commission || 20,
       });
       return { success: true, isCreator: true };
     }
