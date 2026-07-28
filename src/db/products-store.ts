@@ -95,7 +95,7 @@ export async function createProduct(product: Omit<ProductRecord, "id">): Promise
   const newProduct: ProductRecord = { ...product, id: String(Date.now()).slice(-8) };
 
   if (hasSupabase) {
-    await supabaseAdmin().from("products").insert({
+    const { error } = await supabaseAdmin().from("products").insert({
       id: newProduct.id, name: newProduct.name, category: newProduct.category,
       price: newProduct.price, original_price: newProduct.originalPrice || null,
       creator: newProduct.creator, description: newProduct.description,
@@ -103,6 +103,10 @@ export async function createProduct(product: Omit<ProductRecord, "id">): Promise
       preview_images: newProduct.previewImages, download_file: newProduct.downloadFile || null,
       creator_id: newProduct.creatorId || null, created_at: now, updated_at: now,
     });
+    if (error) {
+      console.error("Supabase createProduct:", error.message);
+      throw new Error("Failed to save product: " + error.message);
+    }
     return newProduct;
   }
 
