@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Logo from "./Logo";
-import AuthModal from "./AuthModal";
 import CartDrawer from "./CartDrawer";
 import UserMenu from "./UserMenu";
 import { useCart } from "./CartContext";
@@ -12,8 +11,6 @@ import { navLinks, categoryPills } from "@/data/site";
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
-  const [loginKey, setLoginKey] = useState(0);
   const { itemCount, openCart, closeCart, isOpen: cartOpen } = useCart();
 
   useEffect(() => {
@@ -23,10 +20,6 @@ export default function Nav() {
   }, []);
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
-
-  const openAuth = () => {
-    setAuthOpen(true);
-  };
 
   return (
     <>
@@ -51,7 +44,7 @@ export default function Nav() {
               </a>
             ))}
 
-            <UserMenu key={loginKey} onOpenAuth={openAuth} />
+            <UserMenu />
 
             {/* Cart */}
             <button
@@ -107,7 +100,7 @@ export default function Nav() {
                   {link.label}
                 </a>
               ))}
-              <button onClick={() => { closeMenu(); openAuth(); }} className="rounded-lg border border-neutral-600 px-4 py-2.5 text-center text-sm font-medium text-neutral-200">Sign In</button>
+              <Link href="/login" onClick={closeMenu} className="rounded-lg border border-neutral-600 px-4 py-2.5 text-center text-sm font-medium text-neutral-200">Sign In</Link>
             </div>
           </div>
         )}
@@ -128,7 +121,6 @@ export default function Nav() {
         </div>
       </div>
 
-      <AuthModal isOpen={authOpen} onClose={() => { setAuthOpen(false); setLoginKey((k) => k + 1); }} />
       <CartDrawer isOpen={cartOpen} onClose={closeCart} />
     </>
   );

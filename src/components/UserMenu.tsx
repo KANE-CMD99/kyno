@@ -1,12 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
-interface UserMenuProps {
-  onOpenAuth: () => void;
-}
-
-export default function UserMenu({ onOpenAuth }: UserMenuProps) {
+export default function UserMenu() {
   const [user, setUser] = useState<{ name: string; email: string } | null | undefined>(undefined);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -28,12 +25,12 @@ export default function UserMenu({ onOpenAuth }: UserMenuProps) {
   if (!user) {
     return (
       <div className="hidden items-center gap-3 md:flex">
-        <button
-          onClick={() => onOpenAuth()}
+        <Link
+          href="/login"
           className="rounded-lg border border-neutral-600 px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:border-neutral-400 hover:text-white"
         >
           Sign In
-        </button>
+        </Link>
       </div>
     );
   }
