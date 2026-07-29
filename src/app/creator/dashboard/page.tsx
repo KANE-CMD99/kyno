@@ -59,7 +59,7 @@ export default function CreatorDashboardPage() {
             <div className="flex items-center gap-3 text-xs text-neutral-400">
               <span>{creator?.name}</span>
               {creator?.username && (
-                <Link href={`/${creator.username}`} target="_blank" className="text-blue-600 hover:text-blue-700">{t("creator.view_profile")}</Link>
+                <Link href={`/${creator.username}`} className="text-blue-600 hover:text-blue-700">{t("creator.view_profile")}</Link>
               )}
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function CreatorDashboardPage() {
               <button onClick={() => setLang("en")} className={`rounded px-2 py-0.5 text-xs font-medium ${lang === "en" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-400"}`}>EN</button>
               <button onClick={() => setLang("zh")} className={`rounded px-2 py-0.5 text-xs font-medium ${lang === "zh" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-400"}`}>中文</button>
             </div>
-            <Link href={`/${creator?.username || ""}`} target="_blank" className="text-xs text-blue-600 hover:text-blue-700">{t("creator.view_store")}</Link>
+            <Link href={`/${creator?.username || ""}`} className="text-xs text-blue-600 hover:text-blue-700">{t("creator.view_store")}</Link>
             <button onClick={() => router.push("/auth/logout")} className="text-xs text-neutral-400 hover:text-neutral-600">{t("creator.signout")}</button>
           </div>
         </div>
