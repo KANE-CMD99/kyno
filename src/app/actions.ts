@@ -1,6 +1,8 @@
 "use server";
 
 import { cookies } from "next/headers";
+import crypto from "crypto";
+import { getUserByEmail, createUser } from "@/db/storage";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // BUILT-IN ACCOUNTS — hardcoded, always available
@@ -12,8 +14,26 @@ const ACCOUNTS: Record<string, { name: string; p: string; role: string; cid?: st
   "153963592@qq.com": { name: "Creator GCS",   p: "GCS123456",      role: "creator", cid: "creator03" },
 };
 
-export async function registerAction(_name: string, _email: string, _password: string) {
-  return { success: false, error: "Registration is invitation-only. Please contact us for an account." };
+export async function registerAction(name: string, email: string, password: string) {
+  if (process.env.ALLOW_OPEN_REGISTRATION !== "true") {
+    return { success: false, error: "Registration is invitation-only at this time." };
+  }
+  if (!name || !email || !password) return { success: false, error: "All fields required." };
+  if (password.length < 6) return { success: false, error: "Password must be at least 6 characters." };
+
+  const normalizedEmail = email.toLowerCase().trim();
+  const existing = await getUserByEmail(normalizedEmail);
+  if (existing) return { success: false, error: "An account with this email already exists." };
+
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, "sha512").toString("hex");
+
+  await createUser({
+    name: name.trim(), email: normalizedEmail,
+    passwordHash: `${salt}:${hash}`,
+    createdAt: new Date().toISOString(),
+  });
+  return { success: true };
 }
 
 export async function loginAction(email: string, password: string) {
