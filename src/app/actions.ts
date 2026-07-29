@@ -42,7 +42,7 @@ export async function loginAction(email: string, password: string) {
 
   if (result.role === "admin") {
     cs.set("kyno_admin_session", process.env.ADMIN_TOKEN || "kyno-admin-token-secure", {
-      httpOnly: true, secure: process.env.NODE_ENV === "production",
+      httpOnly: true, secure: false,
       sameSite: "lax", maxAge: 12 * 3600, path: "/",
     });
     return { success: true, isAdmin: true };
@@ -56,7 +56,7 @@ export async function loginAction(email: string, password: string) {
       email: result.email,
       role: "creator",
     }), {
-      httpOnly: true, secure: process.env.NODE_ENV === "production",
+      httpOnly: true, secure: false,
       sameSite: "lax", maxAge: 12 * 3600, path: "/",
     });
     cs.set("kyno_session_name", result.name, {

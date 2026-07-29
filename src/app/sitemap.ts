@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import { getAllProducts } from "@/db/products-store";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://kyno.dev";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseRoutes = [

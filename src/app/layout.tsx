@@ -4,7 +4,7 @@ import CookieBanner from "@/components/CookieBanner";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://kyno.dev"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"),
   icons: {
     icon: "/favicon.svg",
   },

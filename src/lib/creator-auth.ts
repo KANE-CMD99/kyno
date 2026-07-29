@@ -19,7 +19,7 @@ export async function setCreatorSession(creator: CreatorSession) {
   const cs = await cookies();
   cs.set(COOKIE_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     sameSite: "lax",
     maxAge: 12 * 3600,
     path: "/",
