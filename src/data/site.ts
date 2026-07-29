@@ -42,6 +42,7 @@ export const categoryPills: NavLink[] = [
   { label: "Photos", href: "/categories/photos" },
   { label: "Fonts", href: "/categories/fonts" },
   { label: "Templates", href: "/categories/templates" },
+  { label: "Free", href: "/categories/free" },
 ];
 
 export const categories: CategoryItem[] = [
@@ -66,6 +67,13 @@ export const categories: CategoryItem[] = [
     emoji: String.fromCodePoint(0x1F4D0),
     href: "#",
   },
+  {
+    id: "free",
+    title: "Free Downloads",
+    description: "Free digital products — fonts, photos, templates, and more at no cost.",
+    emoji: "🎁",
+    href: "#",
+  },
 ];
 
 export const services: ServiceItem[] = [
@@ -83,6 +91,11 @@ export const services: ServiceItem[] = [
     title: "Templates",
     description: "Professional design templates for websites, UI, and presentations.",
     emoji: String.fromCodePoint(0x1F4D0),
+  },
+  {
+    title: "Free Downloads",
+    description: "No-cost digital assets shared by our creator community.",
+    emoji: "🎁",
   },
 ];
 
@@ -106,6 +119,7 @@ export const productSections = [
   { title: "Popular Photos", category: "Photos", href: "#" },
   { title: "Popular Fonts", category: "Fonts", href: "#" },
   { title: "Popular Templates", category: "Templates", href: "#" },
+  { title: "Free Downloads", category: "Free", href: "#" },
 ];
 
 export const footerColumns = [

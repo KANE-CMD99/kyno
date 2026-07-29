@@ -16,10 +16,12 @@ const categoryEmoji: Record<string, string> = {
   Photos: String.fromCodePoint(0x1F4F7),
   Icons: String.fromCodePoint(0x1F4CC),
   "3D": String.fromCodePoint(0x1F3A8),
+  Free: "🎁",
 };
 
 export default function ProductCard({ product, index }: ProductCardProps) {
   const hasSale = !!product.originalPrice;
+  const isFree = product.price === "$0" || product.price === "0";
   const emoji = categoryEmoji[product.category] ?? String.fromCodePoint(0x1F4E6);
   const { addItem, openCart } = useCart();
 
@@ -29,7 +31,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
     e.preventDefault();
     e.stopPropagation();
     addItem({ id: product.id, name: product.name, price: priceNum, category: product.category });
-    openCart();
+    if (!isFree) openCart();
   };
 
   return (
@@ -63,14 +65,19 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       {/* Add to Cart button — outside the Link */}
       <button
         onClick={handleAddToCart}
-        className="mt-3 w-full rounded-lg border border-neutral-300 bg-white py-2 text-xs font-semibold text-neutral-700 transition-all hover:border-neutral-900 hover:text-neutral-900"
+        className={`mt-3 w-full rounded-lg border py-2 text-xs font-semibold transition-all ${
+          isFree ? "border-emerald-300 bg-emerald-50 text-emerald-700 hover:border-emerald-500 hover:bg-emerald-100" : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900 hover:text-neutral-900"
+        }`}
       >
-        Add to Cart
+        {isFree ? "Download Free" : "Add to Cart"}
       </button>
 
       {/* Info */}
       <div className="mt-2.5 px-0.5 text-center">
         <div className="flex items-center justify-center gap-2">
+          {isFree && (
+            <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">FREE</span>
+          )}
           {hasSale && (
             <span className="rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-bold text-green-700">
               25% OFF

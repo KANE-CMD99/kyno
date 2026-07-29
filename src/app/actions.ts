@@ -3,16 +3,8 @@
 import { cookies } from "next/headers";
 import crypto from "crypto";
 import { getUserByEmail, createUser } from "@/db/storage";
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// BUILT-IN ACCOUNTS — hardcoded, always available
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const ACCOUNTS: Record<string, { name: string; p: string; role: string; cid?: string }> = {
-  "admin@kyno.dev":   { name: "Admin",        p: "kyno-admin-2025", role: "admin" },
-  "creator@kyno.dev": { name: "Demo Creator",  p: "creator2025",     role: "creator", cid: "demo01" },
-  "397521650@qq.com": { name: "Creator LJ",    p: "LJ123456",       role: "creator", cid: "creator02" },
-  "153963592@qq.com": { name: "Creator GCS",   p: "GCS123456",      role: "creator", cid: "creator03" },
-};
+import { setSessionCookie } from "@/lib/auth";
+import { lookupAccount } from "@/lib/accounts";
 
 export async function registerAction(name: string, email: string, password: string) {
   if (process.env.ALLOW_OPEN_REGISTRATION !== "true") {
@@ -42,35 +34,48 @@ export async function loginAction(email: string, password: string) {
   }
 
   const key = email.toLowerCase().trim();
-  const acct = ACCOUNTS[key];
 
-  if (!acct || password !== acct.p) {
-    return { success: false, error: "Invalid email or password." };
-  }
+  // 1) Check built-in accounts (admin / creators)
+  const acct = lookupAccount(email, password);
+  if (acct) {
+    const cs = await cookies();
 
-  // Set session cookie directly — no external crypto/JWT deps
-  const cs = await cookies();
+    if (acct.role === "admin") {
+      cs.set("kyno_admin_session", process.env.ADMIN_TOKEN || "kyno-admin-token-secure", {
+        httpOnly: true, secure: process.env.NODE_ENV === "production",
+        sameSite: "lax", maxAge: 12 * 3600, path: "/",
+      });
+      return { success: true, isAdmin: true };
+    }
 
-  if (acct.role === "admin") {
-    cs.set("kyno_admin_session", process.env.ADMIN_TOKEN || "kyno-admin-token-secure", {
+    cs.set("kyno_creator_session", JSON.stringify({
+      id: acct.creatorId || "demo01", name: acct.name, email: key, role: "creator",
+    }), {
       httpOnly: true, secure: process.env.NODE_ENV === "production",
       sameSite: "lax", maxAge: 12 * 3600, path: "/",
     });
-    return { success: true, isAdmin: true };
+    cs.set("kyno_session_name", acct.name, {
+      httpOnly: false, secure: false, sameSite: "lax", maxAge: 12 * 3600, path: "/",
+    });
+    return { success: true, isCreator: true };
   }
 
-  // Creator — store session data directly in a cookie
-  cs.set("kyno_creator_session", JSON.stringify({
-    id: acct.cid || "demo01", name: acct.name, email: key, role: "creator",
-  }), {
-    httpOnly: true, secure: process.env.NODE_ENV === "production",
-    sameSite: "lax", maxAge: 12 * 3600, path: "/",
-  });
+  // 2) Try database user (regular customer)
+  const dbUser = await getUserByEmail(key);
+  if (!dbUser) {
+    return { success: false, error: "Invalid email or password." };
+  }
 
-  // Also set as kyno_session for UserMenu recognition
-  cs.set("kyno_session_name", acct.name, {
-    httpOnly: false, secure: false, sameSite: "lax", maxAge: 12 * 3600, path: "/",
-  });
+  const [salt, storedHash] = dbUser.passwordHash.split(":");
+  if (!salt || !storedHash) {
+    return { success: false, error: "Invalid email or password." };
+  }
 
-  return { success: true, isCreator: true };
+  const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, "sha512").toString("hex");
+  if (hash !== storedHash) {
+    return { success: false, error: "Invalid email or password." };
+  }
+
+  await setSessionCookie({ id: dbUser.id, name: dbUser.name, email: dbUser.email });
+  return { success: true };
 }

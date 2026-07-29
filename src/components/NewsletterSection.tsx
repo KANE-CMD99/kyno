@@ -8,9 +8,16 @@ export default function NewsletterSection() {
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "submitted">("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !consent) return;
+    try {
+      await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+    } catch { /* fail silently */ }
     setStatus("submitted");
   };
 

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const products = await getAllProducts();
   // Sort: category groups (Photos→Fonts→Templates), then alphabetically by name
-  const categoryOrder = ["Photos", "Fonts", "Templates"];
+  const categoryOrder = ["Photos", "Fonts", "Templates", "Free"];
   const sorted = [...products].sort((a, b) => {
     const ca = categoryOrder.indexOf(a.category);
     const cb = categoryOrder.indexOf(b.category);

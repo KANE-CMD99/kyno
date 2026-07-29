@@ -57,7 +57,7 @@ export default function ProductsSection() {
           </p>
         ) : (
           <>
-            {(["Photos", "Fonts", "Templates"] as const).map((cat) => {
+            {(["Photos", "Fonts", "Templates", "Free"] as const).map((cat) => {
               const items = filtered.filter((p) => p.category === cat);
               if (items.length === 0) return null;
               return (

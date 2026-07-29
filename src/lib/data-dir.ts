@@ -18,7 +18,7 @@ export function ensureDataDir() {
     fs.mkdirSync(target, { recursive: true });
   }
 
-  const files = ["products-store.json", "creators.json"];
+  const files = ["products-store.json", "creators.json", "orders.json", "users.json", "affiliates.json", "affiliate-clicks.json", "newsletter-subscribers.json"];
   for (const file of files) {
     const src = path.join(repoData, file);
     const dest = path.join(target, file);
