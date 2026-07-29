@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { createOrder, type OrderRecord } from "@/db/storage";
+import { getOrdersByTokens, createOrder, type OrderRecord } from "@/db/storage";
 import { convertClick } from "@/db/affiliates";
 import { sendDownloadEmail } from "@/lib/email";
 
@@ -31,8 +31,32 @@ export async function POST(req: Request) {
   const email = getCustomerEmail(session);
   const name = session.metadata?.customer_name || "";
 
-  console.log(`Order completed for ${email} — $${session.amount_total ? session.amount_total / 100 : 0}`);
+  console.log(`Payment confirmed for ${email} — $${session.amount_total ? session.amount_total / 100 : 0}`);
 
+  // If orders were pre-created at checkout, just re-send the email
+  const orderTokens = (session.metadata?.order_tokens || "").split(",").filter(Boolean);
+  if (orderTokens.length > 0) {
+    const orders = await getOrdersByTokens(orderTokens);
+    if (orders.length > 0 && email) {
+      try {
+        await sendDownloadEmail(orders, email);
+        console.log(`Re-sent download email to ${email}`);
+      } catch (err) {
+        console.error("Failed to send download email:", err);
+      }
+    }
+
+    // Still record affiliate commission
+    const affCode = session.metadata?.aff_code;
+    if (affCode) {
+      const total = session.amount_total ? session.amount_total / 100 : 0;
+      convertClick(affCode, 0, total);
+    }
+
+    return NextResponse.json({ received: true });
+  }
+
+  // Legacy path (no pre-created orders): create orders now
   const orders: OrderRecord[] = [];
   try {
     const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
@@ -55,7 +79,6 @@ export async function POST(req: Request) {
       orders.push(order);
     }
 
-    // Record affiliate commission
     const affCode = session.metadata?.aff_code;
     if (affCode) {
       const total = session.amount_total ? session.amount_total / 100 : 0;
@@ -65,7 +88,6 @@ export async function POST(req: Request) {
     console.error("Failed to create orders:", err);
   }
 
-  // Send email with download links
   if (orders.length > 0 && email) {
     try {
       await sendDownloadEmail(orders, email);

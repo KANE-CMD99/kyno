@@ -58,6 +58,35 @@ export async function getOrders(userId: number): Promise<OrderRecord[]> {
   return readJSON<OrderRecord[]>("orders.json", []).filter(o => o.userId === userId);
 }
 
+export async function getOrdersByEmail(email: string): Promise<OrderRecord[]> {
+  const normalized = email.toLowerCase().trim();
+  if (hasSupabase) {
+    const { data } = await supabaseAdmin().from("orders").select("*").eq("customer_email", normalized);
+    return (data || []).map((o: Record<string, unknown>) => ({
+      id: o.id as number, userId: (o.user_id as number) || 0,
+      productId: o.product_id as string, productName: o.product_name as string,
+      price: o.price as number, customerEmail: o.customer_email as string || "",
+      customerName: o.customer_name as string || "", downloadToken: o.download_token as string,
+      downloadClaimed: o.download_claimed as boolean, createdAt: o.created_at as string,
+    }));
+  }
+  return readJSON<OrderRecord[]>("orders.json", []).filter(o => o.customerEmail === normalized);
+}
+
+export async function getOrdersByTokens(tokens: string[]): Promise<OrderRecord[]> {
+  if (hasSupabase) {
+    const { data } = await supabaseAdmin().from("orders").select("*").in("download_token", tokens);
+    return (data || []).map((o: Record<string, unknown>) => ({
+      id: o.id as number, userId: (o.user_id as number) || 0,
+      productId: o.product_id as string, productName: o.product_name as string,
+      price: o.price as number, customerEmail: o.customer_email as string || "",
+      customerName: o.customer_name as string || "", downloadToken: o.download_token as string,
+      downloadClaimed: o.download_claimed as boolean, createdAt: o.created_at as string,
+    }));
+  }
+  return readJSON<OrderRecord[]>("orders.json", []).filter(o => tokens.includes(o.downloadToken));
+}
+
 export async function createOrder(order: Omit<OrderRecord, "id" | "downloadToken" | "downloadClaimed">): Promise<OrderRecord> {
   const token = crypto.randomBytes(16).toString("hex");
   if (hasSupabase) {

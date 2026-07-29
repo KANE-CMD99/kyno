@@ -1,15 +1,5 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-import { DATA_DIR } from "@/lib/data-dir";
-
-function readOrders() {
-  try {
-    const p = path.join(DATA_DIR, "orders.json");
-    if (!fs.existsSync(p)) return [];
-    return JSON.parse(fs.readFileSync(p, "utf-8"));
-  } catch { return []; }
-}
+import { getOrdersByTokens, getOrdersByEmail } from "@/db/storage";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -20,27 +10,24 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "tokens or email required" }, { status: 400 });
   }
 
-  const orders = readOrders();
-
   if (tokensParam) {
     const tokens = tokensParam.split(",");
-    const results = tokens
-      .map((t) => {
-        const order = orders.find((o: { downloadToken: string }) => o.downloadToken === t);
-        return order ? { productId: order.productId, productName: order.productName, token: order.downloadToken } : null;
-      })
-      .filter(Boolean);
+    const orders = await getOrdersByTokens(tokens);
+    const results = orders.map((o) => ({
+      productId: o.productId,
+      productName: o.productName,
+      token: o.downloadToken,
+    }));
     return NextResponse.json({ downloads: results });
   }
 
   if (email) {
-    const results = orders
-      .filter((o: { customerEmail: string }) => o.customerEmail === email.toLowerCase().trim())
-      .map((o: { productId: string; productName: string; downloadToken: string }) => ({
-        productId: o.productId,
-        productName: o.productName,
-        token: o.downloadToken,
-      }));
+    const orders = await getOrdersByEmail(email);
+    const results = orders.map((o) => ({
+      productId: o.productId,
+      productName: o.productName,
+      token: o.downloadToken,
+    }));
     return NextResponse.json({ downloads: results });
   }
 }
