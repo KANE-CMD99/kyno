@@ -15,7 +15,9 @@ export default async function CreatorProfilePage({ params }: PageProps) {
   const creator = await getCreatorByUsername(username.toLowerCase());
   if (!creator) notFound();
 
-  const products = (await getAllProducts()).filter((p) => p.creatorId === creator.id);
+  const products = (await getAllProducts()).filter(
+    (p) => p.creatorId === creator.id || p.creator === creator.name
+  );
 
   return (
     <>
