@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import crypto from "crypto";
 import { getUserByEmail, createUser } from "@/db/storage";
 import { setSessionCookie } from "@/lib/auth";
-import { lookupAccount } from "@/lib/accounts";
+import { authenticate } from "@/lib/auth-service";
 
 export async function registerAction(name: string, email: string, password: string) {
   if (process.env.ALLOW_OPEN_REGISTRATION !== "true") {
@@ -33,53 +33,43 @@ export async function loginAction(email: string, password: string) {
     return { success: false, error: "Email and password are required." };
   }
 
-  const key = email.toLowerCase().trim();
+  const result = await authenticate(email, password);
+  if (!result) {
+    return { success: false, error: "Invalid email or password." };
+  }
 
-  // 1) Check built-in accounts (admin / creators)
-  const acct = lookupAccount(email, password);
-  if (acct) {
-    const cs = await cookies();
+  const cs = await cookies();
 
-    if (acct.role === "admin") {
-      cs.set("kyno_admin_session", process.env.ADMIN_TOKEN || "kyno-admin-token-secure", {
-        httpOnly: true, secure: process.env.NODE_ENV === "production",
-        sameSite: "lax", maxAge: 12 * 3600, path: "/",
-      });
-      return { success: true, isAdmin: true };
-    }
+  if (result.role === "admin") {
+    cs.set("kyno_admin_session", process.env.ADMIN_TOKEN || "kyno-admin-token-secure", {
+      httpOnly: true, secure: process.env.NODE_ENV === "production",
+      sameSite: "lax", maxAge: 12 * 3600, path: "/",
+    });
+    return { success: true, isAdmin: true };
+  }
 
+  if (result.role === "creator") {
     cs.set("kyno_creator_session", JSON.stringify({
-      id: acct.creatorId || "demo01",
-      username: acct.username || "creator01",
-      name: acct.name,
-      email: key,
+      id: result.id,
+      username: result.username || result.id,
+      name: result.name,
+      email: result.email,
       role: "creator",
     }), {
       httpOnly: true, secure: process.env.NODE_ENV === "production",
       sameSite: "lax", maxAge: 12 * 3600, path: "/",
     });
-    cs.set("kyno_session_name", acct.name, {
+    cs.set("kyno_session_name", result.name, {
       httpOnly: false, secure: false, sameSite: "lax", maxAge: 12 * 3600, path: "/",
     });
     return { success: true, isCreator: true };
   }
 
-  // 2) Try database user (regular customer)
-  const dbUser = await getUserByEmail(key);
-  if (!dbUser) {
-    return { success: false, error: "Invalid email or password." };
-  }
-
-  const [salt, storedHash] = dbUser.passwordHash.split(":");
-  if (!salt || !storedHash) {
-    return { success: false, error: "Invalid email or password." };
-  }
-
-  const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, "sha512").toString("hex");
-  if (hash !== storedHash) {
-    return { success: false, error: "Invalid email or password." };
-  }
-
-  await setSessionCookie({ id: dbUser.id, name: dbUser.name, email: dbUser.email });
+  // Regular user
+  await setSessionCookie({
+    id: parseInt(result.id),
+    name: result.name,
+    email: result.email,
+  });
   return { success: true };
 }

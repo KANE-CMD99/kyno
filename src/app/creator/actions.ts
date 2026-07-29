@@ -1,19 +1,22 @@
 "use server";
 
-import { getCreatorByEmail, verifyCreatorPassword } from "@/db/creators";
+import { authenticate } from "@/lib/auth-service";
 import { setCreatorSession } from "@/lib/creator-auth";
 
 export async function creatorLogin(email: string, password: string) {
   if (!email || !password) return { success: false, error: "Email and password required" };
-  const creator = await getCreatorByEmail(email.toLowerCase().trim());
-  if (!creator) return { success: false, error: "Invalid credentials" };
-  if (!(await verifyCreatorPassword(creator, password))) return { success: false, error: "Invalid credentials" };
+
+  const result = await authenticate(email, password);
+  if (!result || result.role !== "creator") {
+    return { success: false, error: "Invalid credentials" };
+  }
+
   await setCreatorSession({
-    id: creator.id,
-    username: creator.username,
-    name: creator.name,
-    email: creator.email,
-    commission: creator.commission,
+    id: result.id,
+    username: result.username || result.id,
+    name: result.name,
+    email: result.email,
+    commission: result.commission || 20,
   });
   return { success: true };
 }
