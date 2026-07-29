@@ -49,7 +49,11 @@ export async function loginAction(email: string, password: string) {
     }
 
     cs.set("kyno_creator_session", JSON.stringify({
-      id: acct.creatorId || "demo01", name: acct.name, email: key, role: "creator",
+      id: acct.creatorId || "demo01",
+      username: acct.username || "creator01",
+      name: acct.name,
+      email: key,
+      role: "creator",
     }), {
       httpOnly: true, secure: process.env.NODE_ENV === "production",
       sameSite: "lax", maxAge: 12 * 3600, path: "/",
