@@ -3,8 +3,15 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
+interface UserData {
+  name: string;
+  email: string;
+  role?: string;
+  username?: string;
+}
+
 export default function UserMenu() {
-  const [user, setUser] = useState<{ name: string; email: string } | null | undefined>(undefined);
+  const [user, setUser] = useState<UserData | null | undefined>(undefined);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -35,6 +42,9 @@ export default function UserMenu() {
     );
   }
 
+  const isAdmin = user.role === "admin";
+  const isCreator = user.role === "creator";
+
   return (
     <div className="hidden items-center gap-4 md:flex">
       <div className="relative">
@@ -52,10 +62,47 @@ export default function UserMenu() {
             <div className="px-4 py-2 border-b border-neutral-700">
               <p className="text-sm font-medium text-white">{user.name}</p>
               <p className="text-xs text-neutral-400">{user.email}</p>
+              {user.role && (
+                <p className="mt-1 text-[10px] uppercase tracking-wider text-neutral-500">
+                  {isAdmin ? "Admin" : isCreator ? "Creator" : "Customer"}
+                </p>
+              )}
             </div>
+
+            {isAdmin && (
+              <Link
+                href="/admin/dashboard"
+                className="block w-full px-4 py-2 text-left text-sm text-neutral-300 transition-colors hover:bg-neutral-700 hover:text-white"
+                onClick={() => setMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+            )}
+
+            {isCreator && (
+              <>
+                <Link
+                  href="/creator/dashboard"
+                  className="block w-full px-4 py-2 text-left text-sm text-neutral-300 transition-colors hover:bg-neutral-700 hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                {user.username && (
+                  <Link
+                    href={`/${user.username}`}
+                    className="block w-full px-4 py-2 text-left text-sm text-neutral-300 transition-colors hover:bg-neutral-700 hover:text-white"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    My Store
+                  </Link>
+                )}
+              </>
+            )}
+
             <button
               onClick={handleLogout}
-              className="w-full px-4 py-2 text-left text-sm text-neutral-300 transition-colors hover:bg-neutral-700 hover:text-white"
+              className="w-full px-4 py-2 text-left text-sm text-neutral-300 transition-colors hover:bg-neutral-700 hover:text-white border-t border-neutral-700 mt-0"
             >
               Sign Out
             </button>

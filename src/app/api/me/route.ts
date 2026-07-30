@@ -9,18 +9,31 @@ const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "kyno-admin-token-secure";
 export async function GET() {
   // 1) Regular user session (JWT in kyno_session)
   const session = await getSession();
-  if (session) return NextResponse.json({ user: { name: session.name, email: session.email } });
+  if (session) {
+    return NextResponse.json({
+      user: { name: session.name, email: session.email, role: "user" },
+    });
+  }
 
   // 2) Admin session
   const cs = await cookies();
   if (cs.get(ADMIN_COOKIE)?.value === ADMIN_TOKEN) {
-    return NextResponse.json({ user: { name: "Admin", email: "admin@kyno.dev" } });
+    return NextResponse.json({
+      user: { name: "Admin", email: "admin@kyno.dev", role: "admin" },
+    });
   }
 
   // 3) Creator session — try JWT first, then raw JSON
   const jwtCreator = await getCreatorSession();
   if (jwtCreator) {
-    return NextResponse.json({ user: { name: jwtCreator.name, email: jwtCreator.email } });
+    return NextResponse.json({
+      user: {
+        name: jwtCreator.name,
+        email: jwtCreator.email,
+        role: "creator",
+        username: jwtCreator.username,
+      },
+    });
   }
 
   const rawCreator = cs.get("kyno_creator_session")?.value;
@@ -28,7 +41,14 @@ export async function GET() {
     try {
       const c = JSON.parse(rawCreator);
       if (c?.id) {
-        return NextResponse.json({ user: { name: c.name, email: c.email } });
+        return NextResponse.json({
+          user: {
+            name: c.name,
+            email: c.email,
+            role: "creator",
+            username: c.username,
+          },
+        });
       }
     } catch { /* not JSON */ }
   }
