@@ -34,25 +34,15 @@ export default function Nav() {
           <Logo dark />
 
           <div className="hidden items-center gap-6 md:flex">
-            {navLinks.map((link) =>
-              link.label === "Creators" ? (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
-                >
-                  {link.label}
-                </Link>
-              ) : (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm font-medium text-neutral-300 transition-colors hover:text-white"
-                >
-                  {link.label}
-                </a>
-              )
-            )}
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-neutral-300 transition-colors hover:text-white"
+              >
+                {link.label}
+              </a>
+            ))}
 
             <UserMenu />
 
