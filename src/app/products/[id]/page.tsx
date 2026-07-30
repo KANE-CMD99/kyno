@@ -33,6 +33,9 @@ export default async function ProductPage({ params }: PageProps) {
 
   const relatedProducts = await getRelatedProducts(id);
 
+  const hasFeatures = detail.features.filter(Boolean).length > 0;
+  const hasIncludes = detail.includes.filter(Boolean).length > 0;
+
   return (
     <>
       <Nav />
@@ -51,16 +54,25 @@ export default async function ProductPage({ params }: PageProps) {
         {/* Hero: 2-col */}
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="grid gap-12 lg:grid-cols-2">
-            {/* Left: Preview placeholder */}
-            <div className="aspect-[4/3] rounded-xl bg-neutral-100 flex items-center justify-center">
-              <div className="text-center">
-                <span className="text-7xl">
-                  {detail.category === "Photos" ? String.fromCodePoint(0x1F4F7)
-                   : detail.category === "Fonts" ? String.fromCodePoint(0x1F524)
-                   : String.fromCodePoint(0x1F4D0)}
-                </span>
-                <p className="mt-3 text-sm text-neutral-400">Product preview</p>
-              </div>
+            {/* Left: Preview image or placeholder */}
+            <div className="aspect-[4/3] rounded-xl bg-neutral-100 flex items-center justify-center overflow-hidden">
+              {detail.previewImages.filter(Boolean).length > 0 ? (
+                <img
+                  src={detail.previewImages[0]}
+                  alt={detail.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="text-center">
+                  <span className="text-7xl">
+                    {detail.category === "Photos" ? String.fromCodePoint(0x1F4F7)
+                     : detail.category === "Fonts" ? String.fromCodePoint(0x1F524)
+                     : detail.category === "Free" ? String.fromCodePoint(0x1F381)
+                     : String.fromCodePoint(0x1F4D0)}
+                  </span>
+                  <p className="mt-3 text-sm text-neutral-400">Product preview</p>
+                </div>
+              )}
             </div>
 
             {/* Right: Info */}
@@ -116,42 +128,62 @@ export default async function ProductPage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Features + Includes */}
-        <section className="bg-neutral-50 px-6 py-16">
-          <div className="mx-auto max-w-7xl">
-            <div className="grid gap-12 lg:grid-cols-2">
-              {/* Features */}
-              <div>
-                <h2 className="text-lg font-bold text-neutral-900">Features</h2>
-                <ul className="mt-4 space-y-2.5">
-                  {detail.features.map((f, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-600">
-                      <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* What's included */}
-              <div>
-                <h2 className="text-lg font-bold text-neutral-900">What&apos;s included</h2>
-                <ul className="mt-4 space-y-2.5">
-                  {detail.includes.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-600">
-                      <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+        {/* Features + Includes — only show if there's content */}
+        {(hasFeatures || hasIncludes) ? (
+          <section className="bg-neutral-50 px-6 py-16">
+            <div className="mx-auto max-w-7xl">
+              <h2 className="text-lg font-bold text-neutral-900 text-center mb-8">What&apos;s inside</h2>
+              <div className="grid gap-12 lg:grid-cols-2">
+                {hasFeatures && (
+                  <div>
+                    <h3 className="text-base font-semibold text-neutral-900">Features</h3>
+                    <ul className="mt-4 space-y-2.5">
+                      {detail.features.filter(Boolean).map((f, i) => (
+                        <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-600">
+                          <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {hasIncludes && (
+                  <div>
+                    <h3 className="text-base font-semibold text-neutral-900">What&apos;s included</h3>
+                    <ul className="mt-4 space-y-2.5">
+                      {detail.includes.filter(Boolean).map((item, i) => (
+                        <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-600">
+                          <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        ) : (
+          <section className="bg-neutral-50 px-6 py-16">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="text-lg font-bold text-neutral-900">What&apos;s inside</h2>
+              <p className="mt-4 text-sm leading-relaxed text-neutral-600">
+                {detail.description || "This digital product includes downloadable files ready for use in your projects."}
+              </p>
+              {detail.previewImages.filter(Boolean).length > 1 && (
+                <div className="mt-8 grid grid-cols-2 gap-4">
+                  {detail.previewImages.filter(Boolean).slice(1).map((url, i) => (
+                    <img key={i} src={url} alt="" className="rounded-lg object-cover w-full aspect-[4/3]" />
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         {/* Related products */}
         {relatedProducts.length > 0 && (
