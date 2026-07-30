@@ -18,5 +18,45 @@
       "canViewAnalytics": true
     },
     "createdAt": "2026-07-26T03:00:56.293Z"
+  },
+  {
+    "id": "creator02",
+    "username": "ljcreator",
+    "name": "Creator LJ",
+    "email": "397521650@qq.com",
+    "bio": "",
+    "avatarUrl": "",
+    "passwordHash": "salt:hash",
+    "commission": 20,
+    "totalSales": 0,
+    "totalEarnings": 0,
+    "status": "active",
+    "permissions": {
+      "canUpload": true,
+      "canEdit": true,
+      "canDelete": false,
+      "canViewAnalytics": true
+    },
+    "createdAt": "2026-07-30T10:18:57.354Z"
+  },
+  {
+    "id": "creator03",
+    "username": "gcscreator",
+    "name": "Creator GCS",
+    "email": "153963592@qq.com",
+    "bio": "",
+    "avatarUrl": "",
+    "passwordHash": "salt:hash",
+    "commission": 20,
+    "totalSales": 0,
+    "totalEarnings": 0,
+    "status": "active",
+    "permissions": {
+      "canUpload": true,
+      "canEdit": true,
+      "canDelete": false,
+      "canViewAnalytics": true
+    },
+    "createdAt": "2026-07-30T10:18:57.363Z"
   }
 ]
