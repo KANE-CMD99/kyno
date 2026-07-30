@@ -7,8 +7,9 @@ import AdminProductList from "../AdminProductList";
 import AdminProductForm from "../AdminProductForm";
 import AdminAffiliates from "../AdminAffiliates";
 import AdminCreators from "../AdminCreators";
+import AdminUsers from "../AdminUsers";
 
-type Tab = "products" | "creators" | "affiliates";
+type Tab = "products" | "creators" | "affiliates" | "users";
 
 export default function AdminDashboardPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
@@ -68,6 +69,12 @@ export default function AdminDashboardPage() {
               >
                 Affiliates
               </button>
+              <button
+                onClick={() => setTab("users")}
+                className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${tab === "users" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-700"}`}
+              >
+                Users
+              </button>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -86,6 +93,8 @@ export default function AdminDashboardPage() {
       <div className="mx-auto max-w-7xl px-6 py-12">
         {tab === "creators" ? (
           <AdminCreators />
+        ) : tab === "users" ? (
+          <AdminUsers />
         ) : tab === "affiliates" ? (
           <AdminAffiliates />
         ) : view === "list" ? (

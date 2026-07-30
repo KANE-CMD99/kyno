@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     if (!creator) return NextResponse.json({ success: false, error: "Creator not found" }, { status: 404 });
 
     creator.name = name;
-    creator.username = username.toLowerCase();
+    creator.username = username;
     creator.email = email.toLowerCase().trim();
     creator.bio = bio || "";
     creator.commission = commission || 20;
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   }
 
   const creators = await getCreators();
-  const existing = creators.find((c: { username: string }) => c.username === username.toLowerCase());
+  const existing = creators.find((c: { username: string }) => c.username.toLowerCase() === username.toLowerCase());
   if (existing) return NextResponse.json({ success: false, error: "Username already taken" }, { status: 400 });
 
   const creator = await createCreator({

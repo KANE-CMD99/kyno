@@ -113,7 +113,7 @@ export async function createCreator(data: {
   const hash = crypto.pbkdf2Sync(data.password, salt, 100000, 64, "sha512").toString("hex");
   const creator: CreatorRecord = {
     id: String(Date.now()).slice(-6),
-    username: data.username.toLowerCase(),
+    username: data.username,
     name: data.name,
     email: data.email.toLowerCase().trim(),
     bio: data.bio,
