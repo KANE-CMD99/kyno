@@ -39,13 +39,13 @@ export async function POST(req: Request) {
     // Build token list for success URL
     const tokenList = orders.map((o) => o.downloadToken).join(",");
 
-    const lineItems = items.map((item: { id: string; name: string; price: number; quantity: number }) => ({
+    const lineItems = items.map((item: { id: string; name: string; price: number; quantity?: number }) => ({
       price_data: {
         currency: "usd",
         product_data: { name: item.name },
-        unit_amount: Math.round(item.price * 100),
+        unit_amount: Math.round((item.price || 0) * 100),
       },
-      quantity: item.quantity,
+      quantity: item.quantity || 1,
     }));
 
     try {
