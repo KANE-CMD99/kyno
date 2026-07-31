@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { SITE } from "@/lib/site-config";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
@@ -133,7 +134,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-sm font-semibold text-neutral-900">Email</h3>
                 <p className="mt-1 text-sm text-neutral-500">
-                  <a href="mailto:33429296@qq.com" className="text-blue-600 hover:text-blue-700">33429296@qq.com</a>
+                  <a href={`mailto:${SITE.contactEmail}`} className="text-blue-600 hover:text-blue-700">{SITE.contactEmail}</a>
                 </p>
               </div>
               <div>

@@ -1,11 +1,10 @@
 import { Resend } from "resend";
 import type { OrderRecord } from "@/db/storage";
+import { SITE } from "@/lib/site-config";
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
-
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "Kyno <33429296@qq.com>";
 
 function buildOrderEmail(orders: OrderRecord[], origin: string): string {
   const downloadLinks = orders
@@ -30,7 +29,7 @@ function buildOrderEmail(orders: OrderRecord[], origin: string): string {
   <ul style="list-style:none;padding:0;margin:0 0 24px">${downloadLinks}</ul>
   <hr style="border:0;border-top:1px solid #e5e5e5;margin:24px 0">
   <p style="color:#a3a3a3;font-size:12px;margin:0">
-    Need help? Reply to this email or contact <a href="mailto:33429296@qq.com" style="color:#1a56db">33429296@qq.com</a>.
+    Need help? Reply to this email or contact <a href="mailto:${SITE.contactEmail}" style="color:#1a56db">${SITE.contactEmail}</a>.
   </p>
 </body>
 </html>`;
@@ -51,7 +50,7 @@ export async function sendDownloadEmail(orders: OrderRecord[], to: string) {
   }
 
   const { data, error } = await resend.emails.send({
-    from: FROM_EMAIL,
+    from: SITE.fromEmail,
     to: [to],
     subject: orders.length === 1
       ? `Your download: ${orders[0].productName}`

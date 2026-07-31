@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { SITE } from "@/lib/site-config";
 
 export async function POST(req: Request) {
   try {
@@ -16,10 +17,9 @@ export async function POST(req: Request) {
 
     if (process.env.RESEND_API_KEY) {
       const resend = new Resend(process.env.RESEND_API_KEY);
-      const adminEmail = process.env.ADMIN_EMAIL || "33429296@qq.com";
       await resend.emails.send({
-        from: process.env.RESEND_FROM_EMAIL || "Kyno <33429296@qq.com>",
-        to: [adminEmail],
+        from: SITE.fromEmail,
+        to: [SITE.adminEmail],
         subject: `[Kyno Contact] ${subject}`,
         text: body,
       });

@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { SITE } from "@/lib/site-config";
 
 interface DownloadItem {
   productId: string;
@@ -72,7 +73,7 @@ function SuccessContent() {
             <div className="rounded-xl border border-neutral-200 bg-white p-6">
               <p className="text-sm text-neutral-500">
                 Download links will be sent to your email. If you don&apos;t see them, check spam or{" "}
-                <a href="mailto:33429296@qq.com" className="text-blue-600 hover:text-blue-700">contact us</a>.
+                <a href={`mailto:${SITE.contactEmail}`} className="text-blue-600 hover:text-blue-700">contact us</a>.
               </p>
             </div>
           )}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { SITE } from "@/lib/site-config";
 
 export default function OrdersPage() {
   const [email, setEmail] = useState("");
@@ -92,7 +93,7 @@ export default function OrdersPage() {
 
           <p className="mt-10 text-xs text-neutral-400">
             Need help?{" "}
-            <a href="mailto:33429296@qq.com" className="text-blue-600 hover:text-blue-700">Contact support</a>
+            <a href={`mailto:${SITE.contactEmail}`} className="text-blue-600 hover:text-blue-700">Contact support</a>
           </p>
         </div>
       </main>
