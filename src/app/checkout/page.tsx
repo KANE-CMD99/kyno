@@ -117,6 +117,9 @@ export default function CheckoutPage() {
                 className="rounded-xl border border-neutral-200 bg-white p-6"
               >
                 <h2 className="text-sm font-bold text-neutral-900">Contact Information</h2>
+                <p className="mt-1 text-xs text-neutral-400">
+                  No account needed &mdash; just enter your name and email to receive download links.
+                </p>
                 <div className="mt-4 space-y-4">
                   <div>
                     <label htmlFor="name" className="block text-xs font-medium text-neutral-700">Full Name</label>

@@ -80,18 +80,23 @@ function SuccessContent() {
 
         <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <Link
+            href="/orders"
+            className="rounded-lg bg-white border border-neutral-300 px-8 py-3 text-sm font-semibold text-neutral-700 transition-colors hover:border-neutral-400"
+          >
+            Find My Downloads
+          </Link>
+          <Link
             href="/"
             className="rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
           >
             Back to Store
           </Link>
-          <a
-            href="mailto:33429296@qq.com?subject=Order%20Issue"
-            className="text-sm text-neutral-500 transition-colors hover:text-neutral-900"
-          >
-            Need help? Contact us
-          </a>
         </div>
+        <p className="mt-4 text-xs text-neutral-400">
+          Bookmark{" "}
+          <Link href="/orders" className="text-blue-600 hover:text-blue-700">My Downloads</Link>
+          {" "}to find your purchases anytime using your email.
+        </p>
       </div>
     </main>
   );

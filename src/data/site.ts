@@ -136,6 +136,7 @@ export const footerColumns = [
     title: "Resources",
     links: [
       { label: "Free Downloads", href: "/free-downloads" },
+      { label: "My Orders", href: "/orders" },
       { label: "License", href: "/license" },
       { label: "Help Center", href: "/contact" },
     ],
