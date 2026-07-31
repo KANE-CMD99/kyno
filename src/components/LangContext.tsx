@@ -132,7 +132,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "checkout.email": "Email",
     "checkout.email_placeholder": "you@example.com",
     "checkout.email_hint": "Download links and receipt will be sent to this email.",
-    "checkout.pay_button": "Pay with Stripe — ${amount}",
+    "checkout.pay_button": "Pay with Stripe — {amount}",
     "checkout.redirecting": "Redirecting to checkout...",
     "checkout.stripe_note": "You will be redirected to Stripe to complete your payment securely. Prices shown do not include local sales tax, VAT, or GST where applicable. All sales are final per our",
     "checkout.refund_policy": "Refund Policy",

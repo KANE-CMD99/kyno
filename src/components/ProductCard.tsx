@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useCart } from "./CartContext";
+import { useCurrency } from "./CurrencyContext";
 import type { ProductItem } from "@/data/site";
 
 interface ProductCardProps {
@@ -24,8 +25,11 @@ export default function ProductCard({ product, index }: ProductCardProps) {
   const isFree = product.price === "$0" || product.price === "0";
   const emoji = categoryEmoji[product.category] ?? String.fromCodePoint(0x1F4E6);
   const { addItem, openCart } = useCart();
+  const { format } = useCurrency();
 
-  const priceNum = parseInt(product.price.replace("$", ""), 10);
+  const priceNum = parseInt(product.price.replace(/\$/g, ""), 10);
+  const displayPrice = isFree ? "$0" : format(priceNum);
+  const displayOriginal = product.originalPrice ? format(parseInt(product.originalPrice.replace(/\$/g, ""), 10)) : undefined;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -93,9 +97,9 @@ export default function ProductCard({ product, index }: ProductCardProps) {
           in {product.category}
         </p>
         <div className="mt-1.5 flex items-center justify-center gap-2">
-          <span className="text-sm font-bold text-neutral-900">{product.price}</span>
+          <span className="text-sm font-bold text-neutral-900">{displayPrice}</span>
           {hasSale && (
-            <span className="text-xs text-neutral-400 line-through">{product.originalPrice}</span>
+            <span className="text-xs text-neutral-400 line-through">{displayOriginal}</span>
           )}
         </div>
       </div>

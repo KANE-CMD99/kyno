@@ -3,6 +3,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useCart, type CartItem } from "./CartContext";
+import { useLang } from "./LangContext";
+import { useCurrency } from "./CurrencyContext";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -11,6 +13,8 @@ interface CartDrawerProps {
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const { items, removeItem, updateQuantity, subtotal, itemCount, clearCart } = useCart();
+  const { t } = useLang();
+  const { format } = useCurrency();
 
   return (
     <AnimatePresence>
@@ -36,8 +40,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-neutral-200 px-6 py-4">
               <div>
-                <h2 className="text-lg font-bold text-neutral-900">Cart</h2>
-                <p className="text-sm text-neutral-500">{itemCount} {itemCount === 1 ? "item" : "items"}</p>
+                <h2 className="text-lg font-bold text-neutral-900">{t("nav.cart")}</h2>
+                <p className="text-sm text-neutral-500">{t("nav.cart.items", { n: itemCount })}</p>
               </div>
               <button
                 onClick={onClose}
@@ -57,15 +61,15 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   <span className="text-5xl select-none">
                     {String.fromCodePoint(0x1F6D2)}
                   </span>
-                  <p className="mt-4 text-sm font-medium text-neutral-900">Your cart is empty</p>
+                  <p className="mt-4 text-sm font-medium text-neutral-900">{t("nav.cart.empty")}</p>
                   <p className="mt-1 text-xs text-neutral-500">
-                    Add some products to get started.
+                    {t("nav.cart.empty_hint")}
                   </p>
                   <button
                     onClick={onClose}
                     className="mt-6 rounded-lg border border-neutral-300 px-6 py-2 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400"
                   >
-                    Continue Shopping
+                    {t("nav.cart.continue")}
                   </button>
                 </div>
               ) : (
@@ -86,24 +90,24 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             {items.length > 0 && (
               <div className="border-t border-neutral-200 px-6 py-5">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-neutral-500">Subtotal</span>
-                  <span className="font-bold text-neutral-900">${subtotal}</span>
+                  <span className="text-neutral-500">{t("nav.cart.subtotal")}</span>
+                  <span className="font-bold text-neutral-900">{format(subtotal)}</span>
                 </div>
                 <p className="mt-1 text-xs text-neutral-400">
-                  Taxes calculated at checkout
+                  {t("checkout.stripe_note").slice(0, 50)}...
                 </p>
                 <Link
                   href="/checkout"
                   onClick={onClose}
                   className="mt-4 block rounded-lg bg-blue-600 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700"
                 >
-                  Checkout — ${subtotal}
+                  {t("nav.cart.checkout")} — {format(subtotal)}
                 </Link>
                 <button
                   onClick={clearCart}
                   className="mt-2 block w-full text-center text-xs text-neutral-400 transition-colors hover:text-neutral-600"
                 >
-                  Clear cart
+                  {t("nav.cart.clear")}
                 </button>
               </div>
             )}
@@ -127,6 +131,7 @@ function CartItemRow({
     item.category === "Photos" ? String.fromCodePoint(0x1F4F7)
     : item.category === "Fonts" ? String.fromCodePoint(0x1F524)
     : String.fromCodePoint(0x1F4D0);
+  const { format } = useCurrency();
 
   return (
     <li className="flex gap-3">
@@ -152,7 +157,7 @@ function CartItemRow({
               +
             </button>
           </div>
-          <span className="text-sm font-semibold text-neutral-900">${item.price * item.quantity}</span>
+          <span className="text-sm font-semibold text-neutral-900">{format(item.price * item.quantity)}</span>
         </div>
       </div>
       <button

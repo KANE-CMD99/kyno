@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartContext";
+import { useLang } from "@/components/LangContext";
+import { useCurrency } from "@/components/CurrencyContext";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
@@ -12,13 +14,15 @@ export default function CheckoutPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { t } = useLang();
+  const { format } = useCurrency();
 
   if (!hydrated) {
     return (
       <>
         <Nav />
         <main className="flex min-h-[80vh] items-center justify-center bg-[#FAFAFA] pt-[105px]">
-          <p className="text-sm text-neutral-500">Loading cart...</p>
+          <p className="text-sm text-neutral-500">{t("checkout.loading_cart")}</p>
         </main>
         <Footer />
       </>
@@ -32,13 +36,13 @@ export default function CheckoutPage() {
         <main className="flex min-h-[80vh] items-center justify-center bg-[#FAFAFA] pt-[105px]">
           <div className="text-center px-6">
             <span className="text-6xl select-none">{String.fromCodePoint(0x1F6D2)}</span>
-            <h1 className="mt-6 text-2xl font-bold text-neutral-900">Your cart is empty</h1>
-            <p className="mt-2 text-neutral-500">Add some products before checking out.</p>
+            <h1 className="mt-6 text-2xl font-bold text-neutral-900">{t("checkout.empty_title")}</h1>
+            <p className="mt-2 text-neutral-500">{t("checkout.empty_hint")}</p>
             <Link
               href="/"
               className="mt-6 inline-block rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
             >
-              Browse Products
+              {t("checkout.browse")}
             </Link>
           </div>
         </main>
@@ -72,10 +76,10 @@ export default function CheckoutPage() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setError(data.error || "Something went wrong. Please try again.");
+        setError(data.error || t("common.error"));
       }
     } catch {
-      setError("Network error. Please try again.");
+      setError(t("checkout.network_error"));
     }
     setLoading(false);
   };
@@ -85,27 +89,27 @@ export default function CheckoutPage() {
       <Nav />
       <main className="bg-[#FAFAFA] pt-[105px]">
         <div className="mx-auto max-w-3xl px-6 py-12">
-          <h1 className="text-2xl font-bold text-neutral-900">Checkout</h1>
-          <p className="mt-1 text-sm text-neutral-500">{itemCount} {itemCount === 1 ? "item" : "items"} in your cart</p>
+          <h1 className="text-2xl font-bold text-neutral-900">{t("checkout.title")}</h1>
+          <p className="mt-1 text-sm text-neutral-500">{t("checkout.items_count", { n: itemCount })}</p>
 
           <div className="mt-8 grid gap-8 lg:grid-cols-5">
             {/* Order summary */}
             <div className="lg:col-span-2">
               <div className="rounded-xl border border-neutral-200 bg-white p-6">
-                <h2 className="text-sm font-bold text-neutral-900">Order Summary</h2>
+                <h2 className="text-sm font-bold text-neutral-900">{t("checkout.order_summary")}</h2>
                 <ul className="mt-4 space-y-3">
                   {items.map((item) => (
                     <li key={item.id} className="flex justify-between text-sm">
                       <span className="text-neutral-600">
                         {item.name} <span className="text-neutral-400">x{item.quantity}</span>
                       </span>
-                      <span className="font-medium text-neutral-900">${item.price * item.quantity}</span>
+                      <span className="font-medium text-neutral-900">{format(item.price * item.quantity)}</span>
                     </li>
                   ))}
                 </ul>
                 <div className="mt-4 border-t border-neutral-200 pt-4 flex justify-between text-sm font-bold">
-                  <span className="text-neutral-900">Total</span>
-                  <span className="text-neutral-900">${subtotal}</span>
+                  <span className="text-neutral-900">{t("nav.cart.subtotal")}</span>
+                  <span className="text-neutral-900">{format(subtotal)}</span>
                 </div>
               </div>
             </div>
@@ -116,13 +120,11 @@ export default function CheckoutPage() {
                 onSubmit={handleCheckout}
                 className="rounded-xl border border-neutral-200 bg-white p-6"
               >
-                <h2 className="text-sm font-bold text-neutral-900">Contact Information</h2>
-                <p className="mt-1 text-xs text-neutral-400">
-                  No account needed &mdash; just enter your name and email to receive download links.
-                </p>
+                <h2 className="text-sm font-bold text-neutral-900">{t("checkout.contact_info")}</h2>
+                <p className="mt-1 text-xs text-neutral-400">{t("checkout.no_account")}</p>
                 <div className="mt-4 space-y-4">
                   <div>
-                    <label htmlFor="name" className="block text-xs font-medium text-neutral-700">Full Name</label>
+                    <label htmlFor="name" className="block text-xs font-medium text-neutral-700">{t("checkout.full_name")}</label>
                     <input
                       id="name"
                       type="text"
@@ -130,11 +132,11 @@ export default function CheckoutPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                      placeholder="Your name"
+                      placeholder={t("checkout.name_placeholder")}
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-xs font-medium text-neutral-700">Email</label>
+                    <label htmlFor="email" className="block text-xs font-medium text-neutral-700">{t("checkout.email")}</label>
                     <input
                       id="email"
                       type="email"
@@ -142,11 +144,9 @@ export default function CheckoutPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                      placeholder="you@example.com"
+                      placeholder={t("checkout.email_placeholder")}
                     />
-                    <p className="mt-1 text-xs text-neutral-400">
-                      Download links and receipt will be sent to this email.
-                    </p>
+                    <p className="mt-1 text-xs text-neutral-400">{t("checkout.email_hint")}</p>
                   </div>
                 </div>
 
@@ -159,13 +159,14 @@ export default function CheckoutPage() {
                   disabled={loading}
                   className="mt-6 w-full rounded-lg bg-blue-600 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-60"
                 >
-                  {loading ? "Redirecting to checkout..." : `Pay with Stripe — $${subtotal}`}
+                  {loading
+                    ? t("checkout.redirecting")
+                    : t("checkout.pay_button", { amount: format(subtotal) })}
                 </button>
 
                 <p className="mt-3 text-center text-xs text-neutral-400">
-                  You will be redirected to Stripe to complete your payment securely. Prices shown do not include
-                  local sales tax, VAT, or GST where applicable. All sales are final per our{" "}
-                  <Link href="/terms" className="text-blue-600 hover:text-blue-700">Refund Policy</Link>.
+                  {t("checkout.stripe_note")}{" "}
+                  <Link href="/terms" className="text-blue-600 hover:text-blue-700">{t("checkout.refund_policy")}</Link>.
                 </p>
 
                 <div className="mt-4 flex items-center justify-center gap-3 text-xs text-neutral-400">
@@ -174,9 +175,9 @@ export default function CheckoutPage() {
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </svg>
-                    Secure checkout
+                    {t("checkout.secure")}
                   </span>
-                  <span>Powered by Stripe</span>
+                  <span>{t("checkout.powered_by")}</span>
                 </div>
               </form>
             </div>
