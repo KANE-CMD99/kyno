@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { loginAction, registerAction } from "@/app/actions";
+import { loginAction } from "@/app/actions";
 import Link from "next/link";
 
 export default function LoginPage() {
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,14 +19,7 @@ export default function LoginPage() {
     const form = new FormData(e.currentTarget);
     const email = form.get("email") as string;
     const password = form.get("password") as string;
-
-    let result;
-    if (mode === "signup") {
-      const name = form.get("name") as string;
-      result = await registerAction(name, email, password);
-    } else {
-      result = await loginAction(email, password);
-    }
+    const result = await loginAction(email, password);
 
     setLoading(false);
 
@@ -40,65 +32,34 @@ export default function LoginPage() {
         router.push("/");
       }
     } else {
-      setError(result.error || "Something went wrong.");
+      setError(result.error || "Invalid email or password.");
     }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-neutral-100 px-6">
       <div className="w-full max-w-sm rounded-xl border border-neutral-200 bg-white p-8 shadow-lg">
-
-        <h2 className="text-xl font-bold text-neutral-900">
-          {mode === "signin" ? "Welcome back" : "Create your account"}
-        </h2>
+        <h2 className="text-xl font-bold text-neutral-900">Sign in</h2>
         <p className="mt-1 text-sm text-neutral-500">
-          {mode === "signin"
-            ? "Sign in to manage your account."
-            : "Join Kyno to buy and download premium assets."}
+          Sign in to manage your products and account.
         </p>
-
-        {/* Tabs */}
-        <div className="mt-6 flex rounded-lg bg-neutral-100 p-1">
-          <button
-            onClick={() => { setError(""); setMode("signin"); }}
-            className={`flex-1 rounded-md py-2 text-sm font-medium transition-colors ${mode === "signin" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-700"}`}
-          >
-            Sign In
-          </button>
-          <button
-            onClick={() => { setError(""); setMode("signup"); }}
-            className={`flex-1 rounded-md py-2 text-sm font-medium transition-colors ${mode === "signup" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-700"}`}
-          >
-            Sign Up
-          </button>
-        </div>
 
         {error && (
           <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-xs text-red-600">{error}</p>
         )}
 
-        <form className="mt-4 space-y-4" onSubmit={handleSubmit}>
-          {mode === "signup" && (
-            <div>
-              <label htmlFor="name" className="block text-xs font-medium text-neutral-700">Name</label>
-              <input id="name" name="name" type="text" required
-                className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                placeholder="Your name" />
-            </div>
-          )}
-
+        <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-xs font-medium text-neutral-700">Email</label>
             <input id="email" name="email" type="email" required
               className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               placeholder="you@example.com" />
           </div>
-
           <div>
             <label htmlFor="password" className="block text-xs font-medium text-neutral-700">Password</label>
             <div className="relative mt-1.5">
               <input id="password" name="password" type={showPassword ? "text" : "password"} required minLength={6}
-                autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                autoComplete="current-password"
                 className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 pr-10 text-sm text-neutral-900 placeholder-neutral-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 placeholder="••••••••" />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
@@ -112,19 +73,18 @@ export default function LoginPage() {
               </button>
             </div>
           </div>
-
           <button type="submit" disabled={loading}
             className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60">
-            {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Create Account"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
         <p className="mt-5 text-center text-xs text-neutral-500">
-          {mode === "signin" ? "Don't have an account? " : "Already have an account? "}
-          <button onClick={() => { setError(""); setMode(mode === "signin" ? "signup" : "signin"); }}
-            className="font-medium text-blue-600 hover:text-blue-700">
-            {mode === "signin" ? "Sign up" : "Sign in"}
-          </button>
+          Buying products?{" "}
+          <Link href="/orders" className="font-medium text-blue-600 hover:text-blue-700">
+            Find your downloads
+          </Link>
+          {" "}&mdash; no account needed.
         </p>
 
         <div className="mt-6 border-t border-neutral-200 pt-4 text-center">
