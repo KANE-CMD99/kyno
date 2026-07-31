@@ -116,6 +116,35 @@ const translations: Record<Lang, Record<string, string>> = {
     "common.success": "Success!",
     "common.copied": "Copied!",
     "common.no_results": "No results found",
+
+    // Checkout
+    "checkout.title": "Checkout",
+    "checkout.empty_title": "Your cart is empty",
+    "checkout.empty_hint": "Add some products before checking out.",
+    "checkout.browse": "Browse Products",
+    "checkout.loading_cart": "Loading cart...",
+    "checkout.items_count": "{n} items in your cart",
+    "checkout.order_summary": "Order Summary",
+    "checkout.contact_info": "Contact Information",
+    "checkout.no_account": "No account needed — just enter your name and email to receive download links.",
+    "checkout.full_name": "Full Name",
+    "checkout.name_placeholder": "Your name",
+    "checkout.email": "Email",
+    "checkout.email_placeholder": "you@example.com",
+    "checkout.email_hint": "Download links and receipt will be sent to this email.",
+    "checkout.pay_button": "Pay with Stripe — ${amount}",
+    "checkout.redirecting": "Redirecting to checkout...",
+    "checkout.stripe_note": "You will be redirected to Stripe to complete your payment securely. Prices shown do not include local sales tax, VAT, or GST where applicable. All sales are final per our",
+    "checkout.refund_policy": "Refund Policy",
+    "checkout.secure": "Secure checkout",
+    "checkout.powered_by": "Powered by Stripe",
+    "checkout.network_error": "Network error. Please try again.",
+
+    // Free Downloads
+    "free.title": "Free Downloads",
+    "free.subtitle": "Free digital products from our creators. Download instantly — no payment required.",
+    "free.no_items": "No free downloads available right now. Check back soon.",
+    "free.download_btn": "Download Free",
   },
   zh: {
     // Nav
@@ -228,6 +257,35 @@ const translations: Record<Lang, Record<string, string>> = {
     "common.success": "操作成功！",
     "common.copied": "已复制！",
     "common.no_results": "未找到结果",
+
+    // Checkout
+    "checkout.title": "结账",
+    "checkout.empty_title": "购物车是空的",
+    "checkout.empty_hint": "先添加一些产品再来结账吧。",
+    "checkout.browse": "浏览产品",
+    "checkout.loading_cart": "加载购物车...",
+    "checkout.items_count": "购物车共 {n} 件商品",
+    "checkout.order_summary": "订单摘要",
+    "checkout.contact_info": "联系信息",
+    "checkout.no_account": "无需注册 — 填写姓名和邮箱即可接收下载链接。",
+    "checkout.full_name": "姓名",
+    "checkout.name_placeholder": "请输入姓名",
+    "checkout.email": "邮箱",
+    "checkout.email_placeholder": "your@example.com",
+    "checkout.email_hint": "下载链接和收据将发送到此邮箱。",
+    "checkout.pay_button": "使用 Stripe 支付 — ¥{amount}",
+    "checkout.redirecting": "正在跳转支付页面...",
+    "checkout.stripe_note": "您将被重定向到 Stripe 安全完成支付。价格不含当地税费。所有销售均遵循我们的",
+    "checkout.refund_policy": "退款政策",
+    "checkout.secure": "安全支付",
+    "checkout.powered_by": "由 Stripe 提供支付服务",
+    "checkout.network_error": "网络错误，请重试。",
+
+    // Free Downloads
+    "free.title": "免费下载",
+    "free.subtitle": "来自创作者的免费数字产品。立即下载 — 无需支付。",
+    "free.no_items": "暂无免费下载内容，请稍后再来。",
+    "free.download_btn": "免费下载",
   },
 };
 
@@ -244,7 +302,13 @@ export function LangProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = localStorage.getItem("kyno-lang") as Lang | null;
-    if (stored === "en" || stored === "zh") setLangState(stored);
+    if (stored === "en" || stored === "zh") {
+      setLangState(stored);
+    } else {
+      // Auto-detect browser language on first visit
+      const browserLang = navigator.language || "";
+      setLangState(browserLang.startsWith("zh") ? "zh" : "en");
+    }
   }, []);
 
   const setLang = useCallback((l: Lang) => {
