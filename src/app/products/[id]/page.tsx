@@ -6,6 +6,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import AddToCartButton from "@/components/AddToCartButton";
+import PriceDisplay from "@/components/PriceDisplay";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -93,19 +94,14 @@ export default async function ProductPage({ params }: PageProps) {
 
               {/* Price + CTA */}
               <div className="mt-8 flex items-center gap-4">
-                <div>
-                  <span className="text-3xl font-bold text-neutral-900">${detail.price}</span>
-                  {detail.originalPrice && (
-                    <span className="ml-2 text-lg text-neutral-400 line-through">
-                      ${detail.originalPrice}
-                    </span>
-                  )}
+                <div className="flex items-center gap-3">
+                  <PriceDisplay
+                    price={detail.price}
+                    originalPrice={detail.originalPrice}
+                    className="text-3xl font-bold text-neutral-900"
+                    originalClassName="text-lg text-neutral-400 line-through"
+                  />
                 </div>
-                {detail.originalPrice && (
-                  <span className="rounded bg-green-100 px-2.5 py-1 text-xs font-bold text-green-700">
-                    {Math.round((1 - detail.price / detail.originalPrice) * 100)}% OFF
-                  </span>
-                )}
               </div>
 
               <div className="mt-6 flex gap-3">
