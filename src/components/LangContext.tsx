@@ -79,7 +79,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "admin.creators_earnings": "Earnings",
     "admin.creators_commission_col": "Commission",
     "admin.creators_no_data": "No creators yet. Invite your first designer.",
-    "admin.creators_profile_hint": "Profile: kyno.dev/{username}",
+    "admin.creators_profile_hint": "Profile: kyno.ltd/{username}",
 
     // Creator Dashboard
     "creator.title": "Creator Dashboard",

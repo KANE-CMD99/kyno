@@ -24,18 +24,8 @@ yarn-error.log*
 # vercel
 .vercel
 
-# local runtime data
-/data/users.json
-/data/orders.json
-
 # user-uploaded content
 /public/uploads/
 
-# local runtime data (VPS writes to these, do NOT deploy from repo)
-/data/products-store.json
-/data/creators.json
-/data/users.json
-/data/orders.json
-/data/affiliates.json
-/data/affiliate-clicks.json
-/data/newsletter-subscribers.json
+# local runtime data — VPS writes to these, do NOT deploy from repo
+/data/*.json
