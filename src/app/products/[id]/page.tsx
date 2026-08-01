@@ -42,21 +42,21 @@ export default async function ProductPage({ params }: PageProps) {
       <Nav />
       <main className="bg-white pt-[105px]">
         {/* Breadcrumb */}
-        <div className="mx-auto max-w-7xl px-6 pt-8">
-          <p className="text-sm text-neutral-400">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-6 sm:pt-8">
+          <p className="text-xs sm:text-sm text-neutral-400 truncate">
             <Link href="/" className="hover:text-neutral-600 transition-colors">Home</Link>
-            <span className="mx-2">/</span>
-            <Link href="/#products" className="hover:text-neutral-600 transition-colors">{detail.category}</Link>
-            <span className="mx-2">/</span>
+            <span className="mx-1.5 sm:mx-2">/</span>
+            <Link href={`/categories/${detail.category.toLowerCase()}`} className="hover:text-neutral-600 transition-colors">{detail.category}</Link>
+            <span className="mx-1.5 sm:mx-2">/</span>
             <span className="text-neutral-900">{detail.name}</span>
           </p>
         </div>
 
-        {/* Hero: 2-col */}
-        <section className="mx-auto max-w-7xl px-6 py-12">
-          <div className="grid gap-12 lg:grid-cols-2">
+        {/* Hero: stacked on mobile, 2-col on desktop */}
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 py-8 sm:py-12">
+          <div className="grid gap-8 sm:gap-12 lg:grid-cols-2">
             {/* Left: Preview image or placeholder */}
-            <div className="aspect-[4/3] rounded-xl bg-neutral-100 flex items-center justify-center overflow-hidden">
+            <div className="aspect-[4/3] sm:aspect-[4/3] rounded-lg sm:rounded-xl bg-neutral-100 flex items-center justify-center overflow-hidden order-1 lg:order-none">
               {detail.previewImages.filter(Boolean).length > 0 ? (
                 <img
                   src={detail.previewImages[0]}
@@ -104,15 +104,15 @@ export default async function ProductPage({ params }: PageProps) {
                 </div>
               </div>
 
-              <div className="mt-6 flex gap-3">
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 <AddToCartButton
                   id={detail.id}
                   name={detail.name}
                   price={detail.price}
                   category={detail.category}
-                  className="rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+                  className="w-full sm:w-auto rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
                 />
-                <button className="rounded-lg border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400">
+                <button className="w-full sm:w-auto rounded-lg border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400">
                   Save
                 </button>
               </div>
@@ -126,10 +126,10 @@ export default async function ProductPage({ params }: PageProps) {
 
         {/* Features + Includes — only show if there's content */}
         {(hasFeatures || hasIncludes) ? (
-          <section className="bg-neutral-50 px-6 py-16">
+          <section className="bg-neutral-50 px-4 sm:px-6 py-12 sm:py-16">
             <div className="mx-auto max-w-7xl">
-              <h2 className="text-lg font-bold text-neutral-900 text-center mb-8">What&apos;s inside</h2>
-              <div className="grid gap-12 lg:grid-cols-2">
+              <h2 className="text-lg font-bold text-neutral-900 text-center mb-6 sm:mb-8">What&apos;s inside</h2>
+              <div className="grid gap-8 sm:gap-12 lg:grid-cols-2">
                 {hasFeatures && (
                   <div>
                     <h3 className="text-base font-semibold text-neutral-900">Features</h3>
@@ -164,10 +164,10 @@ export default async function ProductPage({ params }: PageProps) {
             </div>
           </section>
         ) : (
-          <section className="bg-neutral-50 px-6 py-16">
+          <section className="bg-neutral-50 px-4 sm:px-6 py-12 sm:py-16">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-lg font-bold text-neutral-900">What&apos;s inside</h2>
-              <p className="mt-4 text-sm leading-relaxed text-neutral-600">
+              <p className="mt-4 text-sm leading-relaxed text-neutral-600 px-2 sm:px-0">
                 {detail.description || "This digital product includes downloadable files ready for use in your projects."}
               </p>
               {detail.previewImages.filter(Boolean).length > 1 && (
@@ -183,7 +183,7 @@ export default async function ProductPage({ params }: PageProps) {
 
         {/* Related products */}
         {relatedProducts.length > 0 && (
-          <section className="bg-white px-6 py-20">
+          <section className="bg-white px-4 sm:px-6 py-14 sm:py-20">
             <div className="mx-auto max-w-7xl text-center">
               <h2 className="text-2xl font-bold text-neutral-900">
                 More {detail.category}
@@ -191,7 +191,7 @@ export default async function ProductPage({ params }: PageProps) {
               <p className="mt-2 text-sm text-neutral-500">
                 You might also like
               </p>
-              <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-8 grid gap-4 sm:gap-5 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
                 {relatedProducts.map((product, i) => {
                   const cardProduct = {
                     id: product.id,

@@ -41,7 +41,7 @@ export default function ProductsSection() {
   }, [products, query, sort]);
 
   return (
-    <AnimatedSection id="products" className="bg-[#FAFAFA] px-6 py-20">
+    <AnimatedSection id="products" className="bg-[#FAFAFA] px-4 sm:px-6 py-14 sm:py-20">
       <div className="mx-auto max-w-7xl space-y-12">
         {/* Search + Sort */}
         <div className="mx-auto max-w-2xl">
@@ -66,9 +66,9 @@ export default function ProductsSection() {
                   <p className="mt-2 text-sm text-neutral-500">
                     Curated {cat.toLowerCase()} for your next project
                   </p>
-                  <div className="mt-8 flex flex-wrap justify-center gap-5">
+                  <div className="mt-6 sm:mt-8 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
                     {items.map((product, i) => (
-                      <div key={product.id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
+                      <div key={product.id} className="w-full">
                         <ProductCard product={product} index={i} />
                       </div>
                     ))}

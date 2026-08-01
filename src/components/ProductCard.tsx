@@ -70,7 +70,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       {/* Add to Cart button — outside the Link */}
       <button
         onClick={handleAddToCart}
-        className={`mt-3 w-full rounded-lg border py-2 text-xs font-semibold transition-all ${
+        className={`mt-2.5 sm:mt-3 w-full rounded-lg border py-2 sm:py-2 text-xs font-semibold transition-all ${
           isFree ? "border-emerald-300 bg-emerald-50 text-emerald-700 hover:border-emerald-500 hover:bg-emerald-100" : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900 hover:text-neutral-900"
         }`}
       >
