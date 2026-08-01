@@ -21,6 +21,7 @@ export async function GET() {
       price: `$${p.price}`,
       originalPrice: p.originalPrice ? `$${p.originalPrice}` : undefined,
       creator: p.creator,
+      creatorId: p.creatorId || undefined,
       thumbnail: p.previewImages?.[0],
     })),
   });

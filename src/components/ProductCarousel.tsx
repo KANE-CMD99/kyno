@@ -10,13 +10,25 @@ const categoryEmoji: Record<string, string> = {
   Templates: String.fromCodePoint(0x1F4D0),
 };
 
+interface FeaturedProduct {
+  id: string; name: string; category: string; price: string;
+  thumbnail?: string; creatorId?: string;
+}
+
 export default function ProductCarousel() {
-  const [featured, setFeatured] = useState<Array<{ id: string; name: string; category: string; price: string; thumbnail?: string }>>([]);
+  const [featured, setFeatured] = useState<FeaturedProduct[]>([]);
 
   useEffect(() => {
     fetch("/api/products")
       .then((r) => r.json())
-      .then((d) => setFeatured((d.products || []).slice(0, 6)))
+      .then((d) => {
+        const all: FeaturedProduct[] = d.products || [];
+        // Creator products first, then fill remaining slots
+        const creatorProducts = all.filter((p) => p.creatorId);
+        const otherProducts = all.filter((p) => !p.creatorId);
+        const picked = [...creatorProducts, ...otherProducts].slice(0, 6);
+        setFeatured(picked);
+      })
       .catch(() => {});
   }, []);
 
@@ -52,6 +64,9 @@ export default function ProductCarousel() {
                   <span className="text-xs font-medium text-white/80">{product.category}</span>
                   <h3 className="text-base font-semibold text-white">{product.name}</h3>
                   <p className="text-sm font-bold text-white">{product.price}</p>
+                  {product.creatorId && (
+                    <p className="text-xs text-white/60 mt-0.5">Creator upload</p>
+                  )}
                 </div>
               </div>
             </motion.div>
