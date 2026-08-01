@@ -3,7 +3,7 @@
     "id": "1",
     "name": "Photo Presets Bundle",
     "category": "Photos",
-    "price": 1,
+    "price": 0,
     "creator": "Kyno",
     "description": "A comprehensive collection of Lightroom presets designed to give your photos a cohesive, professional look. Whether you're editing portraits, landscapes, or lifestyle shots, this bundle has you covered with over 100 presets across 6 different styles.",
     "features": [
@@ -25,7 +25,7 @@
     "id": "10",
     "name": "Landing Page Kit",
     "category": "Templates",
-    "price": 1,
+    "price": 0,
     "creator": "Kyno",
     "description": "10 conversion-focused landing page templates built with Tailwind CSS. Each template is designed for a specific use case — SaaS, ebook, course, webinar, app launch, newsletter, consulting, event, directory, and coming soon.",
     "features": [
@@ -47,7 +47,7 @@
     "id": "2",
     "name": "Aerial Landscapes Pack",
     "category": "Photos",
-    "price": 1,
+    "price": 0,
     "creator": "Kyno",
     "description": "A stunning collection of 50 high-resolution aerial landscape photographs captured from drone flights across diverse terrains — mountains, coastlines, forests, and urban skylines. Perfect for background imagery, presentations, or editorial use.",
     "features": [
@@ -69,7 +69,7 @@
     "id": "3",
     "name": "Minimal Backgrounds",
     "category": "Photos",
-    "price": 1,
+    "price": 0,
     "creator": "Kyno",
     "description": "A curated set of 80 minimal, clean background textures — paper, grain, gradient, marble, and concrete. Ideal for website hero sections, social media posts, presentations, and brand design.",
     "features": [
@@ -91,7 +91,7 @@
     "id": "4",
     "name": "Modern Sans Serif",
     "category": "Fonts",
-    "price": 1,
+    "price": 0,
     "creator": "Kyno",
     "description": "A clean geometric sans-serif font family with 5 weights, multilingual support, and opentype features. Designed for both display headlines and body text, it reads beautifully at any size.",
     "features": [
@@ -113,7 +113,7 @@
     "id": "5",
     "name": "Handwritten Script",
     "category": "Fonts",
-    "price": 1,
+    "price": 0,
     "creator": "Kyno",
     "description": "A graceful handwritten script font with natural flowing letterforms. Perfect for wedding invitations, greeting cards, logo design, and social media graphics. Includes contextual alternates for realistic handwriting feel.",
     "features": [
@@ -135,7 +135,7 @@
     "id": "6",
     "name": "Display Typeface",
     "category": "Fonts",
-    "price": 1,
+    "price": 0,
     "creator": "Kyno",
     "description": "A bold, expressive display typeface built for headlines, posters, and branding projects. Features dramatic geometric letterforms, extended character set, and stylistic alternates that make your titles stand out.",
     "features": [
@@ -157,7 +157,7 @@
     "id": "7",
     "name": "Ultimate UI Kit",
     "category": "Templates",
-    "price": 1,
+    "price": 0,
     "creator": "Kyno",
     "description": "A complete UI kit with 500+ components, 40+ page templates, and a comprehensive design system built for Figma. Design landing pages, dashboards, mobile apps, and more — all with consistent, customizable components.",
     "features": [
@@ -179,7 +179,7 @@
     "id": "8",
     "name": "Design System Pro",
     "category": "Templates",
-    "price": 1,
+    "price": 0,
     "creator": "Kyno",
     "description": "An enterprise-grade design system with advanced components, accessibility-first patterns, and a scalable token architecture. Ideal for teams building complex, multi-platform products that need consistency at scale.",
     "features": [
@@ -201,7 +201,7 @@
     "id": "9",
     "name": "Portfolio Template",
     "category": "Templates",
-    "price": 1,
+    "price": 0,
     "creator": "Kyno",
     "description": "A modern portfolio website template built with Next.js and Tailwind CSS. Features smooth page transitions, project case studies, and a minimal aesthetic that lets your work take center stage. Deploy to Vercel in minutes.",
     "features": [
