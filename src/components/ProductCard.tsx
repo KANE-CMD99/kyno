@@ -21,15 +21,16 @@ const categoryEmoji: Record<string, string> = {
 };
 
 export default function ProductCard({ product, index }: ProductCardProps) {
-  const hasSale = !!product.originalPrice;
-  const isFree = product.price === "$0" || product.price === "0";
+  const priceNum = parseFloat(String(product.price || "$0").replace(/\$/g, "")) || 0;
+  const hasSale = !!(product.originalPrice && priceNum > 0);
+  const isFree = priceNum === 0;
   const emoji = categoryEmoji[product.category] ?? String.fromCodePoint(0x1F4E6);
   const { addItem, openCart } = useCart();
   const { format } = useCurrency();
 
-  const priceNum = parseInt(product.price.replace(/\$/g, ""), 10);
-  const displayPrice = isFree ? "$0" : format(priceNum);
-  const displayOriginal = product.originalPrice ? format(parseInt(product.originalPrice.replace(/\$/g, ""), 10)) : undefined;
+  const displayPrice = isFree ? format(0) : format(priceNum);
+  const displayOriginal = product.originalPrice ? format(parseFloat(String(product.originalPrice).replace(/\$/g, "")) || 0) : undefined;
+  const discountPercent = hasSale ? Math.round((1 - priceNum / (parseFloat(String(product.originalPrice).replace(/\$/g, "")) || 1)) * 100) : 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -82,9 +83,9 @@ export default function ProductCard({ product, index }: ProductCardProps) {
           {isFree && (
             <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">FREE</span>
           )}
-          {hasSale && (
+          {hasSale && discountPercent > 0 && (
             <span className="rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-bold text-green-700">
-              25% OFF
+              {discountPercent}% OFF
             </span>
           )}
         </div>
