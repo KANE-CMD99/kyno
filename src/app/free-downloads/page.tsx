@@ -75,25 +75,25 @@ export default function FreeDownloadsPage() {
           </div>
         </div>
 
-        <section className="px-6 py-20">
+        <section className="px-4 sm:px-6 py-12 sm:py-20">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="text-5xl">🎁</span>
-            <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-neutral-900 md:text-5xl">
+            <span className="text-4xl sm:text-5xl">🎁</span>
+            <h1 className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 md:text-5xl">
               Free Downloads
             </h1>
-            <p className="mt-4 text-lg text-neutral-500">
+            <p className="mt-4 text-base sm:text-lg text-neutral-500 px-2 sm:px-0">
               Free resources for your creative projects. Enter your email to download — no signup required.
             </p>
           </div>
         </section>
 
         {submitted && (
-          <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-neutral-900 px-6 py-3 text-sm text-white shadow-lg">
+          <div className="fixed bottom-6 left-4 right-4 sm:left-1/2 sm:right-auto z-50 sm:-translate-x-1/2 rounded-lg bg-neutral-900 px-6 py-3 text-sm text-white shadow-lg text-center">
             Download link sent to your email! Check your inbox.
           </div>
         )}
 
-        <section className="bg-neutral-50 px-6 py-16">
+        <section className="bg-neutral-50 px-4 sm:px-6 py-12 sm:py-16">
           <div className="mx-auto max-w-7xl">
             {loading ? (
               <p className="py-12 text-center text-sm text-neutral-400">Loading free downloads...</p>
