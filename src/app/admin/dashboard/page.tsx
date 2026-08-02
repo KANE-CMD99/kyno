@@ -8,12 +8,13 @@ import AdminProductForm from "../AdminProductForm";
 import AdminAffiliates from "../AdminAffiliates";
 import AdminCreators from "../AdminCreators";
 import AdminUsers from "../AdminUsers";
+import AdminAnalytics from "../AdminAnalytics";
 
-type Tab = "products" | "creators" | "affiliates" | "users";
+type Tab = "analytics" | "products" | "creators" | "affiliates" | "users";
 
 export default function AdminDashboardPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
-  const [tab, setTab] = useState<Tab>("products");
+  const [tab, setTab] = useState<Tab>("analytics");
   const [view, setView] = useState<
     "list"
     | { mode: "create"; category?: string }
@@ -51,6 +52,12 @@ export default function AdminDashboardPage() {
           <div className="flex items-center gap-6">
             <h1 className="text-lg font-bold text-neutral-900">Admin Panel</h1>
             <div className="flex rounded-lg bg-neutral-100 p-1">
+              <button
+                onClick={() => setTab("analytics")}
+                className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${tab === "analytics" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-700"}`}
+              >
+                Analytics
+              </button>
               <button
                 onClick={() => { setTab("products"); setView("list"); }}
                 className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${tab === "products" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-700"}`}
@@ -91,7 +98,9 @@ export default function AdminDashboardPage() {
 
       {/* Main content */}
       <div className="mx-auto max-w-7xl px-6 py-12">
-        {tab === "creators" ? (
+        {tab === "analytics" ? (
+          <AdminAnalytics />
+        ) : tab === "creators" ? (
           <AdminCreators />
         ) : tab === "users" ? (
           <AdminUsers />

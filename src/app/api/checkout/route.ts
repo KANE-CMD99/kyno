@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { createOrder, type OrderRecord } from "@/db/storage";
 import { convertClick } from "@/db/affiliates";
 import { sendDownloadEmail } from "@/lib/email";
+import { recordOrder } from "@/db/stats";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder", {
   timeout: 8000,
@@ -18,6 +19,10 @@ export async function POST(req: Request) {
 
     const origin = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const affCode = req.headers.get("cookie")?.match(/kyno_affiliate=([^;]+)/)?.[1] || "";
+
+    // Record visit + orders for analytics
+    const totalRevenue = items.reduce((sum: number, i: { price: number }) => sum + (i.price || 0), 0);
+    if (email) recordOrder(email, totalRevenue);
 
     // Create orders with download tokens BEFORE Stripe — ensures orders exist
     // even if webhook never fires (common when server has no public HTTPS)
