@@ -6,6 +6,7 @@ interface Creator {
   id: string;
   username: string;
   name: string;
+  englishName: string;
   email: string;
   bio: string;
   totalSales: number;
@@ -22,6 +23,7 @@ export default function AdminCreators() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState("");
+  const [englishName, setEnglishName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
@@ -44,13 +46,13 @@ export default function AdminCreators() {
   useEffect(() => { load(); }, [load]);
 
   const resetForm = () => {
-    setName(""); setUsername(""); setEmail(""); setBio(""); setPassword("");
+    setName(""); setEnglishName(""); setUsername(""); setEmail(""); setBio(""); setPassword("");
     setCommission(20); setStatus("active"); setPerms({ canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true });
     setEditingId(null); setShowForm(false);
   };
 
   const startEdit = (c: Creator) => {
-    setName(c.name || ""); setUsername(c.username || ""); setEmail(c.email || ""); setBio(c.bio || "");
+    setName(c.name || ""); setEnglishName(c.englishName || ""); setUsername(c.username || ""); setEmail(c.email || ""); setBio(c.bio || "");
     setCommission(c.commission || 20); setStatus(c.status || "active");
     setPerms(c.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true });
     setEditingId(c.id); setShowForm(true); setPassword("");
@@ -62,7 +64,7 @@ export default function AdminCreators() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name, username, email, bio, password, commission, status, permissions: perms,
+        name, englishName, username, email, bio, password, commission, status, permissions: perms,
         ...(editingId ? { id: editingId } : {}),
       }),
     });
@@ -110,6 +112,10 @@ export default function AdminCreators() {
               <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" placeholder="Sarah Chen" />
             </div>
             <div>
+              <label className="block text-xs font-medium text-neutral-700">English Name <span className="text-red-500">*</span></label>
+              <input value={englishName} onChange={(e) => setEnglishName(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" placeholder="Sarah" required />
+            </div>
+            <div>
               <label className="block text-xs font-medium text-neutral-700">Username</label>
               <input value={username} onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9]/g, ""))} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm font-mono outline-none focus:border-blue-500" placeholder="Sarah" />
             </div>
@@ -152,7 +158,7 @@ export default function AdminCreators() {
           </div>
 
           <div className="mt-5 flex gap-3">
-            <button onClick={handleCreate} disabled={!name || !username || !email || (!editingId && !password)} className="rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 disabled:opacity-50">
+            <button onClick={handleCreate} disabled={!name || !englishName || !username || !email || (!editingId && !password)} className="rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 disabled:opacity-50">
               {editingId ? "Save Changes" : "Create Account"}
             </button>
             <button onClick={resetForm} className="text-sm text-neutral-400 hover:text-neutral-600">Cancel</button>

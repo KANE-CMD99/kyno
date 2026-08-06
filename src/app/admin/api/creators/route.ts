@@ -12,10 +12,10 @@ export async function GET() {
 export async function POST(req: Request) {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await req.json();
-  const { id, username, name, email, bio, password, commission, status, permissions } = body;
+  const { id, username, name, englishName, email, bio, password, commission, status, permissions } = body;
 
-  if (!name || !username || !email) {
-    return NextResponse.json({ success: false, error: "Name, username, and email are required" }, { status: 400 });
+  if (!name || !username || !email || !englishName) {
+    return NextResponse.json({ success: false, error: "Name, username, English name, and email are required" }, { status: 400 });
   }
 
   // Update existing creator
@@ -25,6 +25,7 @@ export async function POST(req: Request) {
     if (!creator) return NextResponse.json({ success: false, error: "Creator not found" }, { status: 404 });
 
     creator.name = name;
+    creator.englishName = englishName || "";
     creator.username = username;
     creator.email = email.toLowerCase().trim();
     creator.bio = bio || "";
@@ -50,7 +51,7 @@ export async function POST(req: Request) {
   if (existing) return NextResponse.json({ success: false, error: "Username already taken" }, { status: 400 });
 
   const creator = await createCreator({
-    username, name, email, bio: bio || "", password, commission: commission || 20,
+    username, name, englishName: englishName || "", email, bio: bio || "", password, commission: commission || 20,
     status: status || "active",
     permissions: permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true },
   });

@@ -17,7 +17,8 @@
       "canDelete": false,
       "canViewAnalytics": true
     },
-    "createdAt": "2026-07-26T03:00:56.293Z"
+    "createdAt": "2026-07-26T03:00:56.293Z",
+    "englishName": "Demo Creator"
   },
   {
     "id": "creator02",
@@ -37,7 +38,8 @@
       "canDelete": false,
       "canViewAnalytics": true
     },
-    "createdAt": "2026-07-30T10:18:57.354Z"
+    "createdAt": "2026-07-30T10:18:57.354Z",
+    "englishName": "LJ"
   },
   {
     "id": "creator03",
@@ -57,6 +59,7 @@
       "canDelete": false,
       "canViewAnalytics": true
     },
-    "createdAt": "2026-07-30T10:18:57.363Z"
+    "createdAt": "2026-07-30T10:18:57.363Z",
+    "englishName": "GCS"
   }
 ]

@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import AddToCartButton from "@/components/AddToCartButton";
 import PriceDisplay from "@/components/PriceDisplay";
+import ProductComments from "@/components/ProductComments";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -86,6 +87,9 @@ export default async function ProductPage({ params }: PageProps) {
               </h1>
               <p className="mt-2 text-sm text-neutral-500">
                 by <span className="font-medium text-neutral-700">{detail.creator}</span>
+                {detail.creatorEnglishName && (
+                  <span className="text-neutral-400 ml-1">({detail.creatorEnglishName})</span>
+                )}
               </p>
 
               <p className="mt-6 text-base leading-relaxed text-neutral-600">
@@ -211,6 +215,9 @@ export default async function ProductPage({ params }: PageProps) {
             </div>
           </section>
         )}
+
+        {/* Comments */}
+        <ProductComments productId={detail.id} />
       </main>
       <Footer />
     </>

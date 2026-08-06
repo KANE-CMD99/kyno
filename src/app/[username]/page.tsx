@@ -30,6 +30,9 @@ export default async function CreatorProfilePage({ params }: PageProps) {
               {creator.name.charAt(0)}
             </div>
             <h1 className="mt-4 text-2xl font-bold text-neutral-900">{creator.name}</h1>
+            {creator.englishName && (
+              <p className="mt-0.5 text-base text-neutral-500 font-medium">{creator.englishName}</p>
+            )}
             <p className="mt-1 text-sm text-neutral-500">@{creator.username}</p>
             {creator.bio && (
               <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-neutral-600">{creator.bio}</p>

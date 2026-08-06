@@ -21,6 +21,7 @@ export interface CreatorRecord {
   id: string;
   username: string;
   name: string;
+  englishName: string;
   email: string;
   bio: string;
   avatarUrl: string;
@@ -46,6 +47,7 @@ export async function getCreators(): Promise<CreatorRecord[]> {
       id: c.id as string,
       username: c.username as string,
       name: c.name as string,
+      englishName: (c.english_name as string) || "",
       email: c.email as string,
       bio: (c.bio as string) || "",
       avatarUrl: (c.avatar_url as string) || "",
@@ -66,7 +68,7 @@ export async function saveCreators(creators: CreatorRecord[]): Promise<void> {
     // Upsert each creator individually
     for (const c of creators) {
       await supabaseAdmin().from("creators").upsert({
-        id: c.id, username: c.username, name: c.name, email: c.email,
+        id: c.id, username: c.username, name: c.name, english_name: c.englishName || "", email: c.email,
         bio: c.bio, avatar_url: c.avatarUrl, password_hash: c.passwordHash,
         commission: c.commission, total_sales: c.totalSales, total_earnings: c.totalEarnings,
         status: c.status, permissions: c.permissions, created_at: c.createdAt,
@@ -81,7 +83,7 @@ export async function getCreatorByUsername(username: string): Promise<CreatorRec
   if (hasSupabase) {
     const { data } = await supabaseAdmin().from("creators").select("*").eq("username", username.toLowerCase()).single();
     if (!data) return undefined;
-    return { id: data.id, username: data.username, name: data.name, email: data.email, bio: data.bio || "", avatarUrl: data.avatar_url || "", passwordHash: data.password_hash, commission: data.commission, totalSales: data.total_sales || 0, totalEarnings: data.total_earnings || 0, status: data.status || "active", permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }, createdAt: data.created_at };
+    return { id: data.id, username: data.username, name: data.name, englishName: data.english_name || "", email: data.email, bio: data.bio || "", avatarUrl: data.avatar_url || "", passwordHash: data.password_hash, commission: data.commission, totalSales: data.total_sales || 0, totalEarnings: data.total_earnings || 0, status: data.status || "active", permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }, createdAt: data.created_at };
   }
   return getCreatorsJSON().find((c: CreatorRecord) => c.username === username.toLowerCase());
 }
@@ -90,7 +92,7 @@ export async function getCreatorByEmail(email: string): Promise<CreatorRecord | 
   if (hasSupabase) {
     const { data } = await supabaseAdmin().from("creators").select("*").eq("email", email.toLowerCase().trim()).single();
     if (!data) return undefined;
-    return { id: data.id, username: data.username, name: data.name, email: data.email, bio: data.bio || "", avatarUrl: data.avatar_url || "", passwordHash: data.password_hash, commission: data.commission, totalSales: data.total_sales || 0, totalEarnings: data.total_earnings || 0, status: data.status || "active", permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }, createdAt: data.created_at };
+    return { id: data.id, username: data.username, name: data.name, englishName: data.english_name || "", email: data.email, bio: data.bio || "", avatarUrl: data.avatar_url || "", passwordHash: data.password_hash, commission: data.commission, totalSales: data.total_sales || 0, totalEarnings: data.total_earnings || 0, status: data.status || "active", permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }, createdAt: data.created_at };
   }
   return getCreatorsJSON().find((c: CreatorRecord) => c.email === email.toLowerCase().trim());
 }
@@ -99,13 +101,13 @@ export async function getCreatorById(id: string): Promise<CreatorRecord | undefi
   if (hasSupabase) {
     const { data } = await supabaseAdmin().from("creators").select("*").eq("id", id).single();
     if (!data) return undefined;
-    return { id: data.id, username: data.username, name: data.name, email: data.email, bio: data.bio || "", avatarUrl: data.avatar_url || "", passwordHash: data.password_hash, commission: data.commission, totalSales: data.total_sales || 0, totalEarnings: data.total_earnings || 0, status: data.status || "active", permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }, createdAt: data.created_at };
+    return { id: data.id, username: data.username, name: data.name, englishName: data.english_name || "", email: data.email, bio: data.bio || "", avatarUrl: data.avatar_url || "", passwordHash: data.password_hash, commission: data.commission, totalSales: data.total_sales || 0, totalEarnings: data.total_earnings || 0, status: data.status || "active", permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }, createdAt: data.created_at };
   }
   return getCreatorsJSON().find((c: CreatorRecord) => c.id === id);
 }
 
 export async function createCreator(data: {
-  username: string; name: string; email: string; bio: string; password: string;
+  username: string; name: string; englishName?: string; email: string; bio: string; password: string;
   avatarUrl?: string; commission?: number; status?: "active" | "suspended";
   permissions?: { canUpload: boolean; canEdit: boolean; canDelete: boolean; canViewAnalytics: boolean };
 }): Promise<CreatorRecord> {
@@ -115,6 +117,7 @@ export async function createCreator(data: {
     id: String(Date.now()).slice(-6),
     username: data.username,
     name: data.name,
+    englishName: data.englishName || "",
     email: data.email.toLowerCase().trim(),
     bio: data.bio,
     avatarUrl: data.avatarUrl || "",
@@ -128,7 +131,7 @@ export async function createCreator(data: {
 
   if (hasSupabase) {
     await supabaseAdmin().from("creators").insert({
-      id: creator.id, username: creator.username, name: creator.name, email: creator.email,
+      id: creator.id, username: creator.username, name: creator.name, english_name: creator.englishName || "", email: creator.email,
       bio: creator.bio, avatar_url: creator.avatarUrl, password_hash: creator.passwordHash,
       commission: creator.commission, total_sales: 0, total_earnings: 0,
       status: creator.status, permissions: creator.permissions, created_at: creator.createdAt,
