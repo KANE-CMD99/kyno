@@ -57,8 +57,10 @@ export default function FreeDownloadsPage() {
     if (!email.trim()) return;
     setClaimed((prev) => ({ ...prev, [item.id]: true }));
     setActiveItem(null);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    // If the product has a download file, trigger download directly
+    if (item.downloadUrl) {
+      window.open(item.downloadUrl, "_blank");
+    }
   };
 
   return (
