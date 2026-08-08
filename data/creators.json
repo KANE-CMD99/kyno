@@ -1,0 +1,65 @@
+[
+  {
+    "id": "demo01",
+    "username": "creator01",
+    "name": "Demo Creator",
+    "email": "creator@kyno.dev",
+    "bio": "Demo creator account for testing",
+    "avatarUrl": "",
+    "passwordHash": "9d8bb4b1cfb4c1cc8a36fdb772b1b447:3741e77150429312807b6cb5dbd4ddfa4711b3cb635ca1e28a52e4a9c874a61611bd71c5198409e64430907368fbc1d6ba78585999a01fbfb764cb1268ff1fe0",
+    "commission": 20,
+    "totalSales": 0,
+    "totalEarnings": 0,
+    "status": "active",
+    "permissions": {
+      "canUpload": true,
+      "canEdit": true,
+      "canDelete": false,
+      "canViewAnalytics": true
+    },
+    "createdAt": "2026-07-26T03:00:56.293Z",
+    "englishName": "Demo Creator"
+  },
+  {
+    "id": "creator02",
+    "username": "ljcreator",
+    "name": "Creator LJ",
+    "email": "397521650@qq.com",
+    "bio": "",
+    "avatarUrl": "",
+    "passwordHash": "salt:hash",
+    "commission": 20,
+    "totalSales": 0,
+    "totalEarnings": 0,
+    "status": "active",
+    "permissions": {
+      "canUpload": true,
+      "canEdit": true,
+      "canDelete": false,
+      "canViewAnalytics": true
+    },
+    "createdAt": "2026-07-30T10:18:57.354Z",
+    "englishName": "LJ"
+  },
+  {
+    "id": "creator03",
+    "username": "gcscreator",
+    "name": "Creator GCS",
+    "email": "153963592@qq.com",
+    "bio": "",
+    "avatarUrl": "",
+    "passwordHash": "salt:hash",
+    "commission": 20,
+    "totalSales": 0,
+    "totalEarnings": 0,
+    "status": "active",
+    "permissions": {
+      "canUpload": true,
+      "canEdit": true,
+      "canDelete": false,
+      "canViewAnalytics": true
+    },
+    "createdAt": "2026-07-30T10:18:57.363Z",
+    "englishName": "GCS"
+  }
+]

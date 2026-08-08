@@ -1,0 +1,22 @@
+{
+  "id": "1",
+  "name": "Photo Presets Bundle",
+  "category": "Photos",
+  "price": 1,
+  "creator": "Kyno",
+  "description": "A comprehensive collection of Lightroom presets designed to give your photos a cohesive, professional look. Whether you're editing portraits, landscapes, or lifestyle shots, this bundle has you covered with over 100 presets across 6 different styles.",
+  "features": [
+    "100+ Lightroom & Photoshop presets",
+    "6 style categories (Warm, Cool, B&W, Vintage, Golden Hour, Moody)",
+    "Compatible with Lightroom Classic, CC, and Mobile",
+    "One-click application with adjustable settings",
+    "Includes installation guide and tutorial video"
+  ],
+  "includes": [
+    "100+ preset files (.xmp / .lrtemplate)",
+    "Step-by-step installation PDF",
+    "Video walkthrough (15 min)",
+    "Lifetime free updates"
+  ],
+  "previewImages": []
+}

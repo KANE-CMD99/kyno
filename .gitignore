@@ -23,3 +23,9 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# user-uploaded content
+/public/uploads/
+
+# local runtime data — VPS writes to these, do NOT deploy from repo
+/data/*.json

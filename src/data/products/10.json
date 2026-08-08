@@ -1,0 +1,22 @@
+{
+  "id": "10",
+  "name": "Landing Page Kit",
+  "category": "Templates",
+  "price": 1,
+  "creator": "Kyno",
+  "description": "10 conversion-focused landing page templates built with Tailwind CSS. Each template is designed for a specific use case — SaaS, ebook, course, webinar, app launch, newsletter, consulting, event, directory, and coming soon.",
+  "features": [
+    "10 landing page templates for different use cases",
+    "Tailwind CSS v4 + minimal JavaScript",
+    "Mobile-first responsive design",
+    "Conversion-optimized layouts (hero, features, pricing, CTA, testimonials)",
+    "Easy to customize — just edit HTML and Tailwind classes"
+  ],
+  "includes": [
+    "10 HTML landing page files",
+    "Tailwind config & build setup",
+    "Figma wireframes for all 10 pages",
+    "Lifetime updates"
+  ],
+  "previewImages": []
+}
