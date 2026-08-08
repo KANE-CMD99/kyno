@@ -58,8 +58,11 @@ export default function ProductsSection() {
         ) : (
           <>
             {(["Photos", "Fonts", "Templates", "Free"] as const).map((cat) => {
-              const items = filtered.filter((p) => p.category === cat);
-              if (items.length === 0) return null;
+              const allItems = filtered.filter((p) => p.category === cat);
+              if (allItems.length === 0) return null;
+              // Show max 4 per category — "Photos" and "Fonts" limited, "Templates" and "Free" unlimited
+              const limitCats = ["Photos", "Fonts"];
+              const items = limitCats.includes(cat) ? allItems.slice(0, 4) : allItems;
               return (
                 <div key={cat} className="text-center">
                   <h2 className="text-2xl font-bold text-neutral-900">Popular {cat}</h2>
