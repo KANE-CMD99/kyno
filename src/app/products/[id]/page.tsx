@@ -8,6 +8,7 @@ import ProductCard from "@/components/ProductCard";
 import AddToCartButton from "@/components/AddToCartButton";
 import PriceDisplay from "@/components/PriceDisplay";
 import ProductComments from "@/components/ProductComments";
+import ProductStructuredData from "@/components/ProductStructuredData";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -17,13 +18,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id } = await params;
   const detail = await getProductDetail(id);
   if (!detail) return { title: "Not Found" };
+  const url = `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"}/products/${id}`;
+  const imageUrl = detail.previewImages?.[0]?.startsWith("http")
+    ? detail.previewImages[0]
+    : detail.previewImages?.[0]
+      ? `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"}${detail.previewImages[0]}`
+      : undefined;
+
   return {
-    title: detail.name,
+    title: `${detail.name} — $${detail.price} | Kyno`,
     description: detail.description.slice(0, 160),
+    alternates: { canonical: url },
     openGraph: {
       title: `${detail.name} — Kyno`,
       description: detail.description.slice(0, 160),
       type: "article",
+      url,
+      ...(imageUrl ? { images: [{ url: imageUrl, width: 1200, height: 630 }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: detail.name,
+      description: detail.description.slice(0, 160),
+      ...(imageUrl ? { images: [imageUrl] } : {}),
     },
   };
 }
@@ -40,6 +57,14 @@ export default async function ProductPage({ params }: PageProps) {
 
   return (
     <>
+      <ProductStructuredData
+        name={detail.name}
+        description={detail.description}
+        image={detail.previewImages?.[0]}
+        price={detail.price}
+        category={detail.category}
+        productUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"}/products/${detail.id}`}
+      />
       <Nav />
       <main className="bg-white pt-[105px]">
         {/* Breadcrumb */}
