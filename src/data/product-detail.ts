@@ -9,6 +9,7 @@ export interface ProductDetail {
   originalPrice?: number;
   creator: string;
   creatorEnglishName?: string;
+  creatorUsername?: string;
   description: string;
   features: string[];
   includes: string[];
@@ -20,18 +21,22 @@ export async function getProductDetail(id: string): Promise<ProductDetail | unde
   const p = products.find((x) => x.id === id);
   if (!p) return undefined;
 
-  // Look up creator's English name
+  // Look up creator info
   let creatorEnglishName = "";
+  let creatorUsername = "";
   if (p.creatorId) {
     const creators = await getCreators();
     const creator = creators.find((c) => c.id === p.creatorId);
-    creatorEnglishName = creator?.englishName || "";
+    if (creator) {
+      creatorEnglishName = creator.englishName || "";
+      creatorUsername = creator.username || "";
+    }
   }
 
   return {
     id: p.id, name: p.name, category: p.category,
     price: p.price, originalPrice: p.originalPrice || undefined,
-    creator: p.creator, creatorEnglishName,
+    creator: p.creator, creatorEnglishName, creatorUsername,
     description: p.description || "",
     features: p.features || [], includes: p.includes || [],
     previewImages: p.previewImages || [],

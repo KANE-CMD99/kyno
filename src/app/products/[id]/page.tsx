@@ -111,9 +111,13 @@ export default async function ProductPage({ params }: PageProps) {
                 {detail.name}
               </h1>
               <p className="mt-2 text-sm text-neutral-500">
-                by <span className="font-medium text-neutral-700">{detail.creator}</span>
-                {detail.creatorEnglishName && (
-                  <span className="text-neutral-400 ml-1">({detail.creatorEnglishName})</span>
+                by{" "}
+                {detail.creatorUsername ? (
+                  <Link href={`/${detail.creatorUsername}`} className="font-medium text-blue-600 hover:text-blue-700">
+                    {detail.creatorEnglishName || detail.creator}
+                  </Link>
+                ) : (
+                  <span className="font-medium text-neutral-700">{detail.creatorEnglishName || detail.creator}</span>
                 )}
               </p>
 
@@ -153,37 +157,46 @@ export default async function ProductPage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Features + Includes — only show if there's content */}
-        {(hasFeatures || hasIncludes) ? (
-          <section className="bg-neutral-50 px-4 sm:px-6 py-12 sm:py-16">
-            <div className="mx-auto max-w-7xl">
-              <h2 className="text-lg font-bold text-neutral-900 text-center mb-6 sm:mb-8">What&apos;s inside</h2>
-              <div className="grid gap-8 sm:gap-12 lg:grid-cols-2">
+        {/* What's inside — visual quick-glance format */}
+        {hasFeatures || hasIncludes ? (
+          <section className="bg-neutral-50 px-4 sm:px-6 py-14 sm:py-20">
+            <div className="mx-auto max-w-4xl">
+              <h2 className="text-xl font-bold text-neutral-900 text-center mb-2">What&apos;s inside</h2>
+              <p className="text-sm text-neutral-500 text-center mb-10">
+                Everything included in this product
+              </p>
+              <div className={`grid gap-6 ${hasFeatures && hasIncludes ? "md:grid-cols-2" : "max-w-lg mx-auto"}`}>
                 {hasFeatures && (
-                  <div>
-                    <h3 className="text-base font-semibold text-neutral-900">Features</h3>
-                    <ul className="mt-4 space-y-2.5">
+                  <div className="rounded-xl border border-neutral-200 bg-white p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 text-sm font-bold">✨</span>
+                      <h3 className="text-sm font-bold text-neutral-900">Key Features</h3>
+                    </div>
+                    <ul className="space-y-2.5">
                       {detail.features.filter(Boolean).map((f, i) => (
                         <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-600">
-                          <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
-                          {f}
+                          <span>{f}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
                 {hasIncludes && (
-                  <div>
-                    <h3 className="text-base font-semibold text-neutral-900">What&apos;s included</h3>
-                    <ul className="mt-4 space-y-2.5">
+                  <div className="rounded-xl border border-neutral-200 bg-white p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-green-100 text-green-700 text-sm font-bold">📦</span>
+                      <h3 className="text-sm font-bold text-neutral-900">What&apos;s Included</h3>
+                    </div>
+                    <ul className="space-y-2.5">
                       {detail.includes.filter(Boolean).map((item, i) => (
                         <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-600">
-                          <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <svg className="mt-0.5 h-4 w-4 shrink-0 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
-                          {item}
+                          <span>{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -192,23 +205,7 @@ export default async function ProductPage({ params }: PageProps) {
               </div>
             </div>
           </section>
-        ) : (
-          <section className="bg-neutral-50 px-4 sm:px-6 py-12 sm:py-16">
-            <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-lg font-bold text-neutral-900">What&apos;s inside</h2>
-              <p className="mt-4 text-sm leading-relaxed text-neutral-600 px-2 sm:px-0">
-                {detail.description || "This digital product includes downloadable files ready for use in your projects."}
-              </p>
-              {detail.previewImages.filter(Boolean).length > 1 && (
-                <div className="mt-8 grid grid-cols-2 gap-4">
-                  {detail.previewImages.filter(Boolean).slice(1).map((url, i) => (
-                    <img key={i} src={url} alt="" className="rounded-lg object-cover w-full aspect-[4/3]" />
-                  ))}
-                </div>
-              )}
-            </div>
-          </section>
-        )}
+        ) : null}
 
         {/* Related products */}
         {relatedProducts.length > 0 && (
