@@ -23,6 +23,7 @@ export async function GET() {
       creator: p.creator,
       creatorId: p.creatorId || undefined,
       thumbnail: p.previewImages?.[0],
+      downloadUrl: p.downloadFile?.url || undefined,
     })),
   });
 }

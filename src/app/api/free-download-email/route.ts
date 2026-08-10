@@ -15,11 +15,13 @@ export async function POST(req: Request) {
 <body style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:480px;margin:0 auto;padding:32px 16px;color:#171717">
   <h1 style="font-size:20px;margin:0 0 8px">Your free download from Kyno</h1>
   <p style="color:#737373;font-size:14px;line-height:1.6;margin:0 0 24px">
-    Thanks for downloading <strong>${productName}</strong>! Click the link below to get your files.
+    Thanks for downloading <strong>${productName}</strong>!
   </p>
-  <a href="${downloadUrl || `${SITE.url}/products`}" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">
+  ${downloadUrl ? `<a href="${downloadUrl}" style="display:inline-block;background:#2563eb;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">
     Download ${productName}
-  </a>
+  </a>` : `<p style="color:#737373;font-size:14px;line-height:1.6;margin:0 0 24px">
+    Visit <a href="${SITE.url}" style="color:#2563eb">${SITE.url}</a> to download your free product.
+  </p>`}
   <hr style="border:0;border-top:1px solid #e5e5e5;margin:24px 0">
   <p style="color:#a3a3a3;font-size:12px;margin:0">
     Find more free resources at <a href="${SITE.url}" style="color:#2563eb">${SITE.url}</a>.
