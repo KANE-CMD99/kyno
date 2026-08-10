@@ -61,5 +61,47 @@
     },
     "createdAt": "2026-07-30T10:18:57.363Z",
     "englishName": "GCS"
+  },
+  {
+    "id": "caesar_01",
+    "username": "Caesar",
+    "name": "于凯",
+    "englishName": "Caesar",
+    "email": "33429296@qq.com",
+    "bio": "",
+    "avatarUrl": "",
+    "passwordHash": "da56ad1d6d256c67dfee3e8c50688f26:ed7576d43b4024a3d26d3f91b9904737c0bf1a996d8e367f2327d394cee113622fdd608c43b60242519a673768e0b9299b0a1e0c37f0435cfde6b051f1e0a0d3",
+    "commission": 20,
+    "totalSales": 0,
+    "totalEarnings": 0,
+    "status": "active",
+    "permissions": {
+      "canUpload": true,
+      "canEdit": true,
+      "canDelete": false,
+      "canViewAnalytics": true
+    },
+    "createdAt": "2026-08-10T13:37:57.580Z"
+  },
+  {
+    "id": "shenhua_01",
+    "username": "ShenHua",
+    "name": "申花",
+    "englishName": "ShenHua",
+    "email": "shenhua@kyno.ltd",
+    "bio": "",
+    "avatarUrl": "",
+    "passwordHash": "ae03d19e19a04f7736ad678948e51ad1:2e097a0678ca4987b71f2c66e669175a3161500b04f10ec7e40dc3fb41bb4fdc3e11504c79f1a10d47946e6e55c87186ecb729a00644f0e2c99bd63bd8df3ed9",
+    "commission": 20,
+    "totalSales": 0,
+    "totalEarnings": 0,
+    "status": "active",
+    "permissions": {
+      "canUpload": true,
+      "canEdit": true,
+      "canDelete": false,
+      "canViewAnalytics": true
+    },
+    "createdAt": "2026-08-10T13:37:57.619Z"
   }
 ]
