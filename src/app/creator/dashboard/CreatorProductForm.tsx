@@ -44,7 +44,7 @@ export default function CreatorProductForm({ product, onSaved }: Props) {
     if (file.size > 5 * 1024 * 1024) { setError("Max 5MB"); return; }
     setUploading(true); setError("");
     const form = new FormData(); form.append("file", file);
-    const res = await fetch("/api/creator/upload", { method: "POST", body: form });
+    const res = await fetch("/api/creator/upload", { method: "POST", body: form, credentials: "include" });
     const data = await res.json();
     if (data.url) setUploadedImages((prev) => [...prev, data.url]);
     else setError(data.error || "Upload failed");
@@ -57,7 +57,7 @@ export default function CreatorProductForm({ product, onSaved }: Props) {
     if (file.size > 200 * 1024 * 1024) { setError("Max 200MB"); return; }
     setUploadingFile(true); setError("");
     const form = new FormData(); form.append("file", file);
-    const res = await fetch("/api/creator/upload", { method: "POST", body: form });
+    const res = await fetch("/api/creator/upload", { method: "POST", body: form, credentials: "include" });
     const data = await res.json();
     if (data.url) setDownloadFile({ url: data.url, name: file.name, size: file.size });
     else setError(data.error || "Upload failed");
