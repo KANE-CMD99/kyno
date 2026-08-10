@@ -143,11 +143,8 @@ export default async function ProductPage({ params }: PageProps) {
                   name={detail.name}
                   price={detail.price}
                   category={detail.category}
-                  className="w-full sm:w-auto rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+                  className="w-full sm:w-auto rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 shadow-sm shadow-blue-200"
                 />
-                <button className="w-full sm:w-auto rounded-lg border border-neutral-300 px-6 py-3 text-sm font-medium text-neutral-700 transition-colors hover:border-neutral-400">
-                  Save
-                </button>
               </div>
 
               <p className="mt-3 text-xs text-neutral-400">
