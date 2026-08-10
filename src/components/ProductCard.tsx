@@ -67,15 +67,22 @@ export default function ProductCard({ product, index }: ProductCardProps) {
         </div>
       </a>
 
-      {/* Add to Cart button — outside the Link */}
-      <button
-        onClick={handleAddToCart}
-        className={`mt-2.5 sm:mt-3 w-full rounded-lg border py-2 sm:py-2 text-xs font-semibold transition-all ${
-          isFree ? "border-emerald-300 bg-emerald-50 text-emerald-700 hover:border-emerald-500 hover:bg-emerald-100" : "border-neutral-300 bg-white text-neutral-700 hover:border-neutral-900 hover:text-neutral-900"
-        }`}
-      >
-        {isFree ? "Download Free" : "Add to Cart"}
-      </button>
+      {/* Add to Cart / Download Free button — outside the Link */}
+      {isFree ? (
+        <a
+          href={`/products/${product.id}`}
+          className="mt-2.5 sm:mt-3 block w-full rounded-lg border border-emerald-300 bg-emerald-50 py-2 sm:py-2 text-center text-xs font-semibold text-emerald-700 transition-all hover:border-emerald-500 hover:bg-emerald-100"
+        >
+          Download Free
+        </a>
+      ) : (
+        <button
+          onClick={handleAddToCart}
+          className="mt-2.5 sm:mt-3 w-full rounded-lg border border-neutral-300 bg-white py-2 sm:py-2 text-xs font-semibold text-neutral-700 transition-all hover:border-neutral-900 hover:text-neutral-900"
+        >
+          Add to Cart
+        </button>
+      )}
 
       {/* Info */}
       <div className="mt-2.5 px-0.5 text-center">

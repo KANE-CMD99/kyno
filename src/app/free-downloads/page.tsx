@@ -53,13 +53,25 @@ export default function FreeDownloadsPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  const handleClaim = (item: FreeProduct) => {
+  const handleClaim = async (item: FreeProduct) => {
     if (!email.trim()) return;
+    // Send email via API
+    fetch("/api/free-download-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email.trim(),
+        productName: item.name,
+        downloadUrl: item.downloadUrl || `${window.location.origin}/products/${item.id}`,
+      }),
+    }).catch(() => {});
     setClaimed((prev) => ({ ...prev, [item.id]: true }));
     setActiveItem(null);
-    // If the product has a download file, trigger download directly
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 4000);
+    // Also trigger download directly if file exists
     if (item.downloadUrl) {
-      window.open(item.downloadUrl, "_blank");
+      setTimeout(() => { window.open(item.downloadUrl, "_blank"); }, 500);
     }
   };
 
@@ -113,17 +125,17 @@ export default function FreeDownloadsPage() {
                       key={item.id}
                       className="rounded-xl border border-neutral-200 bg-white p-6 transition-shadow hover:shadow-md"
                     >
-                      <div className="flex items-start gap-4">
+                      <Link href={`/products/${item.id}`} className="flex items-start gap-4 group">
                         <span className="text-4xl shrink-0">{item.emoji}</span>
                         <div>
                           <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-[10px] font-bold text-green-700">
                             FREE
                           </span>
-                          <h3 className="mt-1.5 text-base font-semibold text-neutral-900">
+                          <h3 className="mt-1.5 text-base font-semibold text-neutral-900 group-hover:text-blue-600 transition-colors">
                             {item.name}
                           </h3>
                         </div>
-                      </div>
+                      </Link>
 
                       <p className="mt-3 text-sm leading-relaxed text-neutral-500">
                         {item.description}
