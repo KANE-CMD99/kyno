@@ -298,16 +298,16 @@ interface LangContextType {
 const LangContext = createContext<LangContextType | null>(null);
 
 export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en");
+  const [lang, setLangState] = useState<Lang>("zh");
 
   useEffect(() => {
     const stored = localStorage.getItem("kyno-lang") as Lang | null;
     if (stored === "en" || stored === "zh") {
       setLangState(stored);
     } else {
-      // Auto-detect browser language on first visit
+      // Auto-detect browser language on first visit — default to Chinese
       const browserLang = navigator.language || "";
-      setLangState(browserLang.startsWith("zh") ? "zh" : "en");
+      setLangState(browserLang.startsWith("en") ? "en" : "zh");
     }
   }, []);
 
