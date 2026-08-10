@@ -82,26 +82,5 @@
       "canViewAnalytics": true
     },
     "createdAt": "2026-08-10T13:37:57.580Z"
-  },
-  {
-    "id": "shenhua_01",
-    "username": "ShenHua",
-    "name": "申花",
-    "englishName": "ShenHua",
-    "email": "shenhua@kyno.ltd",
-    "bio": "",
-    "avatarUrl": "",
-    "passwordHash": "ae03d19e19a04f7736ad678948e51ad1:2e097a0678ca4987b71f2c66e669175a3161500b04f10ec7e40dc3fb41bb4fdc3e11504c79f1a10d47946e6e55c87186ecb729a00644f0e2c99bd63bd8df3ed9",
-    "commission": 20,
-    "totalSales": 0,
-    "totalEarnings": 0,
-    "status": "active",
-    "permissions": {
-      "canUpload": true,
-      "canEdit": true,
-      "canDelete": false,
-      "canViewAnalytics": true
-    },
-    "createdAt": "2026-08-10T13:37:57.619Z"
   }
 ]
