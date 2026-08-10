@@ -13,6 +13,7 @@ interface FreeProduct {
   fileSize?: string;
   format?: string;
   emoji: string;
+  thumbnail?: string;
   downloadUrl?: string;
 }
 
@@ -37,7 +38,7 @@ export default function FreeDownloadsPage() {
       .then((d) => {
         const free = (d.products || [])
           .filter((p: { category: string }) => p.category === "Free")
-          .map((p: { id: string; name: string; category: string; description?: string; downloadFile?: { url: string; name: string; size: number }; price: string }) => ({
+          .map((p: { id: string; name: string; category: string; description?: string; downloadFile?: { url: string; name: string; size: number }; price: string; thumbnail?: string }) => ({
             id: p.id,
             name: p.name,
             category: p.category,
@@ -45,6 +46,7 @@ export default function FreeDownloadsPage() {
             fileSize: p.downloadFile ? `${(p.downloadFile.size / 1024 / 1024).toFixed(1)} MB` : "N/A",
             format: p.downloadFile ? p.downloadFile.name.split(".").pop()?.toUpperCase() || "FILE" : "FILE",
             emoji: categoryEmoji[p.category] || "🎁",
+            thumbnail: p.thumbnail,
             downloadUrl: p.downloadFile?.url,
           }));
         setProducts(free);
@@ -123,8 +125,18 @@ export default function FreeDownloadsPage() {
                   return (
                     <div
                       key={item.id}
-                      className="rounded-xl border border-neutral-200 bg-white p-6 transition-shadow hover:shadow-md"
+                      className="rounded-xl border border-neutral-200 bg-white overflow-hidden transition-shadow hover:shadow-md"
                     >
+                      {item.thumbnail ? (
+                        <Link href={`/products/${item.id}`} className="block">
+                          <img src={item.thumbnail} alt={item.name} className="w-full aspect-[3/2] object-cover" />
+                        </Link>
+                      ) : (
+                        <div className="w-full aspect-[3/2] bg-neutral-100 flex items-center justify-center">
+                          <span className="text-4xl">{item.emoji}</span>
+                        </div>
+                      )}
+                      <div className="p-6">
                       <Link href={`/products/${item.id}`} className="flex items-start gap-4 group">
                         <span className="text-4xl shrink-0">{item.emoji}</span>
                         <div>
@@ -203,6 +215,7 @@ export default function FreeDownloadsPage() {
                             Download Free
                           </button>
                         )}
+                      </div>
                       </div>
                     </div>
                   );
