@@ -25,10 +25,10 @@ const ACCOUNTS: Record<string, BuiltInAccount> = {
     commission: 20,
   },
   "33429296@qq.com": {
-    name: "Caesar",
+    name: "于凯",
     password: "Kyno7878",
     role: "creator",
-    creatorId: "caesar01",
+    creatorId: "caesar_01",
     username: "Caesar",
     commission: 20,
   },

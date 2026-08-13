@@ -85,7 +85,7 @@ export async function getCreatorByUsername(username: string): Promise<CreatorRec
     if (!data) return undefined;
     return { id: data.id, username: data.username, name: data.name, englishName: data.english_name || "", email: data.email, bio: data.bio || "", avatarUrl: data.avatar_url || "", passwordHash: data.password_hash, commission: data.commission, totalSales: data.total_sales || 0, totalEarnings: data.total_earnings || 0, status: data.status || "active", permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true }, createdAt: data.created_at };
   }
-  return getCreatorsJSON().find((c: CreatorRecord) => c.username === username.toLowerCase());
+  return getCreatorsJSON().find((c: CreatorRecord) => c.username.toLowerCase() === username.toLowerCase());
 }
 
 export async function getCreatorByEmail(email: string): Promise<CreatorRecord | undefined> {

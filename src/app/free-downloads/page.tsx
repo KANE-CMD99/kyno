@@ -37,8 +37,8 @@ export default function FreeDownloadsPage() {
       .then((r) => r.json())
       .then((d) => {
         const free = (d.products || [])
-          .filter((p: { category: string }) => p.category === "Free")
-          .map((p: { id: string; name: string; category: string; description?: string; downloadFile?: { url: string; name: string; size: number }; price: string; thumbnail?: string }) => ({
+          .filter((p: { category: string; downloadUrl?: string }) => p.category === "Free" && p.downloadUrl)
+          .map((p: { id: string; name: string; category: string; description?: string; downloadFile?: { url: string; name: string; size: number }; price: string; thumbnail?: string; downloadUrl?: string }) => ({
             id: p.id,
             name: p.name,
             category: p.category,
@@ -47,7 +47,7 @@ export default function FreeDownloadsPage() {
             format: p.downloadFile ? p.downloadFile.name.split(".").pop()?.toUpperCase() || "FILE" : "FILE",
             emoji: categoryEmoji[p.category] || "🎁",
             thumbnail: p.thumbnail,
-            downloadUrl: p.downloadFile?.url,
+            downloadUrl: p.downloadUrl,
           }));
         setProducts(free);
         setLoading(false);
@@ -57,24 +57,20 @@ export default function FreeDownloadsPage() {
 
   const handleClaim = async (item: FreeProduct) => {
     if (!email.trim()) return;
-    // Send email via API
+    // Send email with download link — user downloads from their inbox, not this page
     fetch("/api/free-download-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: email.trim(),
         productName: item.name,
-        downloadUrl: item.downloadUrl || `${window.location.origin}/products/${item.id}`,
+        downloadUrl: item.downloadUrl || "",
       }),
     }).catch(() => {});
     setClaimed((prev) => ({ ...prev, [item.id]: true }));
     setActiveItem(null);
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4000);
-    // Also trigger download directly if file exists
-    if (item.downloadUrl) {
-      setTimeout(() => { window.open(item.downloadUrl, "_blank"); }, 500);
-    }
   };
 
   return (
@@ -160,23 +156,13 @@ export default function FreeDownloadsPage() {
 
                       <div className="mt-5">
                         {isClaimed ? (
-                          item.downloadUrl ? (
-                            <a
-                              href={item.downloadUrl}
-                              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-                            >
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                <polyline points="7 10 12 15 17 10" />
-                                <line x1="12" y1="15" x2="12" y2="3" />
-                              </svg>
-                              Download
-                            </a>
-                          ) : (
-                            <span className="flex w-full items-center justify-center gap-2 rounded-lg bg-neutral-100 px-4 py-2.5 text-sm text-neutral-500">
-                              Link sent to email
-                            </span>
-                          )
+                          <span className="flex w-full items-center justify-center gap-2 rounded-lg bg-neutral-100 px-4 py-2.5 text-sm text-neutral-500">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                              <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                            Link sent to email
+                          </span>
                         ) : activeItem === item.id ? (
                           <div className="space-y-2">
                             <div className="flex gap-2">

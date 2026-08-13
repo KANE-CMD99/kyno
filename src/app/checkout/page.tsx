@@ -35,8 +35,8 @@ export default function CheckoutPage() {
         <Nav />
         <main className="flex min-h-[80vh] items-center justify-center bg-[#FAFAFA] pt-[105px]">
           <div className="text-center px-6">
-            <span className="text-6xl select-none">{String.fromCodePoint(0x1F6D2)}</span>
-            <h1 className="mt-6 text-2xl font-bold text-neutral-900">{t("checkout.empty_title")}</h1>
+            <span className="text-5xl sm:text-6xl select-none">{String.fromCodePoint(0x1F6D2)}</span>
+            <h1 className="mt-6 text-xl sm:text-2xl font-bold text-neutral-900">{t("checkout.empty_title")}</h1>
             <p className="mt-2 text-neutral-500">{t("checkout.empty_hint")}</p>
             <Link
               href="/"

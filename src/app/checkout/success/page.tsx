@@ -1,82 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Suspense } from "react";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import { SITE } from "@/lib/site-config";
-
-interface DownloadItem {
-  productId: string;
-  productName: string;
-  token: string;
-}
 
 function SuccessContent() {
-  const [downloads, setDownloads] = useState<DownloadItem[] | null>(null);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const tokens = params.get("tokens");
-    const email = params.get("email");
-
-    if (tokens) {
-      fetch(`/api/downloads?tokens=${tokens}`)
-        .then((r) => r.json())
-        .then((d) => setDownloads(d.downloads || []));
-    } else if (email) {
-      fetch(`/api/downloads?email=${email}`)
-        .then((r) => r.json())
-        .then((d) => setDownloads(d.downloads || []));
-    } else {
-      setDownloads([]);
-    }
-  }, []);
-
   return (
     <main className="flex min-h-[80vh] items-center justify-center bg-[#FAFAFA] pt-[105px]">
       <div className="max-w-md px-6 text-center">
         <span className="text-7xl select-none">{String.fromCodePoint(0x2705)}</span>
         <h1 className="mt-6 text-3xl font-bold text-neutral-900">Payment successful!</h1>
         <p className="mt-3 text-neutral-500">
-          Thank you for your purchase. Here are your download links:
+          Thank you for your purchase. Your download link has been sent to your email.
         </p>
 
-        {/* Download links */}
-        <div className="mt-6 space-y-3">
-          {downloads === null ? (
-            <div className="animate-pulse space-y-3">
-              {[1, 2].map((i) => (
-                <div key={i} className="h-16 rounded-xl bg-neutral-200" />
-              ))}
+        <div className="mt-6">
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
+            <div className="flex items-center justify-center gap-2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              <p className="text-sm font-semibold text-emerald-800">Download link sent!</p>
             </div>
-          ) : downloads.length > 0 ? (
-            downloads.map((item) => (
-              <a
-                key={item.token}
-                href={`/download/${item.token}`}
-                className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white p-4 text-left transition-colors hover:border-blue-300"
-              >
-                <div>
-                  <p className="text-sm font-semibold text-neutral-900">{item.productName}</p>
-                  <p className="text-xs text-neutral-400">Click to download &middot; One-time use</p>
-                </div>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-blue-600">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-              </a>
-            ))
-          ) : (
-            <div className="rounded-xl border border-neutral-200 bg-white p-6">
-              <p className="text-sm text-neutral-500">
-                Download links will be sent to your email. If you don&apos;t see them, check spam or{" "}
-                <a href={`mailto:${SITE.contactEmail}`} className="text-blue-600 hover:text-blue-700">contact us</a>.
-              </p>
-            </div>
-          )}
+            <p className="mt-2 text-xs text-emerald-700">
+              Check your email and click the download link to get your files.
+              If you don&apos;t see it within a few minutes, check your spam folder.
+            </p>
+          </div>
         </div>
 
         <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">

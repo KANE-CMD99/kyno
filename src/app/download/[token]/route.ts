@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { getOrderByToken, markOrderClaimed } from "@/db/storage";
 import { getProductById } from "@/db/products-store";
+import { recordDownload } from "@/db/stats";
 
 export async function GET(
   req: Request,
@@ -20,6 +21,7 @@ export async function GET(
   }
 
   await markOrderClaimed(order.id);
+  recordDownload();
 
   // Try to serve the actual file
   const product = await getProductById(order.productId);
@@ -49,11 +51,7 @@ export async function GET(
     }
   }
 
-  // Fallback: return JSON (no file attached)
-  return NextResponse.json({
-    success: true,
-    message: `Download activated for ${order.productName}`,
-    productName: order.productName,
-    orderId: order.id,
-  });
+  // No file attached — redirect to product detail page so user can find it
+  const productPageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/products/${order.productId}`;
+  return NextResponse.redirect(productPageUrl);
 }

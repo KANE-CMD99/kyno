@@ -29,3 +29,9 @@ yarn-error.log*
 
 # local runtime data — VPS writes to these, do NOT deploy from repo
 /data/*.json
+
+# claude local settings (machine-specific permissions)
+.claude/settings.local.json
+
+# typescript incremental build cache
+tsconfig.tsbuildinfo

@@ -15,6 +15,7 @@ export interface DailyStats {
   uniqueIPs: string[];
   orders: number;
   revenue: number;
+  downloads: number;
   customerEmails: string[];
 }
 
@@ -44,6 +45,7 @@ function readStats(): DailyStats {
       uniqueIPs: [],
       orders: 0,
       revenue: 0,
+      downloads: 0,
       customerEmails: [],
     };
   }
@@ -73,6 +75,12 @@ export function recordOrder(email: string, price: number) {
   if (email && !stats.customerEmails.includes(email)) {
     stats.customerEmails.push(email);
   }
+  writeStats(stats);
+}
+
+export function recordDownload() {
+  const stats = readStats();
+  stats.downloads += 1;
   writeStats(stats);
 }
 
@@ -146,4 +154,43 @@ export function exportCustomerEmailsCSV(): string {
     ([email, { name, date }]) => `${email},${name},${date}`
   );
   return [header, ...rows].join("\n");
+}
+
+// ──────────────────────────────────────────────
+// Creator-specific stats (per-creator product sales + downloads)
+// ──────────────────────────────────────────────
+
+export function getCreatorStats(creatorId: string) {
+  try {
+    const ordersPath = path.join(DATA_DIR, "orders.json");
+    const productsPath = path.join(DATA_DIR, "products-store.json");
+    if (!fs.existsSync(ordersPath)) return { totalSales: 0, totalRevenue: 0, totalDownloads: 0, recentOrders: [] as Array<{productName:string;customerEmail:string;date:string;downloaded:boolean}> };
+
+    const orders = JSON.parse(fs.readFileSync(ordersPath, "utf-8")) as Array<{productId:string;productName:string;price:number;customerEmail?:string;customerName?:string;downloadClaimed:boolean;createdAt:string}>;
+    let products: Array<{id:string;creatorId?:string}> = [];
+    if (fs.existsSync(productsPath)) products = JSON.parse(fs.readFileSync(productsPath, "utf-8"));
+
+    // Build productId -> creatorId map
+    const productCreator = new Map<string, string>();
+    products.forEach(p => { if (p.creatorId) productCreator.set(p.id, p.creatorId); });
+
+    // Filter orders for this creator
+    const creatorOrders = orders.filter(o => productCreator.get(o.productId) === creatorId || productCreator.get(o.productId) === creatorId);
+
+    const totalSales = creatorOrders.length;
+    const totalRevenue = creatorOrders.reduce((s, o) => s + (typeof o.price === 'number' ? o.price : 0), 0);
+    const totalDownloads = creatorOrders.filter(o => o.downloadClaimed).length;
+
+    const recentOrders = creatorOrders
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 20)
+      .map(o => ({
+        productName: o.productName,
+        customerEmail: o.customerEmail || "-",
+        date: o.createdAt?.slice(0, 10) || "",
+        downloaded: !!o.downloadClaimed,
+      }));
+
+    return { totalSales, totalRevenue, totalDownloads, recentOrders };
+  } catch { return { totalSales: 0, totalRevenue: 0, totalDownloads: 0, recentOrders: [] as Array<{productName:string;customerEmail:string;date:string;downloaded:boolean}> }; }
 }

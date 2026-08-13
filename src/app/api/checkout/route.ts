@@ -9,7 +9,23 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder"
   timeout: 8000,
 });
 
+const RATE_WINDOW = 60000; // 1 minute
+const ipCounts = new Map<string, { count: number; resetAt: number }>();
+
 export async function POST(req: Request) {
+  // IP-based rate limiting
+  const ip = (req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown").split(",")[0].trim();
+  const now = Date.now();
+  const entry = ipCounts.get(ip);
+  if (entry && entry.resetAt > now) {
+    if (entry.count >= 5) {
+      return NextResponse.json({ error: "Too many requests. Please try again in a minute." }, { status: 429 });
+    }
+    entry.count++;
+  } else {
+    ipCounts.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
+  }
+
   try {
     const { items, email, name } = await req.json();
 

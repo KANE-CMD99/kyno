@@ -9,6 +9,7 @@ interface StatsData {
     uniqueIPs: string[];
     orders: number;
     revenue: number;
+    downloads: number;
     customerEmails: string[];
   };
   history: Array<{
@@ -17,6 +18,7 @@ interface StatsData {
     uniqueIPs: string[];
     orders: number;
     revenue: number;
+    downloads: number;
     customerEmails: string[];
     timestamp: string;
   }>;
@@ -52,11 +54,12 @@ export default function AdminAnalytics() {
       <div>
         <h2 className="text-xl font-bold text-neutral-900">Today&apos;s Stats</h2>
         <p className="text-sm text-neutral-500">{today.date}</p>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <StatCard label="Visits" value={today.visits} sub={`${today.uniqueIPs.length} unique IPs`} />
           <StatCard label="Orders" value={today.orders} sub={`$${today.revenue.toFixed(2)} revenue`} />
-          <StatCard label="Customer Emails" value={today.customerEmails.length} sub="purchased today" />
-          <StatCard label="Total Customers" value={total.customers} sub={`${total.orders} orders · $${total.revenue.toFixed(2)}`} />
+          <StatCard label="Downloads" value={today.downloads || 0} sub="files delivered" />
+          <StatCard label="Customers" value={today.customerEmails.length} sub="emails collected" />
+          <StatCard label="Total" value={total.customers} sub={`${total.orders} orders · $${total.revenue.toFixed(2)}`} />
         </div>
       </div>
 
@@ -72,6 +75,7 @@ export default function AdminAnalytics() {
                 <th className="px-5 py-3 font-medium text-neutral-500">Unique IPs</th>
                 <th className="px-5 py-3 font-medium text-neutral-500">Orders</th>
                 <th className="px-5 py-3 font-medium text-neutral-500">Revenue</th>
+                <th className="px-5 py-3 font-medium text-neutral-500">Downloads</th>
                 <th className="px-5 py-3 font-medium text-neutral-500">Customers</th>
               </tr>
             </thead>
@@ -83,6 +87,7 @@ export default function AdminAnalytics() {
                   <td className="px-5 py-3">{h.uniqueIPs.length}</td>
                   <td className="px-5 py-3">{h.orders}</td>
                   <td className="px-5 py-3">${h.revenue.toFixed(2)}</td>
+                  <td className="px-5 py-3">{h.downloads || 0}</td>
                   <td className="px-5 py-3">{h.customerEmails.length}</td>
                 </tr>
               ))}

@@ -7,11 +7,12 @@ import { useLang } from "@/components/LangContext";
 import { getAllProducts, deleteProduct, type ProductRecord } from "@/db/products-store";
 import CreatorProductForm from "./CreatorProductForm";
 import CreatorSettings from "./CreatorSettings";
+import CreatorAnalytics from "./CreatorAnalytics";
 
 export default function CreatorDashboardPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
   const [creator, setCreator] = useState<{ id: string; username: string; name: string; email: string } | null>(null);
-  const [view, setView] = useState<"list" | "create" | "settings" | { edit: ProductRecord }>("list");
+  const [view, setView] = useState<"list" | "create" | "settings" | "analytics" | { edit: ProductRecord }>("list");
   const [products, setProducts] = useState<ProductRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -71,6 +72,7 @@ export default function CreatorDashboardPage() {
               <button onClick={() => setLang("zh")} className={`rounded px-2 py-0.5 text-xs font-medium ${lang === "zh" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-400"}`}>中文</button>
             </div>
             <Link href={`/${creator?.username || ""}`} className="text-xs text-blue-600 hover:text-blue-700">{t("creator.view_store")}</Link>
+            <button onClick={() => setView("analytics")} className="text-xs text-blue-600 hover:text-blue-700">Analytics</button>
             <button onClick={() => setView("settings")} className="text-xs text-neutral-500 hover:text-neutral-700">{t("creator.settings")}</button>
             <button onClick={() => router.push("/auth/logout")} className="text-xs text-neutral-400 hover:text-neutral-600">{t("creator.signout")}</button>
           </div>
@@ -127,6 +129,11 @@ export default function CreatorDashboardPage() {
           <CreatorSettings
             onBack={() => setView("list")}
           />
+        ) : view === "analytics" ? (
+          <div>
+            <button onClick={() => setView("list")} className="mb-6 text-sm text-blue-600 hover:text-blue-700">&larr; {t("creator.back")}</button>
+            <CreatorAnalytics />
+          </div>
         ) : (
           <div>
             <button onClick={() => setView("list")} className="mb-6 text-sm text-blue-600 hover:text-blue-700">&larr; {t("creator.back")}</button>
