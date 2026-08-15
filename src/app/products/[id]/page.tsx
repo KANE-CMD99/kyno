@@ -5,6 +5,7 @@ import { getProductDetail, getRelatedProducts } from "@/data/product-detail";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import ProductGallery from "@/components/ProductGallery";
 import AddToCartButton from "@/components/AddToCartButton";
 import PriceDisplay from "@/components/PriceDisplay";
 import ProductComments from "@/components/ProductComments";
@@ -54,6 +55,7 @@ export default async function ProductPage({ params }: PageProps) {
 
   const hasFeatures = detail.features.filter(Boolean).length > 0;
   const hasIncludes = detail.includes.filter(Boolean).length > 0;
+  const images = detail.previewImages.filter(Boolean).slice(0, 3);
 
   return (
     <>
@@ -81,23 +83,21 @@ export default async function ProductPage({ params }: PageProps) {
         {/* Hero: stacked on mobile, 2-col on desktop */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6 py-8 sm:py-12">
           <div className="grid gap-8 sm:gap-12 lg:grid-cols-2">
-            {/* Left: Preview image or placeholder */}
-            <div className="aspect-[4/3] sm:aspect-[4/3] rounded-lg sm:rounded-xl bg-neutral-100 flex items-center justify-center overflow-hidden order-1 lg:order-none">
-              {detail.previewImages.filter(Boolean).length > 0 ? (
-                <img
-                  src={detail.previewImages[0]}
-                  alt={detail.name}
-                  className="h-full w-full object-cover"
-                />
+            {/* Left: Preview gallery or placeholder */}
+            <div className="order-1 lg:order-none">
+              {images.length > 0 ? (
+                <ProductGallery images={images} name={detail.name} />
               ) : (
-                <div className="text-center">
-                  <span className="text-7xl">
-                    {detail.category === "Photos" ? String.fromCodePoint(0x1F4F7)
-                     : detail.category === "Fonts" ? String.fromCodePoint(0x1F524)
-                     : detail.category === "Free" ? String.fromCodePoint(0x1F381)
-                     : String.fromCodePoint(0x1F4D0)}
-                  </span>
-                  <p className="mt-3 text-sm text-neutral-400">Product preview</p>
+                <div className="aspect-[4/3] rounded-lg sm:rounded-xl bg-neutral-100 flex items-center justify-center overflow-hidden">
+                  <div className="text-center">
+                    <span className="text-7xl">
+                      {detail.category === "Photos" ? String.fromCodePoint(0x1F4F7)
+                       : detail.category === "Fonts" ? String.fromCodePoint(0x1F524)
+                       : detail.category === "Free" ? String.fromCodePoint(0x1F381)
+                       : String.fromCodePoint(0x1F4D0)}
+                    </span>
+                    <p className="mt-3 text-sm text-neutral-400">Product preview</p>
+                  </div>
                 </div>
               )}
             </div>
