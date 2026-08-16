@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import ClientLayout from "@/components/ClientLayout";
 import CookieBanner from "@/components/CookieBanner";
 import OrganizationStructuredData from "@/components/OrganizationStructuredData";
@@ -43,6 +44,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9346189548515611"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <OrganizationStructuredData />
         <a
           href="#main-content"
