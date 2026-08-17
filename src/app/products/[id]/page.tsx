@@ -59,7 +59,6 @@ export default async function ProductPage({ params }: PageProps) {
   const hasFeatures = detail.features.filter(Boolean).length > 0;
   const hasIncludes = detail.includes.filter(Boolean).length > 0;
   const images = detail.previewImages.filter(Boolean).slice(0, 3);
-  const highlights = detail.features.filter(Boolean).slice(0, 4);
 
   return (
     <>
@@ -138,20 +137,6 @@ export default async function ProductPage({ params }: PageProps) {
                   </Link>
                 )}
               </div>
-
-              {/* Highlights */}
-              {highlights.length > 0 && (
-                <ul className="mt-5 space-y-2.5">
-                  {highlights.map((h, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-700">
-                      <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>{h}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
 
               {/* Price */}
               <div className="mt-6 flex items-center gap-3">
