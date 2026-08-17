@@ -35,7 +35,7 @@ function buildOrderEmail(orders: OrderRecord[], origin: string): string {
 </html>`;
 }
 
-export async function sendDownloadEmail(orders: OrderRecord[], to: string) {
+export async function sendDownloadEmail(orders: OrderRecord[], to: string): Promise<boolean> {
   const origin = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const html = buildOrderEmail(orders, origin);
 
@@ -46,7 +46,7 @@ export async function sendDownloadEmail(orders: OrderRecord[], to: string) {
       console.log(`  ${o.productName}: ${origin}/download/${o.downloadToken}`);
     }
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    return;
+    return true;
   }
 
   const { data, error } = await resend.emails.send({
@@ -60,7 +60,8 @@ export async function sendDownloadEmail(orders: OrderRecord[], to: string) {
 
   if (error) {
     console.error("Resend send error:", error);
-  } else {
-    console.log(`Email sent to ${to} — ${data?.id}`);
+    return false;
   }
+  console.log(`Email sent to ${to} — ${data?.id}`);
+  return true;
 }

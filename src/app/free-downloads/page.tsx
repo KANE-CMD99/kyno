@@ -57,14 +57,13 @@ export default function FreeDownloadsPage() {
 
   const handleClaim = async (item: FreeProduct) => {
     if (!email.trim()) return;
-    // Send email with download link — user downloads from their inbox, not this page
+    // Send email with a one-time download link — user downloads from their inbox
     fetch("/api/free-download-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: email.trim(),
-        productName: item.name,
-        downloadUrl: item.downloadUrl || "",
+        productId: item.id,
       }),
     }).catch(() => {});
     setClaimed((prev) => ({ ...prev, [item.id]: true }));

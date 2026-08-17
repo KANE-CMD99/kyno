@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import AddToCartButton from "./AddToCartButton";
 import PriceDisplay from "./PriceDisplay";
 
@@ -31,12 +30,12 @@ export default function MobileBuyBar({ id, name, price, originalPrice, category 
           )}
         </div>
         {isFree ? (
-          <Link
-            href="/free-downloads"
+          <a
+            href="#free-download"
             className="flex-1 rounded-lg bg-emerald-600 px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
           >
             Download Free
-          </Link>
+          </a>
         ) : (
           <AddToCartButton
             id={id}

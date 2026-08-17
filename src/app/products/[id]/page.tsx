@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
 import ProductDescription from "@/components/ProductDescription";
+import FreeDownloadForm from "@/components/FreeDownloadForm";
 import MobileBuyBar from "@/components/MobileBuyBar";
 import AddToCartButton from "@/components/AddToCartButton";
 import PriceDisplay from "@/components/PriceDisplay";
@@ -165,12 +166,7 @@ export default async function ProductPage({ params }: PageProps) {
               {/* CTA */}
               <div className="mt-5">
                 {detail.price === 0 ? (
-                  <Link
-                    href="/free-downloads"
-                    className="block w-full rounded-lg bg-emerald-600 px-8 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
-                  >
-                    Download Free
-                  </Link>
+                  <FreeDownloadForm productId={detail.id} />
                 ) : (
                   <AddToCartButton
                     id={detail.id}
