@@ -20,38 +20,36 @@ export async function GET(
     return NextResponse.json({ error: "This download link has already been used" }, { status: 410 });
   }
 
-  await markOrderClaimed(order.id);
-  recordDownload();
-
-  // Try to serve the actual file
+  // Resolve the file location BEFORE marking claimed, so a missing file
+  // doesn't burn the user's one-time download token.
   const product = await getProductById(order.productId);
-  if (product?.downloadFile?.url) {
-    const fileUrl = product.downloadFile.url;
+  const fileUrl = product?.downloadFile?.url;
 
-    // If it's a local path (starts with /), serve from disk
-    if (fileUrl.startsWith("/")) {
-      const filePath = path.join(process.cwd(), "public", fileUrl);
-      if (fs.existsSync(filePath)) {
-        const fileBuffer = fs.readFileSync(filePath);
-        const fileName = product.downloadFile.name || `${order.productName}.zip`;
-        return new NextResponse(fileBuffer, {
-          headers: {
-            "Content-Type": "application/octet-stream",
-            "Content-Disposition": `attachment; filename="${encodeURIComponent(fileName)}"`,
-            "Content-Length": String(fileBuffer.length),
-          },
-        });
-      }
-      console.error(`[Download] File not found: ${filePath}`);
+  if (fileUrl?.startsWith("/")) {
+    const filePath = path.join(process.cwd(), "public", fileUrl);
+    if (fs.existsSync(filePath)) {
+      await markOrderClaimed(order.id);
+      recordDownload();
+      const fileBuffer = fs.readFileSync(filePath);
+      const fileName = product?.downloadFile?.name || `${order.productName}.zip`;
+      return new NextResponse(fileBuffer, {
+        headers: {
+          "Content-Type": "application/octet-stream",
+          "Content-Disposition": `attachment; filename="${encodeURIComponent(fileName)}"`,
+          "Content-Length": String(fileBuffer.length),
+        },
+      });
     }
-
-    // If it's an external URL, redirect
-    if (fileUrl.startsWith("http")) {
-      return NextResponse.redirect(fileUrl);
-    }
+    console.error(`[Download] File not found: ${filePath}`);
   }
 
-  // No file attached — redirect to product detail page so user can find it
+  if (fileUrl?.startsWith("http")) {
+    await markOrderClaimed(order.id);
+    recordDownload();
+    return NextResponse.redirect(fileUrl);
+  }
+
+  // No file attached or file missing — redirect WITHOUT claiming so the user can retry
   const productPageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/products/${order.productId}`;
   return NextResponse.redirect(productPageUrl);
 }

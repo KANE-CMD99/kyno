@@ -43,8 +43,11 @@ export async function POST(req: Request) {
         subject: `Your free download: ${productName}`,
         html,
       });
-      if (error) console.error("Resend free-download error:", error);
-      else console.log(`Free download email sent to ${email} — ${productName}`);
+      if (error) {
+        console.error("Resend free-download error:", error);
+        return NextResponse.json({ error: "Failed to send email. Please try again." }, { status: 500 });
+      }
+      console.log(`Free download email sent to ${email} — ${productName}`);
     } else {
       console.log(`━━━ FREE DOWNLOAD EMAIL (not sent — no RESEND_API_KEY) ━━━`);
       console.log(`To: ${email} | Product: ${productName} | URL: ${downloadUrl || "N/A"}`);
