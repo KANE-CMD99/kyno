@@ -6,6 +6,8 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import ProductGallery from "@/components/ProductGallery";
+import ProductDescription from "@/components/ProductDescription";
+import MobileBuyBar from "@/components/MobileBuyBar";
 import AddToCartButton from "@/components/AddToCartButton";
 import PriceDisplay from "@/components/PriceDisplay";
 import ProductComments from "@/components/ProductComments";
@@ -56,6 +58,7 @@ export default async function ProductPage({ params }: PageProps) {
   const hasFeatures = detail.features.filter(Boolean).length > 0;
   const hasIncludes = detail.includes.filter(Boolean).length > 0;
   const images = detail.previewImages.filter(Boolean).slice(0, 3);
+  const highlights = detail.features.filter(Boolean).slice(0, 4);
 
   return (
     <>
@@ -104,52 +107,104 @@ export default async function ProductPage({ params }: PageProps) {
 
             {/* Right: Info */}
             <div>
-              <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
-                {detail.category}
-              </span>
-              <h1 className="mt-2 text-3xl font-bold text-neutral-900 md:text-4xl">
-                {detail.name}
-              </h1>
-              <p className="mt-2 text-sm text-neutral-500">
-                by{" "}
-                {detail.creatorUsername ? (
-                  <Link href={`/${detail.creatorUsername}`} className="font-medium text-blue-600 hover:text-blue-700">
-                    {detail.creatorEnglishName || detail.creator}
-                  </Link>
-                ) : (
-                  <span className="font-medium text-neutral-700">{detail.creatorEnglishName || detail.creator}</span>
-                )}
-              </p>
-
-              <p className="mt-6 text-base leading-relaxed text-neutral-600">
-                {detail.description}
-              </p>
-
-              {/* Price + CTA */}
-              <div className="mt-8 flex items-center gap-4">
-                <div className="flex items-center gap-3">
-                  <PriceDisplay
-                    price={detail.price}
-                    originalPrice={detail.originalPrice}
-                    className="text-3xl font-bold text-neutral-900"
-                    originalClassName="text-lg text-neutral-400 line-through"
-                  />
-                </div>
+              <div className="flex items-center gap-2.5">
+                <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
+                  {detail.category}
+                </span>
+                <span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-[11px] font-medium text-neutral-500">
+                  Digital Download
+                </span>
               </div>
 
-              <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                <AddToCartButton
-                  id={detail.id}
-                  name={detail.name}
+              <h1 className="mt-3 text-3xl font-bold leading-tight text-neutral-900 md:text-4xl">
+                {detail.name}
+              </h1>
+
+              {/* Creator card */}
+              <div className="mt-4 flex items-center gap-3 rounded-xl border border-neutral-200 p-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
+                  {(detail.creatorEnglishName || detail.creator).charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-neutral-900">
+                    {detail.creatorEnglishName || detail.creator}
+                  </p>
+                  <p className="text-xs text-neutral-500">Creator</p>
+                </div>
+                {detail.creatorUsername && (
+                  <Link href={`/${detail.creatorUsername}`} className="shrink-0 text-xs font-medium text-blue-600 hover:text-blue-700">
+                    View Store
+                  </Link>
+                )}
+              </div>
+
+              {/* Highlights */}
+              {highlights.length > 0 && (
+                <ul className="mt-5 space-y-2.5">
+                  {highlights.map((h, i) => (
+                    <li key={i} className="flex items-start gap-2.5 text-sm text-neutral-700">
+                      <svg className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {/* Price */}
+              <div className="mt-6 flex items-center gap-3">
+                <PriceDisplay
                   price={detail.price}
-                  category={detail.category}
-                  className="w-full sm:w-auto rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 shadow-sm shadow-blue-200"
+                  originalPrice={detail.originalPrice}
+                  className="text-3xl font-bold text-neutral-900"
+                  originalClassName="text-lg text-neutral-400 line-through"
                 />
               </div>
 
-              <p className="mt-3 text-xs text-neutral-400">
-                Pay once, own forever. Lifetime access included.
-              </p>
+              {/* CTA */}
+              <div className="mt-5">
+                {detail.price === 0 ? (
+                  <Link
+                    href="/free-downloads"
+                    className="block w-full rounded-lg bg-emerald-600 px-8 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+                  >
+                    Download Free
+                  </Link>
+                ) : (
+                  <AddToCartButton
+                    id={detail.id}
+                    name={detail.name}
+                    price={detail.price}
+                    category={detail.category}
+                    className="w-full rounded-lg bg-blue-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 shadow-sm shadow-blue-200"
+                  />
+                )}
+              </div>
+
+              {/* Trust badges */}
+              <div className="mt-6 grid grid-cols-3 gap-3 border-t border-neutral-100 pt-5">
+                <div className="flex flex-col items-center gap-1.5 text-center">
+                  <span className="text-xl">⚡</span>
+                  <span className="text-[11px] font-medium leading-tight text-neutral-600">Instant delivery</span>
+                </div>
+                <div className="flex flex-col items-center gap-1.5 text-center">
+                  <span className="text-xl">🔒</span>
+                  <span className="text-[11px] font-medium leading-tight text-neutral-600">Secure payment</span>
+                </div>
+                <div className="flex flex-col items-center gap-1.5 text-center">
+                  <span className="text-xl">∞</span>
+                  <span className="text-[11px] font-medium leading-tight text-neutral-600">Lifetime access</span>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="mt-6 border-t border-neutral-100 pt-5">
+                <h2 className="text-sm font-bold text-neutral-900">About this product</h2>
+                <div className="mt-2">
+                  <ProductDescription description={detail.description} />
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -238,6 +293,13 @@ export default async function ProductPage({ params }: PageProps) {
         {/* Comments */}
         <ProductComments productId={detail.id} />
       </main>
+      <MobileBuyBar
+        id={detail.id}
+        name={detail.name}
+        price={detail.price}
+        originalPrice={detail.originalPrice}
+        category={detail.category}
+      />
       <Footer />
     </>
   );
