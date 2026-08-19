@@ -1,7 +1,14 @@
 import { cookies } from "next/headers";
 import crypto from "crypto";
 
-const JWT_SECRET = process.env.JWT_SECRET || "kyno-dev-secret-change-in-production";
+const JWT_SECRET = (() => {
+  const v = process.env.JWT_SECRET;
+  if (v) return v;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("JWT_SECRET must be set in production environment");
+  }
+  return "kyno-dev-secret";
+})();
 const COOKIE_NAME = "kyno_session";
 
 export interface SessionUser {

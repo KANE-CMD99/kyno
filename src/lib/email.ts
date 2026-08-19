@@ -6,12 +6,21 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
+function escapeHtml(str: string): string {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function buildOrderEmail(orders: OrderRecord[], origin: string): string {
   const downloadLinks = orders
     .map((o) => {
       const url = `${origin}/download/${o.downloadToken}`;
       return `<li style="margin:0 0 10px;padding:12px 16px;background:#f9fafb;border-radius:8px">
-        <strong style="color:#171717">${o.productName}</strong><br>
+        <strong style="color:#171717">${escapeHtml(o.productName)}</strong><br>
         <span style="color:#737373;font-size:14px">$${o.price}</span><br>
         <a href="${url}" style="color:#1a56db;font-size:13px;text-decoration:none">Download &rarr;</a>
       </li>`;
@@ -29,7 +38,7 @@ function buildOrderEmail(orders: OrderRecord[], origin: string): string {
   <ul style="list-style:none;padding:0;margin:0 0 24px">${downloadLinks}</ul>
   <hr style="border:0;border-top:1px solid #e5e5e5;margin:24px 0">
   <p style="color:#a3a3a3;font-size:12px;margin:0">
-    Need help? Reply to this email or contact <a href="mailto:${SITE.contactEmail}" style="color:#1a56db">${SITE.contactEmail}</a>.
+    Need help? Reply to this email or contact <a href="mailto:${escapeHtml(SITE.contactEmail)}" style="color:#1a56db">${escapeHtml(SITE.contactEmail)}</a>.
   </p>
 </body>
 </html>`;

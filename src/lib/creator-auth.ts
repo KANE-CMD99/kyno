@@ -3,7 +3,14 @@
 import { cookies } from "next/headers";
 import { sign, verify } from "./jwt";
 
-const CREATOR_JWT = process.env.CREATOR_JWT_SECRET || "kyno-creator-jwt-secret";
+const CREATOR_JWT = (() => {
+  const v = process.env.CREATOR_JWT_SECRET;
+  if (v) return v;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("CREATOR_JWT_SECRET must be set in production environment");
+  }
+  return "kyno-creator-jwt-secret";
+})();
 const COOKIE_NAME = "kyno_creator_session";
 
 export interface CreatorSession {
