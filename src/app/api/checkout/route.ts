@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createOrder, type OrderRecord } from "@/db/storage";
+import { getProductById } from "@/db/products-store";
 import { convertClick } from "@/db/affiliates";
 import { sendDownloadEmail } from "@/lib/email";
 import { recordOrder } from "@/db/stats";
@@ -36,15 +37,28 @@ export async function POST(req: Request) {
     const origin = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const affCode = req.headers.get("cookie")?.match(/kyno_affiliate=([^;]+)/)?.[1] || "";
 
+    // Resolve real product data from DB — never trust client-supplied prices
+    const resolvedItems = await Promise.all(
+      items.map(async (item: { id: string; name: string; price: number; quantity?: number }) => {
+        const product = await getProductById(item.id);
+        return {
+          id: item.id,
+          name: product?.name || item.name,
+          price: product ? product.price : item.price || 0,
+          quantity: item.quantity || 1,
+        };
+      })
+    );
+
     // Record visit + orders for analytics
-    const totalRevenue = items.reduce((sum: number, i: { price: number }) => sum + (i.price || 0), 0);
+    const totalRevenue = resolvedItems.reduce((sum: number, i: { price: number; quantity: number }) => sum + i.price * i.quantity, 0);
     if (email) recordOrder(email, totalRevenue);
 
     // Create orders with download tokens BEFORE Stripe — ensures orders exist
     // even if webhook never fires (common when server has no public HTTPS)
     const now = new Date().toISOString();
     const orders: OrderRecord[] = [];
-    for (const item of items) {
+    for (const item of resolvedItems) {
       const order = await createOrder({
         userId: 0,
         productId: item.id,
@@ -60,13 +74,13 @@ export async function POST(req: Request) {
     // Build token list for success URL
     const tokenList = orders.map((o) => o.downloadToken).join(",");
 
-    const lineItems = items.map((item: { id: string; name: string; price: number; quantity?: number }) => ({
+    const lineItems = resolvedItems.map((item: { name: string; price: number; quantity: number }) => ({
       price_data: {
         currency: "usd",
         product_data: { name: item.name },
-        unit_amount: Math.round((item.price || 0) * 100),
+        unit_amount: Math.round(item.price * 100),
       },
-      quantity: item.quantity || 1,
+      quantity: item.quantity,
     }));
 
     try {
@@ -87,7 +101,7 @@ export async function POST(req: Request) {
 
       // Record affiliate commission
       if (affCode) {
-        const total = items.reduce((sum: number, i: { price: number }) => sum + i.price, 0);
+        const total = resolvedItems.reduce((sum: number, i: { price: number; quantity: number }) => sum + i.price * i.quantity, 0);
         convertClick(affCode, 0, total);
       }
 
@@ -103,7 +117,7 @@ export async function POST(req: Request) {
       if (err.type === "StripeConnectionError" || err.code === "ETIMEDOUT" || err.code === "ECONNREFUSED") {
         // Affiliate commission
         if (affCode) {
-          const total = items.reduce((sum: number, i: { price: number }) => sum + i.price, 0);
+          const total = resolvedItems.reduce((sum: number, i: { price: number; quantity: number }) => sum + i.price * i.quantity, 0);
           convertClick(affCode, 0, total);
         }
 
