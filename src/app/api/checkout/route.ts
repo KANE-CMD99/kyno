@@ -97,6 +97,12 @@ export async function POST(req: Request) {
         line_items: lineItems,
         payment_method_types: ["card"],
         billing_address_collection: "auto",
+        ...(process.env.STRIPE_AUTOMATIC_TAX === "true"
+          ? {
+              automatic_tax: { enabled: true },
+              tax_id_collection: { enabled: true },
+            }
+          : {}),
       });
 
       // Record affiliate commission

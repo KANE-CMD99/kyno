@@ -111,6 +111,9 @@ export default function CheckoutPage() {
                   <span className="text-neutral-900">{t("nav.cart.subtotal")}</span>
                   <span className="text-neutral-900">{format(subtotal)}</span>
                 </div>
+                <p className="mt-2 text-xs text-neutral-400">
+                  Taxes calculated at checkout based on your location.
+                </p>
               </div>
             </div>
 
