@@ -122,7 +122,7 @@ export async function createCreator(data: {
     bio: data.bio,
     avatarUrl: data.avatarUrl || "",
     passwordHash: `${salt}:${hash}`,
-    commission: data.commission || 20,
+    commission: data.commission ?? 20,
     totalSales: 0, totalEarnings: 0,
     status: data.status || "active",
     permissions: data.permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true },

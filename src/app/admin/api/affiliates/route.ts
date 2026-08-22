@@ -16,6 +16,6 @@ export async function POST(req: Request) {
   const all = await getAffiliates();
   const existing = all.find((a: { code: string }) => a.code === code.toUpperCase());
   if (existing) return NextResponse.json({ success: false, error: "Code already taken" }, { status: 400 });
-  createAffiliate({ name, email, code: code.toUpperCase(), commission: commission || 20 });
+  createAffiliate({ name, email, code: code.toUpperCase(), commission: commission ?? 20 });
   return NextResponse.json({ success: true });
 }

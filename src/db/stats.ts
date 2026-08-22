@@ -175,7 +175,7 @@ export function getCreatorStats(creatorId: string) {
     products.forEach(p => { if (p.creatorId) productCreator.set(p.id, p.creatorId); });
 
     // Filter orders for this creator
-    const creatorOrders = orders.filter(o => productCreator.get(o.productId) === creatorId || productCreator.get(o.productId) === creatorId);
+    const creatorOrders = orders.filter(o => productCreator.get(o.productId) === creatorId);
 
     const totalSales = creatorOrders.length;
     const totalRevenue = creatorOrders.reduce((s, o) => s + (typeof o.price === 'number' ? o.price : 0), 0);

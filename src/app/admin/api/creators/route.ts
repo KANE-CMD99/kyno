@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     creator.username = username;
     creator.email = email.toLowerCase().trim();
     creator.bio = bio || "";
-    creator.commission = commission || 20;
+    creator.commission = commission ?? 20;
     if (status) creator.status = status;
     if (permissions) creator.permissions = permissions;
     if (password && password.length >= 6) {
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
   if (existing) return NextResponse.json({ success: false, error: "Username already taken" }, { status: 400 });
 
   const creator = await createCreator({
-    username, name, englishName: englishName || "", email, bio: bio || "", password, commission: commission || 20,
+    username, name, englishName: englishName || "", email, bio: bio || "", password, commission: commission ?? 20,
     status: status || "active",
     permissions: permissions || { canUpload: true, canEdit: true, canDelete: false, canViewAnalytics: true },
   });
