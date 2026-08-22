@@ -5,6 +5,7 @@ import crypto from "crypto";
 import { getUserByEmail, createUser } from "@/db/storage";
 import { setSessionCookie } from "@/lib/auth";
 import { authenticate } from "@/lib/auth-service";
+import { ADMIN_TOKEN } from "@/lib/admin-auth";
 
 export async function registerAction(name: string, email: string, password: string) {
   if (process.env.ALLOW_OPEN_REGISTRATION !== "true") {
@@ -41,7 +42,7 @@ export async function loginAction(email: string, password: string) {
   const cs = await cookies();
 
   if (result.role === "admin") {
-    cs.set("kyno_admin_session", process.env.ADMIN_TOKEN || "kyno-admin-token-secure", {
+    cs.set("kyno_admin_session", ADMIN_TOKEN, {
       httpOnly: true, secure: false,
       sameSite: "lax", maxAge: 12 * 3600, path: "/",
     });

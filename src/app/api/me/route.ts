@@ -2,9 +2,9 @@ import { getSession } from "@/lib/auth";
 import { getCreatorSession } from "@/lib/creator-auth";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { ADMIN_TOKEN } from "@/lib/admin-auth";
 
 const ADMIN_COOKIE = "kyno_admin_session";
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "kyno-admin-token-secure";
 
 export async function GET() {
   // 1) Regular user session (JWT in kyno_session)
