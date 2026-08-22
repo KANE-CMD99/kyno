@@ -65,7 +65,7 @@ export default function ProductGallery({ images, name }: Props) {
                   : "border-transparent opacity-70 hover:opacity-100 hover:border-neutral-300"
               }`}
             >
-              <img src={img} alt="" className="h-full w-full object-cover" />
+              <img src={img} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
             </button>
           ))}
         </div>

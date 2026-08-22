@@ -124,7 +124,7 @@ export default function FreeDownloadsPage() {
                     >
                       {item.thumbnail ? (
                         <Link href={`/products/${item.id}`} className="block">
-                          <img src={item.thumbnail} alt={item.name} className="w-full aspect-[3/2] object-cover" />
+                          <img src={item.thumbnail} alt={item.name} loading="lazy" decoding="async" className="w-full aspect-[3/2] object-cover" />
                         </Link>
                       ) : (
                         <div className="w-full aspect-[3/2] bg-neutral-100 flex items-center justify-center">

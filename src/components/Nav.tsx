@@ -12,6 +12,14 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { itemCount, openCart, closeCart, isOpen: cartOpen } = useCart();
+  const [user, setUser] = useState<{ role?: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/me")
+      .then((r) => r.json())
+      .then((d) => setUser(d.user || null))
+      .catch(() => setUser(null));
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -120,7 +128,11 @@ export default function Nav() {
                   {link.label}
                 </a>
               ))}
-              <Link href="/login" onClick={closeMenu} className="rounded-lg border border-neutral-600 px-4 py-2.5 text-center text-sm font-medium text-neutral-200">Sign In</Link>
+              {user ? (
+                <Link href="/auth/logout" onClick={closeMenu} className="rounded-lg border border-neutral-600 px-4 py-2.5 text-center text-sm font-medium text-neutral-200">Sign Out</Link>
+              ) : (
+                <Link href="/login" onClick={closeMenu} className="rounded-lg border border-neutral-600 px-4 py-2.5 text-center text-sm font-medium text-neutral-200">Sign In</Link>
+              )}
             </div>
           </div>
         )}
