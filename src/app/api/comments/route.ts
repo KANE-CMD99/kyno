@@ -15,6 +15,12 @@ export async function POST(req: Request) {
   if (!productId || !name || !text) {
     return NextResponse.json({ error: "productId, name, and text required" }, { status: 400 });
   }
+  if (name.length > 100) {
+    return NextResponse.json({ error: "Name is too long (max 100 characters)" }, { status: 400 });
+  }
+  if (text.length > 2000) {
+    return NextResponse.json({ error: "Comment is too long (max 2000 characters)" }, { status: 400 });
+  }
   const comment = addComment({ productId, name, email: email || "", text });
   return NextResponse.json({ success: true, comment });
 }

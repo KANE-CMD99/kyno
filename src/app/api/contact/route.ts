@@ -17,12 +17,16 @@ export async function POST(req: Request) {
 
     if (process.env.RESEND_API_KEY) {
       const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
+      const { error } = await resend.emails.send({
         from: SITE.fromEmail,
         to: [SITE.adminEmail],
         subject: `[Kyno Contact] ${subject}`,
         text: body,
       });
+      if (error) {
+        console.error("Contact email error:", error);
+        return NextResponse.json({ error: "Failed to send message." }, { status: 500 });
+      }
     }
 
     return NextResponse.json({ success: true });
