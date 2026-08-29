@@ -23,7 +23,9 @@ export async function GET() {
       creator: p.creator,
       creatorId: p.creatorId || undefined,
       thumbnail: p.previewImages?.[0],
-      downloadUrl: p.downloadFile?.url || undefined,
+      hasFile: !!p.downloadFile,
+      fileSize: p.downloadFile?.size ?? null,
+      fileFormat: p.downloadFile?.name ? p.downloadFile.name.split(".").pop()?.toUpperCase() ?? null : null,
     })),
   });
 }

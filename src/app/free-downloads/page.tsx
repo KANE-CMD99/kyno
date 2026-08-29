@@ -14,7 +14,6 @@ interface FreeProduct {
   format?: string;
   emoji: string;
   thumbnail?: string;
-  downloadUrl?: string;
 }
 
 const categoryEmoji: Record<string, string> = {
@@ -37,17 +36,16 @@ export default function FreeDownloadsPage() {
       .then((r) => r.json())
       .then((d) => {
         const free = (d.products || [])
-          .filter((p: { category: string; downloadUrl?: string }) => p.category === "Free" && p.downloadUrl)
-          .map((p: { id: string; name: string; category: string; description?: string; downloadFile?: { url: string; name: string; size: number }; price: string; thumbnail?: string; downloadUrl?: string }) => ({
+          .filter((p: { category: string; hasFile?: boolean }) => p.category === "Free" && p.hasFile)
+          .map((p: { id: string; name: string; category: string; description?: string; fileSize?: number; fileFormat?: string; thumbnail?: string }) => ({
             id: p.id,
             name: p.name,
             category: p.category,
             description: p.description || "",
-            fileSize: p.downloadFile ? `${(p.downloadFile.size / 1024 / 1024).toFixed(1)} MB` : "N/A",
-            format: p.downloadFile ? p.downloadFile.name.split(".").pop()?.toUpperCase() || "FILE" : "FILE",
+            fileSize: p.fileSize ? `${(p.fileSize / 1024 / 1024).toFixed(1)} MB` : "N/A",
+            format: p.fileFormat || "FILE",
             emoji: categoryEmoji[p.category] || "🎁",
             thumbnail: p.thumbnail,
-            downloadUrl: p.downloadUrl,
           }));
         setProducts(free);
         setLoading(false);
