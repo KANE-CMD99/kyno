@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { SITE } from "@/lib/site-config";
@@ -9,16 +8,30 @@ import { SITE } from "@/lib/site-config";
 export default function OrdersPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [downloads, setDownloads] = useState<{ productName: string; token: string; claimed: boolean }[] | null>(null);
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState<{ type: "success" | "error" | "none"; text: string } | null>(null);
 
   const handleLookup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
-    const res = await fetch(`/api/downloads?email=${encodeURIComponent(email.trim())}`);
-    const data = await res.json();
-    setDownloads(data.downloads || []);
+    setMessage(null);
+    try {
+      const res = await fetch("/api/downloads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json();
+      if (data.sent) {
+        setMessage({
+          type: "success",
+          text: "Download links have been sent to your email. Check your inbox (and spam folder).",
+        });
+      } else {
+        setMessage({ type: "none", text: "No purchases found for that email." });
+      }
+    } catch {
+      setMessage({ type: "error", text: "Something went wrong. Please try again." });
+    }
     setLoading(false);
   };
 
@@ -30,7 +43,7 @@ export default function OrdersPage() {
           <span className="text-6xl select-none">{String.fromCodePoint(0x1F4E6)}</span>
           <h1 className="mt-6 text-2xl font-bold text-neutral-900">Find Your Downloads</h1>
           <p className="mt-2 text-sm text-neutral-500">
-            Enter the email you used during checkout to retrieve your download links.
+            Enter the email you used during checkout and we&apos;ll email your download links.
           </p>
 
           <form onSubmit={handleLookup} className="mt-8 flex gap-2">
@@ -47,47 +60,31 @@ export default function OrdersPage() {
               disabled={loading}
               className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
             >
-              {loading ? "Looking..." : "Search"}
+              {loading ? "Sending..." : "Send Links"}
             </button>
           </form>
 
-          {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
-
-          {downloads !== null && (
-            <div className="mt-8">
-              {downloads.length === 0 ? (
-                <div className="rounded-xl border border-neutral-200 bg-white p-8">
-                  <p className="text-sm text-neutral-500">No downloads found for that email.</p>
-                  <p className="mt-1 text-xs text-neutral-400">
-                    Make sure you use the same email address that received the download links.
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-3 text-left">
-                  <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide">
-                    {downloads.length} download{downloads.length !== 1 ? "s" : ""} found
-                  </p>
-                  {downloads.map((d) => (
-                    <a
-                      key={d.token}
-                      href={`/download/${d.token}`}
-                      className="flex items-center justify-between rounded-xl border border-neutral-200 bg-white p-4 transition-colors hover:border-blue-300"
-                    >
-                      <div>
-                        <p className="text-sm font-semibold text-neutral-900">{d.productName}</p>
-                        <p className="text-xs text-neutral-400">
-                          {d.claimed ? "Already downloaded" : "Ready to download"} &middot; One-time use
-                        </p>
-                      </div>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-blue-600">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="7 10 12 15 17 10" />
-                        <line x1="12" y1="15" x2="12" y2="3" />
-                      </svg>
-                    </a>
-                  ))}
-                </div>
-              )}
+          {message && (
+            <div
+              className={`mt-6 rounded-xl border p-5 ${
+                message.type === "success"
+                  ? "border-emerald-200 bg-emerald-50"
+                  : message.type === "error"
+                    ? "border-red-200 bg-red-50"
+                    : "border-neutral-200 bg-white"
+              }`}
+            >
+              <p
+                className={`text-sm ${
+                  message.type === "error"
+                    ? "text-red-600"
+                    : message.type === "success"
+                      ? "text-emerald-800"
+                      : "text-neutral-600"
+                }`}
+              >
+                {message.text}
+              </p>
             </div>
           )}
 

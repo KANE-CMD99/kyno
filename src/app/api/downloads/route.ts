@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import { getOrdersByTokens, getOrdersByEmail } from "@/db/storage";
+import { getOrdersByEmail } from "@/db/storage";
+import { sendDownloadEmail } from "@/lib/email";
 
 const RATE_WINDOW = 60000; // 1 minute
 const ipCounts = new Map<string, { count: number; resetAt: number }>();
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   // IP-based rate limiting to prevent email enumeration
   const ip = (req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown").split(",")[0].trim();
   const now = Date.now();
@@ -18,32 +19,18 @@ export async function GET(req: Request) {
     ipCounts.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
   }
 
-  const { searchParams } = new URL(req.url);
-  const tokensParam = searchParams.get("tokens");
-  const email = searchParams.get("email");
-
-  if (!tokensParam && !email) {
-    return NextResponse.json({ error: "tokens or email required" }, { status: 400 });
+  const { email } = (await req.json().catch(() => ({}))) as { email?: string };
+  if (!email) {
+    return NextResponse.json({ error: "Email required" }, { status: 400 });
   }
 
-  if (tokensParam) {
-    const tokens = tokensParam.split(",");
-    const orders = await getOrdersByTokens(tokens);
-    const results = orders.map((o) => ({
-      productId: o.productId,
-      productName: o.productName,
-      token: o.downloadToken,
-    }));
-    return NextResponse.json({ downloads: results });
+  const normalized = email.toLowerCase().trim();
+  const orders = await getOrdersByEmail(normalized);
+
+  if (orders.length === 0) {
+    return NextResponse.json({ sent: false });
   }
 
-  if (email) {
-    const orders = await getOrdersByEmail(email);
-    const results = orders.map((o) => ({
-      productId: o.productId,
-      productName: o.productName,
-      token: o.downloadToken,
-    }));
-    return NextResponse.json({ downloads: results });
-  }
+  const sent = await sendDownloadEmail(orders, normalized);
+  return NextResponse.json({ sent });
 }
