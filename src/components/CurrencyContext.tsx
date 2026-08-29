@@ -30,7 +30,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    fetch("https://ip-api.com/json/?fields=countryCode")
+    fetch("/api/location")
       .then((r) => r.json())
       .then((data) => {
         cachedCountry = data.countryCode || "US";
