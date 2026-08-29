@@ -45,7 +45,7 @@ export default function AdminProductForm({ product, defaultCategory, onSaved }: 
     if (!file.type.startsWith("image/")) { setError("Only image files allowed for preview"); return; }
     if (file.size > 5 * 1024 * 1024) { setError("Image must be under 5MB"); return; }
     setUploading(true); setError("");
-    const form = new FormData(); form.append("file", file);
+    const form = new FormData(); form.append("file", file); form.append("type", "image");
     const res = await fetch("/admin/api/upload", { method: "POST", body: form });
     const data = await res.json();
     if (data.url) setUploadedImages((prev) => [...prev, data.url]);
@@ -58,7 +58,7 @@ export default function AdminProductForm({ product, defaultCategory, onSaved }: 
     if (!file) return;
     if (file.size > 200 * 1024 * 1024) { setError("File must be under 200MB"); return; }
     setUploadingFile(true); setError("");
-    const form = new FormData(); form.append("file", file);
+    const form = new FormData(); form.append("file", file); form.append("type", "file");
     const res = await fetch("/admin/api/upload", { method: "POST", body: form });
     const data = await res.json();
     if (data.url) setDownloadFile({ url: data.url, name: file.name, size: file.size });

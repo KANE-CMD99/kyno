@@ -25,23 +25,29 @@ export async function GET(
   const product = await getProductById(order.productId);
   const fileUrl = product?.downloadFile?.url;
 
-  if (fileUrl?.startsWith("/")) {
-    const filePath = path.join(process.cwd(), "public", fileUrl);
-    if (fs.existsSync(filePath)) {
-      await markOrderClaimed(order.id);
-      recordDownload();
-      const fileBuffer = fs.readFileSync(filePath);
-      const fileName = product?.downloadFile?.name || `${order.productName}.zip`;
-      return new NextResponse(fileBuffer, {
-        headers: {
-          "Content-Type": "application/octet-stream",
-          "Content-Disposition": `attachment; filename="${encodeURIComponent(fileName)}"`,
-          "Content-Length": String(fileBuffer.length),
-        },
-      });
-    }
-    console.error(`[Download] File not found: ${filePath}`);
+  // Download files live in private storage/downloads (not served by nginx).
+  // Old data may still point at public/uploads — keep that fallback for compat.
+  let filePath: string | null = null;
+  if (fileUrl?.startsWith("/downloads/")) {
+    filePath = path.join(process.cwd(), "storage", fileUrl);
+  } else if (fileUrl?.startsWith("/uploads/")) {
+    filePath = path.join(process.cwd(), "public", fileUrl);
   }
+
+  if (filePath && fs.existsSync(filePath)) {
+    await markOrderClaimed(order.id);
+    recordDownload();
+    const fileBuffer = fs.readFileSync(filePath);
+    const fileName = product?.downloadFile?.name || `${order.productName}.zip`;
+    return new NextResponse(fileBuffer, {
+      headers: {
+        "Content-Type": "application/octet-stream",
+        "Content-Disposition": `attachment; filename="${encodeURIComponent(fileName)}"`,
+        "Content-Length": String(fileBuffer.length),
+      },
+    });
+  }
+  if (filePath) console.error(`[Download] File not found: ${filePath}`);
 
   if (fileUrl?.startsWith("http")) {
     await markOrderClaimed(order.id);

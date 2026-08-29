@@ -43,7 +43,7 @@ export default function CreatorProductForm({ product, onSaved }: Props) {
     if (!file.type.startsWith("image/")) { setError("Only image files"); return; }
     if (file.size > 5 * 1024 * 1024) { setError("Max 5MB"); return; }
     setUploading(true); setError("");
-    const form = new FormData(); form.append("file", file);
+    const form = new FormData(); form.append("file", file); form.append("type", "image");
     const res = await fetch("/api/creator/upload", { method: "POST", body: form, credentials: "include" });
     const data = await res.json();
     if (data.url) setUploadedImages((prev) => [...prev, data.url]);
@@ -56,7 +56,7 @@ export default function CreatorProductForm({ product, onSaved }: Props) {
     if (!file) return;
     if (file.size > 200 * 1024 * 1024) { setError("Max 200MB"); return; }
     setUploadingFile(true); setError("");
-    const form = new FormData(); form.append("file", file);
+    const form = new FormData(); form.append("file", file); form.append("type", "file");
     const res = await fetch("/api/creator/upload", { method: "POST", body: form, credentials: "include" });
     const data = await res.json();
     if (data.url) setDownloadFile({ url: data.url, name: file.name, size: file.size });
