@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       : undefined;
 
   return {
-    title: `${detail.name} — $${detail.price} | Kyno`,
+    title: `${detail.name} — $${detail.price}`,
     description: detail.description.slice(0, 160),
     alternates: { canonical: url },
     openGraph: {
