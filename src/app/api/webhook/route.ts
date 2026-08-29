@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { getOrdersByTokens, createOrder, type OrderRecord } from "@/db/storage";
+import { createOrder } from "@/db/storage";
 import { convertClick } from "@/db/affiliates";
 import { sendDownloadEmail } from "@/lib/email";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder");
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
 
-function getCustomerEmail(session: Stripe.Checkout.Session): string {
-  return session.customer_details?.email || session.customer_email || "";
-}
+// In-process idempotency guard against webhook retries (best-effort)
+const processedSessions = new Set<string>();
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -28,72 +27,52 @@ export async function POST(req: Request) {
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
-  const email = getCustomerEmail(session);
+  const email = session.customer_details?.email || session.customer_email || "";
   const name = session.metadata?.customer_name || "";
+
+  if (processedSessions.has(session.id)) {
+    return NextResponse.json({ received: true });
+  }
+  processedSessions.add(session.id);
 
   console.log(`Payment confirmed for ${email} — $${session.amount_total ? session.amount_total / 100 : 0}`);
 
-  // If orders were pre-created at checkout, just re-send the email
-  const orderTokens = (session.metadata?.order_tokens || "").split(",").filter(Boolean);
-  if (orderTokens.length > 0) {
-    const orders = await getOrdersByTokens(orderTokens);
-    if (orders.length > 0 && email) {
-      try {
-        await sendDownloadEmail(orders, email);
-        console.log(`Re-sent download email to ${email}`);
-      } catch (err) {
-        console.error("Failed to send download email:", err);
-      }
-    }
-
-    // Still record affiliate commission
-    const affCode = session.metadata?.aff_code;
-    if (affCode) {
-      const total = session.amount_total ? session.amount_total / 100 : 0;
-      convertClick(affCode, 0, total);
-    }
-
-    return NextResponse.json({ received: true });
+  // Read the server-validated items stored in session metadata
+  let items: { id: string; name: string; price: number; quantity: number }[] = [];
+  try {
+    items = JSON.parse(session.metadata?.items || "[]");
+  } catch {
+    items = [];
   }
 
-  // Legacy path (no pre-created orders): create orders now
-  const orders: OrderRecord[] = [];
-  try {
-    const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
-      expand: ["line_items.data.price.product"],
+  // Mint download tokens ONLY after payment is confirmed
+  const orders = [];
+  for (const item of items) {
+    const order = await createOrder({
+      userId: 0,
+      productId: item.id,
+      productName: item.name,
+      price: item.price,
+      customerEmail: email,
+      customerName: name,
+      createdAt: new Date().toISOString(),
     });
-
-    const lineItems = fullSession.line_items?.data ?? [];
-    const productIdsRaw = (session.metadata?.product_ids ?? "").split(",").filter(Boolean);
-
-    for (const item of lineItems) {
-      const order = await createOrder({
-        userId: 0,
-        productId: productIdsRaw.shift() ?? "unknown",
-        productName: item.description ?? "Product",
-        price: item.amount_total / 100,
-        customerEmail: email,
-        customerName: name,
-        createdAt: new Date().toISOString(),
-      });
-      orders.push(order);
-    }
-
-    const affCode = session.metadata?.aff_code;
-    if (affCode) {
-      const total = session.amount_total ? session.amount_total / 100 : 0;
-      convertClick(affCode, 0, total);
-    }
-  } catch (err) {
-    console.error("Failed to create orders:", err);
+    orders.push(order);
   }
 
   if (orders.length > 0 && email) {
     try {
       await sendDownloadEmail(orders, email);
+      console.log(`Sent download email to ${email}`);
     } catch (err) {
       console.error("Failed to send download email:", err);
     }
+  }
+
+  const affCode = session.metadata?.aff_code;
+  if (affCode) {
+    const total = session.amount_total ? session.amount_total / 100 : 0;
+    convertClick(affCode, 0, total);
   }
 
   return NextResponse.json({ received: true });
