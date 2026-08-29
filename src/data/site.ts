@@ -146,8 +146,6 @@ export const footerColumns = [
     links: [
       { label: "About", href: "/about" },
       { label: "Contact", href: "/contact" },
-      { label: "Twitter", href: "#" },
-      { label: "Dribbble", href: "#" },
     ],
   },
   {
@@ -161,9 +159,9 @@ export const footerColumns = [
 ];
 
 export const stats: StatItem[] = [
-  { value: "10", label: "Digital Products" },
-  { value: "1k+", label: "Happy Customers" },
-  { value: "4.8", label: "Average Rating" },
+  { value: "100%", label: "Digital Delivery" },
+  { value: "Instant", label: "Secure Checkout" },
+  { value: "Lifetime", label: "Access" },
 ];
 
 export interface TestimonialItem {

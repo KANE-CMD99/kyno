@@ -47,7 +47,10 @@ export default function PrivacyPage() {
             <h2 className="mt-8 text-lg font-bold text-neutral-900">4. Cookies</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
               We use essential session cookies to keep you signed in and to remember your shopping cart.
-              We do not use third-party tracking cookies or advertising cookies on our site.
+              We also display advertising through Google AdSense, which may set third-party advertising
+              and tracking cookies to serve personalized or non-personalized ads. You can manage ad
+              personalization through Google&apos;s Ads Settings, and disable non-essential cookies in your
+              browser settings.
             </p>
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">5. Third-Party Services</h2>

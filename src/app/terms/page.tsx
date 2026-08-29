@@ -76,8 +76,9 @@ export default function TermsPage() {
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">8. Governing Law</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-              These terms are governed by the laws of the State of California, without regard to
-              conflict of law principles. Any disputes shall be resolved in the courts of California.
+              These terms are governed by the laws of the Hong Kong Special Administrative Region,
+              without regard to conflict of law principles. Any disputes shall be resolved in the
+              courts of Hong Kong.
             </p>
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">9. Contact</h2>

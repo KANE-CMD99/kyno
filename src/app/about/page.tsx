@@ -73,9 +73,9 @@ export default function AboutPage() {
             <h2 className="text-2xl font-bold text-neutral-900">By the numbers</h2>
             <div className="mt-10 grid gap-8 sm:grid-cols-3">
               {[
-                { value: "2025", label: "Founded" },
-                { value: "10+", label: "Products" },
-                { value: "1k+", label: "Customers" },
+                { value: "Instant", label: "Digital Delivery" },
+                { value: "Secure", label: "Stripe Checkout" },
+                { value: "Lifetime", label: "Access" },
               ].map((stat) => (
                 <div key={stat.label}>
                   <div className="text-3xl font-extrabold text-neutral-900">{stat.value}</div>
