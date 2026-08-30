@@ -1,10 +1,10 @@
 const placeholders = [
-  { label: "Photo Presets", emoji: String.fromCodePoint(0x1F4F7) },
-  { label: "Sans Serif", emoji: String.fromCodePoint(0x1F524) },
-  { label: "UI Kit", emoji: String.fromCodePoint(0x1F4D0) },
-  { label: "Backgrounds", emoji: String.fromCodePoint(0x1F5BC) },
-  { label: "Script Font", emoji: String.fromCodePoint(0x270F) },
-  { label: "Landing Page", emoji: String.fromCodePoint(0x1F4C4) },
+  { label: "Resume Templates", emoji: String.fromCodePoint(0x1F4C4) },
+  { label: "Posters", emoji: String.fromCodePoint(0x1F5BC) },
+  { label: "From $1", emoji: String.fromCodePoint(0x1F4B0) },
+  { label: "Buy Once", emoji: String.fromCodePoint(0x1F6D2) },
+  { label: "Lifetime Updates", emoji: String.fromCodePoint(0x1F504) },
+  { label: "Commercial License", emoji: String.fromCodePoint(0x1F4DC) },
 ];
 
 const offsets = [
@@ -23,15 +23,15 @@ export default function HeroSection() {
         {/* Left: Text */}
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-neutral-900 md:text-7xl">
-            Ready-made designs
+            Buy once.
             <br />
-            for everything
+            Own forever.
             <br />
-            you create
+            Create freely.
           </h1>
 
           <p className="mx-auto mt-6 max-w-md text-lg leading-relaxed text-neutral-500 md:mx-0">
-            Photos, fonts &amp; templates — download and use in minutes.
+            Resume templates, posters &amp; design assets — yours forever, from $1.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row md:justify-start">

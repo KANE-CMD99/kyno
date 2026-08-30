@@ -10,24 +10,24 @@ export const metadata: Metadata = {
     icon: "/favicon.svg",
   },
   title: {
-    default: "Kyno — Premium Digital Assets for Creators",
+    default: "Kyno — Buy Once, Own Forever | Resume Templates, Posters & Design Assets",
     template: "%s — Kyno",
   },
   description:
-    "Premium stock photos, fonts, and design templates crafted for the global creator economy. Pay once, own forever.",
+    "Premium resume templates, posters, and design assets for creators. Pay once, own forever — from $1.",
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: "Kyno",
-    title: "Kyno — Premium Digital Assets for Creators",
+    title: "Kyno — Buy Once, Own Forever",
     description:
-      "Premium stock photos, fonts, and design templates crafted for the global creator economy.",
+      "Premium resume templates, posters, and design assets for creators. Pay once, own forever — from $1.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kyno — Premium Digital Assets for Creators",
+    title: "Kyno — Buy Once, Own Forever",
     description:
-      "Premium stock photos, fonts, and design templates crafted for the global creator economy.",
+      "Premium resume templates, posters, and design assets for creators. Pay once, own forever — from $1.",
   },
   robots: {
     index: true,
