@@ -61,9 +61,7 @@ export default async function CreatorProfilePage({ params }: PageProps) {
               <div className="mt-8 flex flex-wrap justify-center gap-5">
                 {products.map((product, i) => (
                   <div key={product.id} className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)]">
-                    <Link href={`/products/${product.id}`} className="block">
-                      <ProductCard product={{ id: product.id, name: product.name, category: product.category, price: `$${product.price}`, originalPrice: product.originalPrice ? `$${product.originalPrice}` : undefined, creator: creator.name, thumbnail: product.previewImages?.[0] }} index={i} />
-                    </Link>
+                    <ProductCard product={{ id: product.id, name: product.name, category: product.category, price: `$${product.price}`, originalPrice: product.originalPrice ? `$${product.originalPrice}` : undefined, creator: creator.name, thumbnail: product.previewImages?.[0] }} index={i} />
                   </div>
                 ))}
               </div>

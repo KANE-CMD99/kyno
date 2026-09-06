@@ -48,7 +48,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       transition={{ duration: 0.4, delay: index * 0.1 }}
     >
       {/* Image / Placeholder — wraps in a Link to product detail */}
-      <a href={`/products/${product.id}`} className="block cursor-pointer">
+      <a href={`/products/${product.id}`} target="_blank" rel="noopener noreferrer" className="block cursor-pointer">
         <div className="relative aspect-[3/2] overflow-hidden rounded-lg bg-neutral-100">
           <div className="flex h-full items-center justify-center text-5xl">
             {product.thumbnail && (product.thumbnail.startsWith("/") || product.thumbnail.startsWith("http")) ? (
@@ -71,6 +71,8 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       {isFree ? (
         <a
           href={`/products/${product.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="mt-2.5 sm:mt-3 block w-full rounded-lg border border-emerald-300 bg-emerald-50 py-2 sm:py-2 text-center text-xs font-semibold text-emerald-700 transition-all hover:border-emerald-500 hover:bg-emerald-100"
         >
           Download Free

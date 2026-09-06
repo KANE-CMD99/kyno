@@ -265,9 +265,7 @@ export default async function ProductPage({ params }: PageProps) {
                     thumbnail: product.previewImages?.[0],
                   };
                   return (
-                    <Link key={product.id} href={`/products/${product.id}`}>
-                      <ProductCard product={cardProduct} index={i} />
-                    </Link>
+                    <ProductCard key={product.id} product={cardProduct} index={i} />
                   );
                 })}
               </div>
