@@ -178,14 +178,16 @@ export default async function ProductPage({ params }: PageProps) {
                   <span className="text-[11px] font-medium leading-tight text-neutral-600">Lifetime access</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
 
-              {/* Description */}
-              <div className="mt-6 border-t border-neutral-100 pt-5">
-                <h2 className="text-sm font-bold text-neutral-900">About this product</h2>
-                <div className="mt-2">
-                  <ProductDescription description={detail.description} />
-                </div>
-              </div>
+        {/* About this product — full-width below the fold */}
+        <section className="border-t border-neutral-100 bg-white px-4 sm:px-6 py-12 sm:py-16">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-xl font-bold text-neutral-900">About this product</h2>
+            <div className="mt-4">
+              <ProductDescription description={detail.description} />
             </div>
           </div>
         </section>
