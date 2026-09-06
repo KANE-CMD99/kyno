@@ -184,7 +184,7 @@ export default async function ProductPage({ params }: PageProps) {
 
         {/* About this product — full-width below the fold */}
         <section className="border-t border-neutral-100 bg-white px-4 sm:px-6 py-12 sm:py-16">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-7xl">
             <h2 className="text-xl font-bold text-neutral-900">About this product</h2>
             <div className="mt-4">
               <ProductDescription description={detail.description} />
