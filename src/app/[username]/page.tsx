@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getCreatorByUsername } from "@/db/creators";
+import { getCreatorByUsername, getCreators } from "@/db/creators";
 import { getAllProducts } from "@/db/products-store";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -9,6 +9,13 @@ import ProductCard from "@/components/ProductCard";
 interface PageProps {
   params: Promise<{ username: string }>;
 }
+
+export async function generateStaticParams() {
+  const creators = await getCreators();
+  return creators.map((c) => ({ username: c.username }));
+}
+
+export const dynamicParams = false;
 
 export default async function CreatorProfilePage({ params }: PageProps) {
   const { username } = await params;
