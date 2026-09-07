@@ -70,7 +70,7 @@ export default function ProductCarousel() {
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: i * 0.08 }}
             >
-              <Link href={`/products/${product.id}`} className="block">
+              <Link href={`/products/${product.id}`} target="_blank" rel="noopener noreferrer" className="block">
                 <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100">
                   <div className="flex h-full items-center justify-center text-6xl transition-transform group-hover:scale-110">
                     {product.thumbnail && (product.thumbnail.startsWith("/") || product.thumbnail.startsWith("http")) ? (
