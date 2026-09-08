@@ -12,7 +12,8 @@ export async function adminCreateProduct(input: {
   creator: string; description: string; features: string[]; includes: string[];
 }) {
   try {
-    const product = await createProduct({ ...input, previewImages: [] });
+    const finalCategory = input.price === 0 ? "Free" : input.category;
+    const product = await createProduct({ ...input, category: finalCategory, previewImages: [] });
     revalidatePath("/");
     revalidatePath("/admin/dashboard");
     return { success: true, id: product.id };
@@ -26,7 +27,8 @@ export async function adminUpdateProduct(id: string, input: {
   creator: string; description: string; features: string[]; includes: string[];
 }) {
   try {
-    const result = await updateProduct(id, { ...input, previewImages: [] });
+    const finalCategory = input.price === 0 ? "Free" : input.category;
+    const result = await updateProduct(id, { ...input, category: finalCategory, previewImages: [] });
     if (!result) return { success: false, error: "Product not found" };
     revalidatePath("/");
     revalidatePath("/admin/dashboard");

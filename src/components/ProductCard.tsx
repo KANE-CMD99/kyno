@@ -75,7 +75,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
           rel="noopener noreferrer"
           className="mt-2.5 sm:mt-3 block w-full rounded-lg border border-emerald-300 bg-emerald-50 py-2 sm:py-2 text-center text-xs font-semibold text-emerald-700 transition-all hover:border-emerald-500 hover:bg-emerald-100"
         >
-          Download Free
+          Get Free
         </a>
       ) : (
         <button

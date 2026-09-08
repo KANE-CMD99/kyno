@@ -49,8 +49,11 @@ export async function POST(req: Request) {
     if (!existing || existing.creatorId !== session.id) return NextResponse.json({ error: "Not found or not yours" }, { status: 404 });
   }
 
+  const finalPrice = parseFloat(price) || 0;
+  const finalCategory = finalPrice === 0 ? "Free" : category;
+
   const data: Omit<ProductRecord, "id"> = {
-    name, category, price: parseFloat(price) || 0,
+    name, category: finalCategory, price: finalPrice,
     ...(originalPrice ? { originalPrice: parseFloat(originalPrice) } : {}),
     creator: session.name, creatorId: session.id, creatorName: session.name,
     description: description || "", features: features || [], includes: includes || [],

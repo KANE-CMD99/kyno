@@ -34,7 +34,7 @@ export default function MobileBuyBar({ id, name, price, originalPrice, category 
             href="#free-download"
             className="flex-1 rounded-lg bg-emerald-600 px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
           >
-            Download Free
+            Get Free
           </a>
         ) : (
           <AddToCartButton
