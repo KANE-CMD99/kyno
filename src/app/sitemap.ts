@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { getAllProducts } from "@/db/products-store";
+import { getPublishedPosts } from "@/db/blog-posts";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
 
@@ -34,5 +35,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  return [...baseRoutes, ...categoryRoutes, ...productRoutes];
+  const blogListRoute = { url: `${SITE_URL}/blog`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.6 };
+
+  const posts = await getPublishedPosts().catch(() => []);
+  const blogRoutes = posts.map((p) => ({
+    url: `${SITE_URL}/blog/${p.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }));
+
+  return [...baseRoutes, blogListRoute, ...categoryRoutes, ...productRoutes, ...blogRoutes];
 }

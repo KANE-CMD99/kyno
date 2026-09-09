@@ -35,6 +35,7 @@ export interface StatItem {
 export const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "Products", href: "#products" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -135,6 +136,7 @@ export const footerColumns = [
   {
     title: "Resources",
     links: [
+      { label: "Blog", href: "/blog" },
       { label: "Free Downloads", href: "/free-downloads" },
       { label: "My Orders", href: "/orders" },
       { label: "License", href: "/license" },

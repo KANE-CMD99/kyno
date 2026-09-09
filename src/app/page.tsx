@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import HeroSection from "@/components/HeroSection";
+import { getPublishedPosts } from "@/db/blog-posts";
 import ProductCarousel from "@/components/ProductCarousel";
 import ProductsSection from "@/components/ProductsSection";
 import NewsletterSection from "@/components/NewsletterSection";
@@ -14,12 +15,13 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-export default function HomePage() {
+export default async function HomePage() {
+  const posts = await getPublishedPosts();
   return (
     <>
       <Nav />
       <main>
-        <HeroSection />
+        <HeroSection posts={posts} />
         <ProductCarousel />
         <ProductsSection />
         <NewsletterSection />

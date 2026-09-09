@@ -1,22 +1,7 @@
-const placeholders = [
-  { label: "Resume Templates", emoji: String.fromCodePoint(0x1F4C4) },
-  { label: "Posters", emoji: String.fromCodePoint(0x1F5BC) },
-  { label: "From $1", emoji: String.fromCodePoint(0x1F4B0) },
-  { label: "Buy Once", emoji: String.fromCodePoint(0x1F6D2) },
-  { label: "Lifetime Updates", emoji: String.fromCodePoint(0x1F504) },
-  { label: "Commercial License", emoji: String.fromCodePoint(0x1F4DC) },
-];
+import Link from "next/link";
+import type { BlogPost } from "@/db/blog-posts";
 
-const offsets = [
-  "md:mt-0",
-  "md:-mt-8",
-  "md:mt-4",
-  "md:mt-0",
-  "md:-mt-6",
-  "md:mt-2",
-];
-
-export default function HeroSection() {
+export default function HeroSection({ posts }: { posts: BlogPost[] }) {
   return (
     <section className="flex min-h-[90vh] items-center bg-[#FAFAFA] px-6 pb-24 pt-32">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-16 md:flex-row md:gap-12">
@@ -35,42 +20,44 @@ export default function HeroSection() {
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row md:justify-start">
-            <a
-              href="#products"
-              className="w-full rounded-lg bg-blue-600 px-8 py-3 text-center text-base font-medium text-white transition-colors hover:bg-blue-700 sm:w-auto"
-            >
+            <a href="#products" className="w-full rounded-lg bg-blue-600 px-8 py-3 text-center text-base font-medium text-white transition-colors hover:bg-blue-700 sm:w-auto">
               Browse Products
             </a>
-            <a
-              href="/free-downloads"
-              className="w-full rounded-lg border border-neutral-300 px-8 py-3 text-center text-base font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:text-neutral-900 sm:w-auto"
-            >
+            <a href="/free-downloads" className="w-full rounded-lg border border-neutral-300 px-8 py-3 text-center text-base font-medium text-neutral-700 transition-colors hover:border-neutral-400 hover:text-neutral-900 sm:w-auto">
               Free Downloads
             </a>
           </div>
 
-          <p className="mt-4 text-sm text-neutral-400">
-            Free updates &middot; Lifetime access
-          </p>
+          <p className="mt-4 text-sm text-neutral-400">Free updates &middot; Lifetime access</p>
         </div>
 
-        {/* Right: Product mosaic */}
+        {/* Right: Recent blog posts */}
         <div className="w-full max-w-md flex-1 md:max-w-none">
-          <div className="grid grid-cols-3 gap-3 md:gap-4">
-            {placeholders.map((item, i) => (
-              <div
-                key={item.label}
-                className={`aspect-[4/3] rounded-lg border border-neutral-200 bg-white shadow-sm flex items-center justify-center ${offsets[i]}`}
-              >
-                <div className="text-center">
-                  <span className="text-2xl md:text-3xl">{item.emoji}</span>
-                  <p className="mt-1 text-[10px] md:text-xs text-neutral-400 font-medium">
-                    {item.label}
-                  </p>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-neutral-900">From the blog</h2>
+            <Link href="/blog" className="text-xs font-medium text-blue-600 hover:text-blue-700">View all →</Link>
           </div>
+          {posts.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-8 text-center">
+              <p className="text-sm text-neutral-400">Blog posts coming soon</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {posts.slice(0, 3).map((post) => (
+                <Link key={post.id} href={`/blog/${post.slug}`} className="flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-3 transition-shadow hover:shadow-md">
+                  {post.coverImage ? (
+                    <img src={post.coverImage} alt="" loading="lazy" decoding="async" className="h-14 w-20 shrink-0 rounded-md object-cover" />
+                  ) : (
+                    <div className="flex h-14 w-20 shrink-0 items-center justify-center rounded-md bg-neutral-100 text-xl">📝</div>
+                  )}
+                  <div className="min-w-0">
+                    <h3 className="truncate text-sm font-semibold text-neutral-900">{post.title}</h3>
+                    <p className="mt-0.5 line-clamp-2 text-xs text-neutral-500">{post.excerpt}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>
