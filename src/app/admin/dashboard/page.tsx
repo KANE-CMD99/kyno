@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { ProductRecord } from "@/db/products-store";
+import type { BlogPost } from "@/db/blog-posts";
 import AdminProductList from "../AdminProductList";
 import AdminProductForm from "../AdminProductForm";
+import AdminPostList from "../AdminPostList";
+import AdminPostForm from "../AdminPostForm";
 import AdminAffiliates from "../AdminAffiliates";
 import AdminCreators from "../AdminCreators";
 import AdminUsers from "../AdminUsers";
 import AdminAnalytics from "../AdminAnalytics";
 
-type Tab = "analytics" | "products" | "creators" | "affiliates" | "users";
+type Tab = "analytics" | "products" | "creators" | "affiliates" | "users" | "blog";
 
 export default function AdminDashboardPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
@@ -20,6 +23,7 @@ export default function AdminDashboardPage() {
     | { mode: "create"; category?: string }
     | { mode: "edit"; product: ProductRecord }
   >("list");
+  const [postView, setPostView] = useState<"list" | { mode: "create" } | { mode: "edit"; post: BlogPost }>("list");
   const router = useRouter();
 
   useEffect(() => {
@@ -82,6 +86,12 @@ export default function AdminDashboardPage() {
               >
                 Users
               </button>
+              <button
+                onClick={() => { setTab("blog"); setPostView("list"); }}
+                className={`rounded-md px-4 py-1.5 text-xs font-medium transition-colors ${tab === "blog" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-700"}`}
+              >
+                Blog
+              </button>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -106,6 +116,23 @@ export default function AdminDashboardPage() {
           <AdminUsers />
         ) : tab === "affiliates" ? (
           <AdminAffiliates />
+        ) : tab === "blog" ? (
+          postView === "list" ? (
+            <AdminPostList
+              onEdit={(post) => setPostView({ mode: "edit", post })}
+              onAdd={() => setPostView({ mode: "create" })}
+            />
+          ) : (
+            <div>
+              <button onClick={() => setPostView("list")} className="mb-6 text-sm text-blue-600 hover:text-blue-700">
+                &larr; Back to posts
+              </button>
+              <AdminPostForm
+                post={postView.mode === "edit" ? postView.post : null}
+                onSaved={() => setPostView("list")}
+              />
+            </div>
+          )
         ) : view === "list" ? (
           <AdminProductList
             onEdit={(product) => setView({ mode: "edit", product })}
