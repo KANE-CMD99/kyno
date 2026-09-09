@@ -15,7 +15,7 @@ type BlogPostInput = {
 };
 
 function normalize(input: BlogPostInput): Omit<BlogPost, "id"> {
-  const slug = (input.slug || "").trim() || slugify(input.title);
+  const slug = slugify((input.slug || "").trim() || input.title);
   return {
     ...input,
     slug,
