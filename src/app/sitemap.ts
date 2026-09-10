@@ -4,6 +4,13 @@ import { getPublishedPosts } from "@/db/blog-posts";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
 
+const CATEGORY_SLUGS: { slug: string; category: string }[] = [
+  { slug: "photos", category: "Photos" },
+  { slug: "fonts", category: "Fonts" },
+  { slug: "templates", category: "Templates" },
+  { slug: "free", category: "Free" },
+];
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseRoutes = [
     { url: SITE_URL, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 1 },
@@ -14,19 +21,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/privacy`, lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.3 },
   ];
 
-  const categoryRoutes = ["photos", "fonts", "templates", "free"].map((slug) => ({
-    url: `${SITE_URL}/categories/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
-
   let products: Awaited<ReturnType<typeof getAllProducts>>;
   try {
     products = await getAllProducts();
   } catch {
     products = [];
   }
+
+  // Only include categories that actually have products — empty category
+  // pages are thin content and shouldn't be indexed.
+  const populatedCategories = new Set(products.map((p) => p.category));
+  const categoryRoutes = CATEGORY_SLUGS.filter(({ category }) => populatedCategories.has(category)).map(({ slug }) => ({
+    url: `${SITE_URL}/categories/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
 
   const productRoutes = products.map((p) => ({
     url: `${SITE_URL}/products/${p.id}`,

@@ -1,25 +1,32 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { categories } from "@/data/site";
 import CategoryPageClient from "./CategoryPageClient";
 import { getAllProducts } from "@/db/products-store";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
 
+const CATEGORY_MAP: Record<string, string> = {
+  photos: "Photos", fonts: "Fonts", templates: "Templates", free: "Free",
+};
+
+function isValidSlug(slug: string): boolean {
+  return slug in CATEGORY_MAP;
+}
+
 function slugToCategory(slug: string): string {
-  const map: Record<string, string> = {
-    photos: "Photos", fonts: "Fonts", templates: "Templates", free: "Free",
-  };
-  return map[slug] ?? slug;
+  return CATEGORY_MAP[slug] ?? slug;
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  if (!isValidSlug(slug)) return { title: "Not Found" };
   const cat = slugToCategory(slug);
   const data = categories.find((c) => c.id === slug);
   const description = data?.description || `Browse ${cat} on Kyno — premium digital assets for creators.`;
 
   return {
-    title: `${cat} — Kyno`,
+    title: cat,
     description,
     alternates: { canonical: `${SITE_URL}/categories/${slug}` },
     openGraph: {
@@ -33,9 +40,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  if (!isValidSlug(slug)) notFound();
   const category = slugToCategory(slug);
   const categoryData = categories.find((c) => c.id === slug);
-  const allProducts = (await getAllProducts()).filter((p) => p.category === category || slug === "free");
+  const allProducts = (await getAllProducts()).filter((p) => p.category === category);
 
   // Convert to site format
   const products = allProducts.map((p) => ({
