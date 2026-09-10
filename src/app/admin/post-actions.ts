@@ -1,8 +1,8 @@
 "use server";
 
-import { createPost, updatePost, deletePost, getAllPosts, slugify } from "@/db/blog-posts";
+import { createPost, updatePost, deletePost, getAllPosts, getPostById, slugify } from "@/db/blog-posts";
 import { revalidatePath } from "next/cache";
-import type { BlogPost } from "@/db/blog-posts";
+import type { BlogPost, BlogStatus } from "@/db/blog-posts";
 
 type BlogPostInput = {
   slug: string;
@@ -10,7 +10,7 @@ type BlogPostInput = {
   excerpt: string;
   coverImage?: string;
   content: string;
-  status: "draft" | "published";
+  status: BlogStatus;
   author: string;
 };
 
@@ -46,7 +46,9 @@ export async function adminCreatePost(input: BlogPostInput) {
 
 export async function adminUpdatePost(id: string, input: BlogPostInput) {
   try {
-    const result = await updatePost(id, normalize(input));
+    // Editing a creator-submitted post must not drop its ownership.
+    const existing = await getPostById(id);
+    const result = await updatePost(id, { ...normalize(input), authorId: existing?.authorId });
     if (!result) return { success: false, error: "Post not found" };
     revalidate();
     return { success: true };
@@ -58,6 +60,54 @@ export async function adminUpdatePost(id: string, input: BlogPostInput) {
 export async function adminDeletePost(id: string) {
   try {
     await deletePost(id);
+    revalidate();
+    return { success: true };
+  } catch (e) {
+    return { success: false, error: String(e) };
+  }
+}
+
+/** Approve a creator-submitted post — publishes it live. */
+export async function adminApprovePost(id: string) {
+  try {
+    const existing = await getPostById(id);
+    if (!existing) return { success: false, error: "Post not found" };
+    const result = await updatePost(id, {
+      slug: existing.slug,
+      title: existing.title,
+      excerpt: existing.excerpt,
+      coverImage: existing.coverImage,
+      content: existing.content,
+      author: existing.author,
+      authorId: existing.authorId,
+      status: "published",
+      publishedAt: new Date().toISOString(),
+    });
+    if (!result) return { success: false, error: "Post not found" };
+    revalidate();
+    return { success: true };
+  } catch (e) {
+    return { success: false, error: String(e) };
+  }
+}
+
+/** Send a post back to its author as a draft. */
+export async function adminRejectPost(id: string) {
+  try {
+    const existing = await getPostById(id);
+    if (!existing) return { success: false, error: "Post not found" };
+    const result = await updatePost(id, {
+      slug: existing.slug,
+      title: existing.title,
+      excerpt: existing.excerpt,
+      coverImage: existing.coverImage,
+      content: existing.content,
+      author: existing.author,
+      authorId: existing.authorId,
+      status: "draft",
+      publishedAt: undefined,
+    });
+    if (!result) return { success: false, error: "Post not found" };
     revalidate();
     return { success: true };
   } catch (e) {

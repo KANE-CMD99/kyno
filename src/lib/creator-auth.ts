@@ -46,3 +46,30 @@ export async function getCreatorSession(): Promise<CreatorSession | null> {
   if (!payload) return null;
   return payload as unknown as CreatorSession;
 }
+
+/**
+ * Resolve the creator session from the cookie, accepting either:
+ *  1. the JWT set by the /creator login flow, or
+ *  2. the raw-JSON cookie set by the site login action (src/app/actions.ts).
+ * Mirrors the fallback logic in /api/creator/me.
+ */
+export async function getCreatorSessionFromCookie(): Promise<CreatorSession | null> {
+  const jwt = await getCreatorSession();
+  if (jwt) return jwt;
+  const cs = await cookies();
+  const raw = cs.get(COOKIE_NAME)?.value;
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed?.id) {
+      return {
+        id: parsed.id,
+        username: parsed.username || parsed.id,
+        name: parsed.name || "",
+        email: parsed.email || "",
+        commission: typeof parsed.commission === "number" ? parsed.commission : 0,
+      };
+    }
+  } catch { /* not JSON */ }
+  return null;
+}

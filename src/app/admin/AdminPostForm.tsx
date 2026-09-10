@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminCreatePost, adminUpdatePost } from "./post-actions";
 import { slugify } from "@/db/slug.mjs";
-import type { BlogPost } from "@/db/blog-posts";
+import type { BlogPost, BlogStatus } from "@/db/blog-posts";
 
 interface AdminPostFormProps {
   post: BlogPost | null;
@@ -18,7 +18,7 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
   const [excerpt, setExcerpt] = useState(post?.excerpt || "");
   const [coverImage, setCoverImage] = useState(post?.coverImage || "");
   const [content, setContent] = useState(post?.content || "");
-  const [status, setStatus] = useState<"draft" | "published">(post?.status || "draft");
+  const [status, setStatus] = useState<BlogStatus>(post?.status || "draft");
   const [author, setAuthor] = useState(post?.author || "Kyno");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -111,8 +111,9 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-700">Status</label>
-          <select value={status} onChange={(e) => setStatus(e.target.value as "draft" | "published")} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500">
+          <select value={status} onChange={(e) => setStatus(e.target.value as BlogStatus)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500">
             <option value="draft">Draft</option>
+            <option value="pending">Pending review</option>
             <option value="published">Published</option>
           </select>
         </div>

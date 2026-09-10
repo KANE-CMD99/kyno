@@ -8,11 +8,14 @@ import { getAllProducts, deleteProduct, type ProductRecord } from "@/db/products
 import CreatorProductForm from "./CreatorProductForm";
 import CreatorSettings from "./CreatorSettings";
 import CreatorAnalytics from "./CreatorAnalytics";
+import CreatorPostList from "./CreatorPostList";
+import CreatorPostForm from "./CreatorPostForm";
+import type { BlogPost } from "@/db/blog-posts";
 
 export default function CreatorDashboardPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
   const [creator, setCreator] = useState<{ id: string; username: string; name: string; email: string } | null>(null);
-  const [view, setView] = useState<"list" | "create" | "settings" | "analytics" | { edit: ProductRecord }>("list");
+  const [view, setView] = useState<"list" | "create" | "settings" | "analytics" | "blog" | "blogCreate" | { edit: ProductRecord } | { blogEdit: BlogPost }>("list");
   const [products, setProducts] = useState<ProductRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -73,6 +76,7 @@ export default function CreatorDashboardPage() {
             </div>
             <Link href={`/${creator?.username || ""}`} className="text-xs text-blue-600 hover:text-blue-700">{t("creator.view_store")}</Link>
             <button onClick={() => setView("analytics")} className="text-xs text-blue-600 hover:text-blue-700">Analytics</button>
+            <button onClick={() => setView("blog")} className={`text-xs ${typeof view === "string" && (view === "blog" || view === "blogCreate") ? "text-blue-600 underline" : "text-blue-600 hover:text-blue-700"}`}>Blog</button>
             <button onClick={() => setView("settings")} className="text-xs text-neutral-500 hover:text-neutral-700">{t("creator.settings")}</button>
             <button onClick={() => router.push("/auth/logout")} className="text-xs text-neutral-400 hover:text-neutral-600">{t("creator.signout")}</button>
           </div>
@@ -134,11 +138,27 @@ export default function CreatorDashboardPage() {
             <button onClick={() => setView("list")} className="mb-6 text-sm text-blue-600 hover:text-blue-700">&larr; {t("creator.back")}</button>
             <CreatorAnalytics />
           </div>
+        ) : view === "blog" ? (
+          <div>
+            <button onClick={() => setView("list")} className="mb-6 text-sm text-blue-600 hover:text-blue-700">&larr; {t("creator.back")}</button>
+            <CreatorPostList
+              onEdit={(post) => setView({ blogEdit: post })}
+              onAdd={() => setView("blogCreate")}
+            />
+          </div>
+        ) : view === "blogCreate" || (typeof view === "object" && "blogEdit" in view) ? (
+          <div>
+            <button onClick={() => setView("blog")} className="mb-6 text-sm text-blue-600 hover:text-blue-700">&larr; Back to posts</button>
+            <CreatorPostForm
+              post={typeof view === "object" && "blogEdit" in view ? view.blogEdit : null}
+              onSaved={() => setView("blog")}
+            />
+          </div>
         ) : (
           <div>
             <button onClick={() => setView("list")} className="mb-6 text-sm text-blue-600 hover:text-blue-700">&larr; {t("creator.back")}</button>
             <CreatorProductForm
-              product={view !== "create" ? view.edit : null}
+              product={typeof view === "object" && "edit" in view ? view.edit : null}
               onSaved={() => { setView("list"); loadProducts(); }}
             />
           </div>

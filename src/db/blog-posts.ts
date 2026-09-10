@@ -4,6 +4,8 @@ import { DATA_DIR } from "@/lib/data-dir";
 
 const STORE_PATH = path.join(DATA_DIR, "blog-posts.json");
 
+export type BlogStatus = "draft" | "pending" | "published";
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -12,8 +14,10 @@ export interface BlogPost {
   coverImage?: string;
   content: string;
   publishedAt?: string;
-  status: "draft" | "published";
+  status: BlogStatus;
   author: string;
+  /** Creator id when the post was submitted from a creator dashboard. */
+  authorId?: string;
 }
 
 function getJSON(): BlogPost[] {
@@ -55,6 +59,17 @@ export async function getPublishedPosts(): Promise<BlogPost[]> {
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | undefined> {
   return getJSON().find((p) => p.slug === slug);
+}
+
+/** Posts owned by a creator, newest first — for the creator dashboard. */
+export async function getPostsByAuthor(authorId: string): Promise<BlogPost[]> {
+  return getJSON()
+    .filter((p) => p.authorId === authorId)
+    .sort((a, b) => b.id.localeCompare(a.id));
+}
+
+export async function getPostById(id: string): Promise<BlogPost | undefined> {
+  return getJSON().find((p) => p.id === id);
 }
 
 export async function createPost(data: Omit<BlogPost, "id">): Promise<BlogPost> {

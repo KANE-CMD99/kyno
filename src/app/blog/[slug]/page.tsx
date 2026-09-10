@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getPublishedPosts, getPostBySlug } from "@/db/blog-posts";
+import { getCreators } from "@/db/creators";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import "../markdown.css";
@@ -43,6 +44,12 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = await getPostBySlug(slug);
   if (!post || post.status !== "published") notFound();
 
+  // Link the byline to the author's creator profile when the post was
+  // submitted from a creator dashboard.
+  const authorUsername = post.authorId
+    ? (await getCreators()).find((c) => c.id === post.authorId)?.username
+    : undefined;
+
   return (
     <>
       <Nav />
@@ -62,7 +69,11 @@ export default async function BlogPostPage({ params }: PageProps) {
         <article className="mx-auto max-w-3xl px-6 py-12">
           <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 sm:text-4xl">{post.title}</h1>
           <div className="mt-4 flex items-center gap-3 text-sm text-neutral-500">
-            <span>{post.author}</span>
+            {authorUsername ? (
+              <Link href={`/${authorUsername}`} className="font-medium text-blue-600 hover:text-blue-700">{post.author}</Link>
+            ) : (
+              <span>{post.author}</span>
+            )}
             <span>·</span>
             <span>{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : ""}</span>
           </div>
