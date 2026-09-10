@@ -25,10 +25,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const data = categories.find((c) => c.id === slug);
   const description = data?.description || `Browse ${cat} on Kyno — premium digital assets for creators.`;
 
+  // Empty categories are thin content. Keep the page reachable (it's linked in
+  // the nav for when products land) but keep it out of the index until it has
+  // at least one product — indexing resumes automatically.
+  const products = await getAllProducts().catch(() => []);
+  const isEmpty = !products.some((p) => p.category === cat);
+
   return {
     title: cat,
     description,
     alternates: { canonical: `${SITE_URL}/categories/${slug}` },
+    ...(isEmpty ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       title: `${cat} — Kyno`,
       description,
