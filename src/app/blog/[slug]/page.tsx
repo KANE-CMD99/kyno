@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!post || post.status !== "published") return { title: "Not Found" };
   const url = `${SITE_URL}/blog/${post.slug}`;
   return {
-    title: `${post.title} — Kyno`,
+    title: post.title,
     description: post.excerpt.slice(0, 160),
     alternates: { canonical: url },
     openGraph: {

@@ -8,7 +8,7 @@ import BlogCard from "@/components/BlogCard";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
 
 export const metadata: Metadata = {
-  title: "Blog — Kyno",
+  title: "Blog",
   description: "Design tips, resume advice, and creative resources from Kyno.",
   alternates: { canonical: `${SITE_URL}/blog` },
 };
