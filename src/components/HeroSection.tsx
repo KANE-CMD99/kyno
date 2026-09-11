@@ -4,9 +4,9 @@ import type { BlogPost } from "@/db/blog-posts";
 export default function HeroSection({ posts }: { posts: BlogPost[] }) {
   return (
     <section className="flex min-h-[90vh] items-center bg-[#FAFAFA] px-6 pb-24 pt-32">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-16 md:flex-row md:gap-12">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-16 md:flex-row md:gap-12">
         {/* Left: Text */}
-        <div className="flex-1 text-center md:text-left">
+        <div className="w-full flex-1 text-center md:text-left">
           <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-neutral-900 md:text-5xl lg:text-6xl">
             Buy once.
             <br />
@@ -15,7 +15,7 @@ export default function HeroSection({ posts }: { posts: BlogPost[] }) {
             <span className="text-blue-600">Create freely.</span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-md text-lg leading-relaxed text-neutral-500 md:mx-0">
+          <p className="mx-auto mt-6 max-w-lg text-lg leading-relaxed text-neutral-500 md:mx-0">
             Resume templates, posters &amp; design assets — yours forever, from $1.
           </p>
 
