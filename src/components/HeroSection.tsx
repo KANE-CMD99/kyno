@@ -6,7 +6,7 @@ export default function HeroSection({ posts }: { posts: BlogPost[] }) {
     <section className="flex min-h-[70vh] items-center bg-[#FAFAFA] px-6 pb-16 pt-28">
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-12 md:flex-row md:justify-between md:gap-12">
         {/* Left: Text */}
-        <div className="w-full flex-1 text-center md:text-left">
+        <div className="w-full flex-1 text-center md:pl-20 md:text-left">
           <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-neutral-900 md:text-5xl lg:text-6xl">
             Buy once.
             <br />
