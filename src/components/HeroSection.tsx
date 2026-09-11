@@ -7,12 +7,12 @@ export default function HeroSection({ posts }: { posts: BlogPost[] }) {
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-16 md:flex-row md:gap-12">
         {/* Left: Text */}
         <div className="flex-1 text-center md:text-left">
-          <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-neutral-900 md:text-7xl">
+          <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-neutral-900 md:text-5xl lg:text-6xl">
             Buy once.
             <br />
             Own forever.
             <br />
-            Create freely.
+            <span className="text-blue-600">Create freely.</span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-md text-lg leading-relaxed text-neutral-500 md:mx-0">
@@ -28,7 +28,7 @@ export default function HeroSection({ posts }: { posts: BlogPost[] }) {
             </a>
           </div>
 
-          <p className="mt-4 text-sm text-neutral-400">Free updates &middot; Lifetime access</p>
+          <p className="mt-4 text-sm text-neutral-400">Instant download &middot; No subscription</p>
         </div>
 
         {/* Right: Recent blog posts */}
