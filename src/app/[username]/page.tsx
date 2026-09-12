@@ -15,7 +15,7 @@ export async function generateStaticParams() {
   return creators.map((c) => ({ username: c.username }));
 }
 
-export const dynamicParams = false;
+export const revalidate = 3600;
 
 export default async function CreatorProfilePage({ params }: PageProps) {
   const { username } = await params;
