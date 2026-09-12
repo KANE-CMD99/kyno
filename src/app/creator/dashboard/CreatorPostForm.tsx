@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { creatorCreatePost, creatorUpdatePost } from "./post-actions";
+import { useLang } from "@/components/LangContext";
 import { slugify } from "@/db/slug.mjs";
 import type { BlogPost } from "@/db/blog-posts";
 
@@ -22,6 +23,7 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
   const [saving, setSaving] = useState<"draft" | "submit" | null>(null);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { t } = useLang();
 
   const isEditing = !!post?.id;
   const wasPublished = post?.status === "published";
@@ -34,8 +36,8 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
   const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!file.type.startsWith("image/")) { setError("Only image files allowed for cover"); return; }
-    if (file.size > 5 * 1024 * 1024) { setError("Image must be under 5MB"); return; }
+    if (!file.type.startsWith("image/")) { setError(t("blog.err_cover_type")); return; }
+    if (file.size > 5 * 1024 * 1024) { setError(t("blog.err_cover_size")); return; }
     setUploading(true);
     setError("");
     try {
@@ -45,9 +47,9 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
       const res = await fetch("/api/creator/upload", { method: "POST", body: form });
       const data = await res.json();
       if (data.url) setCoverImage(data.url);
-      else setError(data.error || "Upload failed");
+      else setError(data.error || t("blog.err_upload"));
     } catch {
-      setError("Upload failed");
+      setError(t("blog.err_upload"));
     } finally {
       setUploading(false);
     }
@@ -55,8 +57,8 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
 
   const save = async (mode: "draft" | "submit") => {
     setError("");
-    if (!title.trim()) { setError("Title is required"); return; }
-    if (!content.trim()) { setError("Content is required"); return; }
+    if (!title.trim()) { setError(t("blog.err_title")); return; }
+    if (!content.trim()) { setError(t("blog.err_content")); return; }
     setSaving(mode);
     const input = {
       slug,
@@ -73,7 +75,7 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
       onSaved();
       router.refresh();
     } else {
-      setError(result.error || "Save failed");
+      setError(result.error || t("blog.err_save"));
     }
     setSaving(null);
   };
@@ -87,7 +89,7 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xl font-bold text-neutral-900">
-          {isEditing ? `Edit: ${post?.title}` : "New post"}
+          {isEditing ? t("blog.edit_title", { title: post?.title || "" }) : t("blog.new_post")}
         </h2>
         <div className="flex items-center gap-2">
           <button
@@ -96,14 +98,14 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
             disabled={busy}
             className="rounded-lg border border-neutral-300 px-4 py-2.5 text-sm font-semibold text-neutral-700 transition-colors hover:border-neutral-400 disabled:opacity-60"
           >
-            {saving === "draft" ? "Saving..." : "Save draft"}
+            {saving === "draft" ? t("admin.saving") : t("blog.save_draft")}
           </button>
           <button
             type="submit"
             disabled={busy}
             className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:opacity-60"
           >
-            {saving === "submit" ? "Submitting..." : "Submit for review"}
+            {saving === "submit" ? t("blog.submitting") : t("blog.submit_review")}
           </button>
         </div>
       </div>
@@ -112,13 +114,13 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
 
       {wasPublished && (
         <p className="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-700">
-          This post is live. Saving your changes sends it back for review before it reappears on the site.
+          {t("blog.live_warning")}
         </p>
       )}
 
       <div className="rounded-xl border border-neutral-200 bg-white p-6 space-y-5">
         <div>
-          <label className="block text-xs font-medium text-neutral-700">Title</label>
+          <label className="block text-xs font-medium text-neutral-700">{t("blog.field_title")}</label>
           <input
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
@@ -127,16 +129,16 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-neutral-700">Slug</label>
+          <label className="block text-xs font-medium text-neutral-700">{t("blog.field_slug")}</label>
           <input
             value={slug}
             onChange={(e) => { setSlug(e.target.value); setSlugTouched(true); }}
-            placeholder="auto-from-title"
+            placeholder={t("blog.slug_placeholder")}
             className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-neutral-700">Excerpt (shown on cards)</label>
+          <label className="block text-xs font-medium text-neutral-700">{t("blog.field_excerpt")}</label>
           <textarea
             value={excerpt}
             onChange={(e) => setExcerpt(e.target.value)}
@@ -145,23 +147,23 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-neutral-700">Cover image (optional)</label>
+          <label className="block text-xs font-medium text-neutral-700">{t("blog.field_cover")}</label>
           {coverImage ? (
             <div className="mt-1.5 flex items-center gap-3">
               <img src={coverImage} alt="" className="h-16 w-24 rounded-lg border border-neutral-200 object-cover" />
               <button type="button" onClick={() => setCoverImage("")} className="text-xs text-red-500 hover:text-red-600">
-                Remove
+                {t("common.remove")}
               </button>
             </div>
           ) : (
             <label className="mt-1.5 flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-neutral-300 bg-neutral-50 px-6 py-4 text-sm text-neutral-400 transition-colors hover:border-blue-400 hover:text-blue-600">
-              {uploading ? "Uploading..." : "Upload cover image (PNG/JPG/WebP, max 5MB)"}
+              {uploading ? t("admin.uploading") : t("blog.upload_cover")}
               <input type="file" accept="image/*" onChange={handleCoverUpload} className="hidden" disabled={uploading} />
             </label>
           )}
         </div>
         <div>
-          <label className="block text-xs font-medium text-neutral-700">Content (Markdown)</label>
+          <label className="block text-xs font-medium text-neutral-700">{t("blog.field_content")}</label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}

@@ -75,8 +75,8 @@ export default function CreatorDashboardPage() {
               <button onClick={() => setLang("zh")} className={`rounded px-2 py-0.5 text-xs font-medium ${lang === "zh" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-400"}`}>中文</button>
             </div>
             <Link href={`/${creator?.username || ""}`} className="text-xs text-blue-600 hover:text-blue-700">{t("creator.view_store")}</Link>
-            <button onClick={() => setView("analytics")} className="text-xs text-blue-600 hover:text-blue-700">Analytics</button>
-            <button onClick={() => setView("blog")} className={`text-xs ${typeof view === "string" && (view === "blog" || view === "blogCreate") ? "text-blue-600 underline" : "text-blue-600 hover:text-blue-700"}`}>Blog</button>
+            <button onClick={() => setView("analytics")} className="text-xs text-blue-600 hover:text-blue-700">{t("creator.analytics")}</button>
+            <button onClick={() => setView("blog")} className={`text-xs ${typeof view === "string" && (view === "blog" || view === "blogCreate") ? "text-blue-600 underline" : "text-blue-600 hover:text-blue-700"}`}>{t("creator.blog")}</button>
             <button onClick={() => setView("settings")} className="text-xs text-neutral-500 hover:text-neutral-700">{t("creator.settings")}</button>
             <button onClick={() => router.push("/auth/logout")} className="text-xs text-neutral-400 hover:text-neutral-600">{t("creator.signout")}</button>
           </div>
@@ -148,7 +148,7 @@ export default function CreatorDashboardPage() {
           </div>
         ) : view === "blogCreate" || (typeof view === "object" && "blogEdit" in view) ? (
           <div>
-            <button onClick={() => setView("blog")} className="mb-6 text-sm text-blue-600 hover:text-blue-700">&larr; Back to posts</button>
+            <button onClick={() => setView("blog")} className="mb-6 text-sm text-blue-600 hover:text-blue-700">&larr; {t("creator.back_to_posts")}</button>
             <CreatorPostForm
               post={typeof view === "object" && "blogEdit" in view ? view.blogEdit : null}
               onSaved={() => setView("blog")}

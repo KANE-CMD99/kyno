@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLang } from "@/components/LangContext";
 
 interface Props {
   onBack: () => void;
@@ -14,6 +15,7 @@ export default function CreatorSettings({ onBack }: Props) {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
   const [success, setSuccess] = useState(false);
+  const { t } = useLang();
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,24 +34,24 @@ export default function CreatorSettings({ onBack }: Props) {
       setSuccess(true);
       setCurrentPassword("");
       setNewPassword("");
-      setMsg("Password changed successfully.");
+      setMsg(t("settings.password_success"));
     } else {
-      setMsg(data.error || "Failed to change password");
+      setMsg(data.error || t("settings.password_failed"));
     }
   };
 
   return (
     <div>
-      <button onClick={onBack} className="mb-6 text-sm text-blue-600 hover:text-blue-700">&larr; Back</button>
+      <button onClick={onBack} className="mb-6 text-sm text-blue-600 hover:text-blue-700">&larr; {t("common.back")}</button>
 
       <div className="max-w-md">
-        <h2 className="text-xl font-bold text-neutral-900">Settings</h2>
-        <p className="mt-1 text-sm text-neutral-500">Manage your account settings.</p>
+        <h2 className="text-xl font-bold text-neutral-900">{t("creator.settings")}</h2>
+        <p className="mt-1 text-sm text-neutral-500">{t("settings.subtitle")}</p>
 
         {/* Change Password */}
         <div className="mt-8 rounded-xl border border-neutral-200 bg-white p-6">
-          <h3 className="text-sm font-semibold text-neutral-900">Change Password</h3>
-          <p className="mt-1 text-xs text-neutral-500">Use a strong password that you don&apos;t use elsewhere.</p>
+          <h3 className="text-sm font-semibold text-neutral-900">{t("settings.change_password")}</h3>
+          <p className="mt-1 text-xs text-neutral-500">{t("settings.password_hint")}</p>
 
           {msg && (
             <p className={`mt-4 rounded-md px-3 py-2 text-xs ${success ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>{msg}</p>
@@ -57,7 +59,7 @@ export default function CreatorSettings({ onBack }: Props) {
 
           <form className="mt-4 space-y-4" onSubmit={handleChangePassword}>
             <div>
-              <label className="block text-xs font-medium text-neutral-700">Current Password</label>
+              <label className="block text-xs font-medium text-neutral-700">{t("settings.current_password")}</label>
               <div className="relative mt-1.5">
                 <input
                   type={showCurrent ? "text" : "password"}
@@ -76,7 +78,7 @@ export default function CreatorSettings({ onBack }: Props) {
               </div>
             </div>
             <div>
-              <label className="block text-xs font-medium text-neutral-700">New Password</label>
+              <label className="block text-xs font-medium text-neutral-700">{t("settings.new_password")}</label>
               <div className="relative mt-1.5">
                 <input
                   type={showNew ? "text" : "password"}
@@ -85,7 +87,7 @@ export default function CreatorSettings({ onBack }: Props) {
                   required
                   minLength={6}
                   className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 pr-10 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  placeholder="min 6 characters"
+                  placeholder={t("settings.min_chars")}
                 />
                 <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-neutral-400 hover:text-neutral-600">
                   {showNew ? (
@@ -97,7 +99,7 @@ export default function CreatorSettings({ onBack }: Props) {
               </div>
             </div>
             <button type="submit" disabled={loading} className="rounded-lg bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 disabled:opacity-50">
-              {loading ? "Updating..." : "Change Password"}
+              {loading ? t("settings.updating") : t("settings.change_password")}
             </button>
           </form>
         </div>
