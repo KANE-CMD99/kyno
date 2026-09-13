@@ -1,0 +1,22 @@
+{
+  "id": "6",
+  "name": "Display Typeface",
+  "category": "Fonts",
+  "price": 1,
+  "creator": "Kyno",
+  "description": "A bold, expressive display typeface built for headlines, posters, and branding projects. Features dramatic geometric letterforms, extended character set, and stylistic alternates that make your titles stand out.",
+  "features": [
+    "3 weights (Regular, Bold, Outline)",
+    "Geometric display design optimized for large sizes",
+    "Stylistic alternates & discretionary ligatures",
+    "Works beautifully for logos and branding",
+    "All standard font formats included"
+  ],
+  "includes": [
+    "3 display font files (OTF, TTF, WOFF2)",
+    "Stylistic alternates guide",
+    "Branding mockup templates",
+    "Commercial license included"
+  ],
+  "previewImages": []
+}

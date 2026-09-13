@@ -1,0 +1,22 @@
+{
+  "id": "4",
+  "name": "Modern Sans Serif",
+  "category": "Fonts",
+  "price": 1,
+  "creator": "Kyno",
+  "description": "A clean geometric sans-serif font family with 5 weights, multilingual support, and opentype features. Designed for both display headlines and body text, it reads beautifully at any size.",
+  "features": [
+    "5 weights (Light, Regular, Medium, Bold, Black)",
+    "Supports 200+ languages",
+    "OpenType features (ligatures, alternates, tabular figures)",
+    "Web font formats included (WOFF2, TTF, OTF)",
+    "Pairs well with serif and script fonts"
+  ],
+  "includes": [
+    "5 font files (OTF, TTF, WOFF2)",
+    "Web font CSS kit",
+    "Glyphs chart & specimen PDF",
+    "Desktop & web license"
+  ],
+  "previewImages": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "7",
+  "name": "Ultimate UI Kit",
+  "category": "Templates",
+  "price": 1,
+  "creator": "Kyno",
+  "description": "A complete UI kit with 500+ components, 40+ page templates, and a comprehensive design system built for Figma. Design landing pages, dashboards, mobile apps, and more — all with consistent, customizable components.",
+  "features": [
+    "500+ auto-layout Figma components",
+    "40+ page templates (landing, dashboard, auth, settings, etc.)",
+    "Fully customizable design tokens (colors, typography, spacing)",
+    "Light and dark mode variants",
+    "Responsive layout examples for desktop, tablet, mobile"
+  ],
+  "includes": [
+    "Figma file (.fig) with all components",
+    "Design token documentation PDF",
+    "Component usage guide",
+    "Lifetime free updates"
+  ],
+  "previewImages": []
+}
