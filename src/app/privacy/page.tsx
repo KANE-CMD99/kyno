@@ -29,13 +29,19 @@ export default function PrivacyPage() {
         <section className="px-6 py-16">
           <div className="mx-auto max-w-3xl">
             <h1 className="text-3xl font-extrabold text-neutral-900">Privacy Policy</h1>
-            <p className="mt-2 text-sm text-neutral-500">Last updated: July 2026</p>
+            <p className="mt-2 text-sm text-neutral-500">Last updated: September 2026</p>
 
             <h2 className="mt-10 text-lg font-bold text-neutral-900">1. Information We Collect</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
               When you create an account, place an order, or contact us, we may collect: name, email address,
               and purchase history. For newsletter signup, we collect only your email address. We do NOT collect
               or store payment card details — all payments are processed by third-party providers.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-neutral-600">
+              We also keep a first-party, aggregate record of visits to this site: a daily count of page views
+              and the number of distinct IP addresses. It exists only to show us how much traffic the store
+              receives. It is not used to build a profile of you, is not linked to your account or purchase
+              history, and is not shared with or sold to anyone.
             </p>
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">2. How We Use Your Information</h2>
@@ -54,11 +60,15 @@ export default function PrivacyPage() {
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">4. Cookies</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-              We use essential session cookies to keep you signed in and to remember your shopping cart.
-              We also display advertising through Google AdSense, which may set third-party advertising
-              and tracking cookies to serve personalized or non-personalized ads. You can manage ad
-              personalization through Google&apos;s Ads Settings, and disable non-essential cookies in your
-              browser settings.
+              We use essential cookies to keep you signed in and to remember your shopping cart. These are
+              required for the store to work and are set regardless of your choice.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-neutral-600">
+              Advertising is served by Google AdSense. Its script loads <strong>only after you accept cookies</strong>{" "}
+              in the banner shown on your first visit — accept, and it may set third-party advertising and
+              tracking cookies to serve personalized or non-personalized ads; if you do not accept, no ad
+              script is loaded at all. We never load advertising scripts on the checkout or account pages.
+              You can also manage ad personalization through Google&apos;s Ads Settings.
             </p>
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">5. Third-Party Services</h2>
