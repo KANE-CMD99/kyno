@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import type { ProductRecord } from "@/db/products-store";
 import { useLang } from "@/components/LangContext";
+import { categoryFull } from "@/data/site";
 
 const CATEGORIES = ["Photos", "Fonts", "Templates", "Free"];
 
@@ -109,7 +110,7 @@ export default function CreatorProductForm({ product, onSaved }: Props) {
           <div>
             <label className="block text-xs font-medium text-neutral-700">{t("admin.category")}</label>
             <select value={category} onChange={(e) => setCategory(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-              {CATEGORIES.map((c) => (<option key={c} value={c}>{c}</option>))}
+              {CATEGORIES.map((c) => (<option key={c} value={c}>{categoryFull(c)}</option>))}
             </select>
           </div>
           <div>

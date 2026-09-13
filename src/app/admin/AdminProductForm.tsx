@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminCreateProduct, adminUpdateProduct } from "./product-actions";
 import type { ProductRecord } from "@/db/products-store";
+import { categoryFull } from "@/data/site";
 
 interface AdminProductFormProps {
   product: ProductRecord | null;
@@ -143,7 +144,7 @@ export default function AdminProductForm({ product, defaultCategory, onSaved }: 
           <div>
             <label className="block text-xs font-medium text-neutral-700">Category</label>
             <select value={category} onChange={(e) => setCategory(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-              {CATEGORIES.map((c) => (<option key={c} value={c}>{c}</option>))}
+              {CATEGORIES.map((c) => (<option key={c} value={c}>{categoryFull(c)}</option>))}
             </select>
           </div>
           <div>

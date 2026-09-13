@@ -11,6 +11,7 @@ import CreatorAnalytics from "./CreatorAnalytics";
 import CreatorPostList from "./CreatorPostList";
 import CreatorPostForm from "./CreatorPostForm";
 import type { BlogPost } from "@/db/blog-posts";
+import { categoryFull } from "@/data/site";
 
 export default function CreatorDashboardPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
@@ -116,7 +117,7 @@ export default function CreatorDashboardPage() {
                     {products.map((p) => (
                       <tr key={p.id} className="border-b border-neutral-100 last:border-0 hover:bg-neutral-50">
                         <td className="px-5 py-3"><p className="font-medium text-neutral-900">{p.name}</p><p className="text-xs text-neutral-400">ID: {p.id}</p></td>
-                        <td className="px-5 py-3"><span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-600">{p.category}</span></td>
+                        <td className="px-5 py-3"><span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-600">{categoryFull(p.category)}</span></td>
                         <td className="px-5 py-3"><span className="font-medium text-neutral-900">${p.price}</span>{p.originalPrice && <span className="ml-2 text-xs text-neutral-400 line-through">${p.originalPrice}</span>}</td>
                         <td className="px-5 py-3 text-right">
                           <button onClick={() => setView({ edit: p })} className="mr-3 text-xs font-medium text-blue-600 hover:text-blue-700">{t("creator.edit")}</button>

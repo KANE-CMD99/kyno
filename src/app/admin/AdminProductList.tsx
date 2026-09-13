@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { adminGetProducts, adminDeleteProduct } from "./product-actions";
 import type { ProductRecord } from "@/db/products-store";
+import { categoryFull } from "@/data/site";
 
 interface AdminProductListProps {
   onEdit: (product: ProductRecord) => void;
@@ -57,7 +58,7 @@ export default function AdminProductList({ onEdit, onAdd }: AdminProductListProp
             {/* Category Header — same as homepage */}
             <div className="mb-2 text-5xl">{categoryEmoji[category]}</div>
             <h2 className="text-2xl font-bold text-neutral-900">
-              {category}
+              {categoryFull(category)}
             </h2>
             <p className="mt-1 text-sm text-neutral-500">
               {catProducts.length} {catProducts.length === 1 ? "product" : "products"}
@@ -72,7 +73,7 @@ export default function AdminProductList({ onEdit, onAdd }: AdminProductListProp
                     onClick={() => onAdd(category)}
                     className="mt-3 text-sm font-medium text-blue-600 hover:text-blue-700"
                   >
-                    + Add your first {category} product
+                    + Add your first {categoryFull(category)} product
                   </button>
                 </div>
               ) : (
