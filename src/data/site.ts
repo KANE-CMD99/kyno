@@ -34,7 +34,7 @@ export interface StatItem {
 
 export const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "Products", href: "#products" },
+  { label: "Products", href: "/products" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];

@@ -29,6 +29,7 @@ export default function FreeDownloadsPage() {
   const [email, setEmail] = useState("");
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -55,19 +56,30 @@ export default function FreeDownloadsPage() {
 
   const handleClaim = async (item: FreeProduct) => {
     if (!email.trim()) return;
-    // Send email with a one-time download link — user downloads from their inbox
-    fetch("/api/free-download-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: email.trim(),
-        productId: item.id,
-      }),
-    }).catch(() => {});
-    setClaimed((prev) => ({ ...prev, [item.id]: true }));
-    setActiveItem(null);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
+    setError("");
+    // Send email with a one-time download link — user downloads from their inbox.
+    // Only report success once the server confirms it actually sent.
+    try {
+      const res = await fetch("/api/free-download-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim(),
+          productId: item.id,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        setError(data.error || "Couldn't send the download link. Please check your email address and try again.");
+        return;
+      }
+      setClaimed((prev) => ({ ...prev, [item.id]: true }));
+      setActiveItem(null);
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
+    } catch {
+      setError("Couldn't send the download link. Please check your connection and try again.");
+    }
   };
 
   return (
@@ -109,7 +121,7 @@ export default function FreeDownloadsPage() {
             ) : products.length === 0 ? (
               <div className="py-12 text-center">
                 <p className="text-sm text-neutral-400">No free downloads available yet. Check back soon!</p>
-                <Link href="/" className="mt-4 inline-block text-sm font-medium text-blue-600 hover:text-blue-700">Browse all products</Link>
+                <Link href="/products" className="mt-4 inline-block text-sm font-medium text-blue-600 hover:text-blue-700">Browse all products</Link>
               </div>
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -166,7 +178,7 @@ export default function FreeDownloadsPage() {
                               <input
                                 type="email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => { setEmail(e.target.value); setError(""); }}
                                 placeholder="your@email.com"
                                 className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-xs outline-none focus:border-blue-500"
                               />
@@ -178,6 +190,9 @@ export default function FreeDownloadsPage() {
                                 Get Link
                               </button>
                             </div>
+                            {error && (
+                              <p className="text-xs text-red-600">{error}</p>
+                            )}
                             <button
                               onClick={() => setActiveItem(null)}
                               className="text-xs text-neutral-400 hover:text-neutral-600"

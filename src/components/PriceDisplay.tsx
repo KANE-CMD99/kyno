@@ -11,12 +11,15 @@ interface Props {
 
 export default function PriceDisplay({ price, originalPrice, className, originalClassName }: Props) {
   const { format } = useCurrency();
-  const discount = originalPrice ? Math.round((1 - price / originalPrice) * 100) : 0;
+  // A "was/was not" price only makes sense for something actually on sale:
+  // never for free items, and never when it wouldn't be a real discount.
+  const hasSale = !!originalPrice && originalPrice > price && price > 0;
+  const discount = hasSale ? Math.round((1 - price / originalPrice) * 100) : 0;
 
   return (
     <>
       <span className={className}>{format(price)}</span>
-      {originalPrice && (
+      {hasSale && (
         <>
           <span className={originalClassName}>{format(originalPrice)}</span>
           {discount > 0 && (

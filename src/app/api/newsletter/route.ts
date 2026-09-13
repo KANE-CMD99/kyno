@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { DATA_DIR } from "@/lib/data-dir";
+import { isEmail } from "@/lib/validation";
 
 const SUBSCRIBERS_FILE = "newsletter-subscribers.json";
 
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
-    if (!email || !email.includes("@")) {
+    if (!isEmail(email)) {
       return NextResponse.json({ error: "Valid email required." }, { status: 400 });
     }
 

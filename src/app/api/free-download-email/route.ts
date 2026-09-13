@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { getProductById } from "@/db/products-store";
 import { createOrder } from "@/db/storage";
 import { sendDownloadEmail } from "@/lib/email";
+import { isEmail } from "@/lib/validation";
 
 export async function POST(req: Request) {
   try {
     const { email, productId } = await req.json();
-    if (!email || !productId) {
-      return NextResponse.json({ error: "email and productId required" }, { status: 400 });
+    if (!isEmail(email) || typeof productId !== "string" || !productId) {
+      return NextResponse.json({ error: "A valid email and productId are required" }, { status: 400 });
     }
 
     const product = await getProductById(productId);

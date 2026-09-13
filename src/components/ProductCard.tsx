@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useCart } from "./CartContext";
 import { useCurrency } from "./CurrencyContext";
 import type { ProductItem } from "@/data/site";
+import { categoryFull } from "@/data/site";
 
 interface ProductCardProps {
   product: ProductItem;
@@ -104,7 +105,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
         <p className="mt-0.5 text-xs text-neutral-500">
           by <span className="font-medium text-neutral-700">{product.creator}</span>
           <span className="mx-1 text-neutral-300">·</span>
-          in {product.category}
+          in {categoryFull(product.category)}
         </p>
         <div className="mt-1.5 flex items-center justify-center gap-2">
           <span className="text-sm font-bold text-neutral-900">{displayPrice}</span>

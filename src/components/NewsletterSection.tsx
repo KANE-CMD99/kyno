@@ -7,18 +7,27 @@ export default function NewsletterSection() {
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "submitted">("idle");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !consent) return;
+    setError("");
     try {
-      await fetch("/api/newsletter", {
+      const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-    } catch { /* fail silently */ }
-    setStatus("submitted");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        setError(data.error || "Couldn't subscribe right now. Please try again.");
+        return;
+      }
+      setStatus("submitted");
+    } catch {
+      setError("Couldn't subscribe right now. Please check your connection and try again.");
+    }
   };
 
   return (
@@ -49,7 +58,7 @@ export default function NewsletterSection() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { setEmail(e.target.value); setError(""); }}
                 placeholder="your@email.com"
                 required
                 className="flex-1 rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
@@ -62,6 +71,9 @@ export default function NewsletterSection() {
                 Subscribe
               </button>
             </div>
+            {error && (
+              <p className="rounded-lg bg-red-950 px-4 py-2.5 text-left text-xs text-red-300">{error}</p>
+            )}
             <label className="flex items-center gap-2 text-left cursor-pointer">
               <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="h-3.5 w-3.5 rounded border-neutral-600 text-blue-600" />
               <span className="text-xs text-neutral-500">I agree to receive product updates and marketing emails.{" "}

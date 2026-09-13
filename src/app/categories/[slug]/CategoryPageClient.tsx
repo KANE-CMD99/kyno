@@ -81,7 +81,7 @@ export default function CategoryPageClient({ slug, category, categoryData, produ
                     : "No products in this category yet."
                   }
                 </p>
-                <Link href="/" className="mt-4 inline-block text-sm font-medium text-blue-600 hover:text-blue-700">
+                <Link href="/products" className="mt-4 inline-block text-sm font-medium text-blue-600 hover:text-blue-700">
                   Browse all products &rarr;
                 </Link>
               </div>

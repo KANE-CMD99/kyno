@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getOrdersByEmail } from "@/db/storage";
 import { sendDownloadEmail } from "@/lib/email";
+import { isEmail } from "@/lib/validation";
 
 const RATE_WINDOW = 60000; // 1 minute
 const ipCounts = new Map<string, { count: number; resetAt: number }>();
@@ -20,8 +21,8 @@ export async function POST(req: Request) {
   }
 
   const { email } = (await req.json().catch(() => ({}))) as { email?: string };
-  if (!email) {
-    return NextResponse.json({ error: "Email required" }, { status: 400 });
+  if (!isEmail(email)) {
+    return NextResponse.json({ error: "Valid email required" }, { status: 400 });
   }
 
   const normalized = email.toLowerCase().trim();
