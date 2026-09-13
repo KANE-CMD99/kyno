@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import AnimatedSection from "./AnimatedSection";
 import SearchBar from "./SearchBar";
+import { categoryFull } from "@/data/site";
 
 interface SiteProduct {
   id: string; name: string; category: string; price: string;
@@ -65,7 +66,7 @@ export default function ProductsSection() {
               const items = limitCats.includes(cat) ? allItems.slice(0, 4) : allItems;
               return (
                 <div key={cat} className="text-center">
-                  <h2 className="text-2xl font-bold text-neutral-900">Popular {cat}</h2>
+                  <h2 className="text-2xl font-bold text-neutral-900">Popular {categoryFull(cat)}</h2>
                   <p className="mt-2 text-sm text-neutral-500">
                     Curated {cat.toLowerCase()} for your next project
                   </p>

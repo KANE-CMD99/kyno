@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getProductDetail, getRelatedProducts } from "@/data/product-detail";
+import { categoryFull } from "@/data/site";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -77,7 +78,7 @@ export default async function ProductPage({ params }: PageProps) {
           <p className="text-xs sm:text-sm text-neutral-400 truncate">
             <Link href="/" className="hover:text-neutral-600 transition-colors">Home</Link>
             <span className="mx-1.5 sm:mx-2">/</span>
-            <Link href={`/categories/${detail.category.toLowerCase()}`} className="hover:text-neutral-600 transition-colors">{detail.category}</Link>
+            <Link href={`/categories/${detail.category.toLowerCase()}`} className="hover:text-neutral-600 transition-colors">{categoryFull(detail.category)}</Link>
             <span className="mx-1.5 sm:mx-2">/</span>
             <span className="text-neutral-900">{detail.name}</span>
           </p>
@@ -109,7 +110,7 @@ export default async function ProductPage({ params }: PageProps) {
             <div>
               <div className="flex items-center gap-2.5">
                 <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
-                  {detail.category}
+                  {categoryFull(detail.category)}
                 </span>
                 <span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-[11px] font-medium text-neutral-500">
                   Digital Download
@@ -249,7 +250,7 @@ export default async function ProductPage({ params }: PageProps) {
           <section className="bg-white px-4 sm:px-6 py-14 sm:py-20">
             <div className="mx-auto max-w-7xl text-center">
               <h2 className="text-2xl font-bold text-neutral-900">
-                More {detail.category}
+                More in {categoryFull(detail.category)}
               </h2>
               <p className="mt-2 text-sm text-neutral-500">
                 You might also like

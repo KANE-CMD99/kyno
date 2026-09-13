@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { categories } from "@/data/site";
+import { categories, categoryFull } from "@/data/site";
 import CategoryPageClient from "./CategoryPageClient";
 import { getAllProducts } from "@/db/products-store";
 
@@ -22,8 +22,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   if (!isValidSlug(slug)) return { title: "Not Found" };
   const cat = slugToCategory(slug);
+  const label = categoryFull(cat);
   const data = categories.find((c) => c.id === slug);
-  const description = data?.description || `Browse ${cat} on Kyno — premium digital assets for creators.`;
+  const description = data?.description || `Browse ${label} on Kyno — premium digital assets for creators.`;
 
   // Empty categories are thin content. Keep the page reachable (it's linked in
   // the nav for when products land) but keep it out of the index until it has
@@ -32,12 +33,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const isEmpty = !products.some((p) => p.category === cat);
 
   return {
-    title: cat,
+    title: label,
     description,
     alternates: { canonical: `${SITE_URL}/categories/${slug}` },
     ...(isEmpty ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
-      title: `${cat} — Kyno`,
+      title: `${label} — Kyno`,
       description,
       type: "website",
       images: [{ url: `${SITE_URL}/og-default.png`, width: 1200, height: 630 }],

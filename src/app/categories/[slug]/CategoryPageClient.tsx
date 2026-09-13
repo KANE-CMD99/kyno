@@ -6,6 +6,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import SearchBar from "@/components/SearchBar";
+import { categoryFull } from "@/data/site";
 
 interface SiteProduct {
   id: string; name: string; category: string; price: string;
@@ -47,7 +48,7 @@ export default function CategoryPageClient({ slug, category, categoryData, produ
             <p className="text-sm text-neutral-400">
               <Link href="/" className="hover:text-neutral-600 transition-colors">Home</Link>
               <span className="mx-2">/</span>
-              <span className="text-neutral-900">{category}</span>
+              <span className="text-neutral-900">{categoryFull(category)}</span>
             </p>
           </div>
         </div>
@@ -56,7 +57,7 @@ export default function CategoryPageClient({ slug, category, categoryData, produ
           <div className="mx-auto max-w-7xl text-center">
             <span className="text-5xl">{categoryData?.emoji}</span>
             <h1 className="mt-4 text-3xl font-bold text-neutral-900 md:text-4xl">
-              {category}
+              {categoryFull(category)}
             </h1>
             <p className="mx-auto mt-3 max-w-lg text-neutral-500">
               {categoryData?.description}

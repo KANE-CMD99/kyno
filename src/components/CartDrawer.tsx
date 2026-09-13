@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart, type CartItem } from "./CartContext";
 import { useLang } from "./LangContext";
 import { useCurrency } from "./CurrencyContext";
+import { categoryFull } from "@/data/site";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -140,7 +141,7 @@ function CartItemRow({
       </div>
       <div className="flex-1 min-w-0">
         <h4 className="text-sm font-semibold text-neutral-900 truncate">{item.name}</h4>
-        <p className="text-xs text-neutral-500">{item.category}</p>
+        <p className="text-xs text-neutral-500">{categoryFull(item.category)}</p>
         <div className="mt-1.5 flex items-center gap-3">
           <div className="flex items-center rounded-md border border-neutral-300">
             <button

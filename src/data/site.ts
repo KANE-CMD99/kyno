@@ -39,31 +39,53 @@ export const navLinks: NavLink[] = [
   { label: "Contact", href: "/contact" },
 ];
 
+/**
+ * Display names for the internal category values stored on products.
+ * The values themselves ("Photos", "Fonts", "Templates") are what the data,
+ * filters, admin dropdowns and URLs use — only the labels shown to visitors
+ * are overridden here, so nothing has to be migrated.
+ */
+export const CATEGORY_DISPLAY: Record<string, { full: string; short: string }> = {
+  Photos: { full: "Travel Guides & Photos", short: "Travel & Photos" },
+  Fonts: { full: "Font Collection", short: "Font Collection" },
+  Templates: { full: "Template Collection", short: "Template Collection" },
+};
+
+/** Full display name — for page headings, footer links and meta titles. */
+export function categoryFull(value: string): string {
+  return CATEGORY_DISPLAY[value]?.full ?? value;
+}
+
+/** Short display name — for the tight category pill row in the nav. */
+export function categoryShort(value: string): string {
+  return CATEGORY_DISPLAY[value]?.short ?? value;
+}
+
 export const categoryPills: NavLink[] = [
-  { label: "Photos", href: "/categories/photos" },
-  { label: "Fonts", href: "/categories/fonts" },
-  { label: "Templates", href: "/categories/templates" },
+  { label: categoryShort("Photos"), href: "/categories/photos" },
+  { label: categoryShort("Fonts"), href: "/categories/fonts" },
+  { label: categoryShort("Templates"), href: "/categories/templates" },
   { label: "Free", href: "/categories/free" },
 ];
 
 export const categories: CategoryItem[] = [
   {
     id: "photos",
-    title: "Stock Photos",
-    description: "High-resolution photo presets and image collections for your projects.",
+    title: categoryFull("Photos"),
+    description: "Travel guides and high-resolution photo collections for your projects.",
     emoji: String.fromCodePoint(0x1F4F7),
     href: "#",
   },
   {
     id: "fonts",
-    title: "Fonts",
+    title: categoryFull("Fonts"),
     description: "Curated typefaces and font families for distinctive design.",
     emoji: String.fromCodePoint(0x1F524),
     href: "#",
   },
   {
     id: "templates",
-    title: "Templates",
+    title: categoryFull("Templates"),
     description: "Premium website, UI & design templates to accelerate your workflow.",
     emoji: String.fromCodePoint(0x1F4D0),
     href: "#",
@@ -127,9 +149,9 @@ export const footerColumns = [
   {
     title: "Products",
     links: [
-      { label: "Photos", href: "/categories/photos" },
-      { label: "Fonts", href: "/categories/fonts" },
-      { label: "Templates", href: "/categories/templates" },
+      { label: categoryFull("Photos"), href: "/categories/photos" },
+      { label: categoryFull("Fonts"), href: "/categories/fonts" },
+      { label: categoryFull("Templates"), href: "/categories/templates" },
       { label: "Free Downloads", href: "/free-downloads" },
     ],
   },
