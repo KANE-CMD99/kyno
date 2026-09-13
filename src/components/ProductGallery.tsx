@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface Props {
   images: string[];
@@ -38,10 +39,13 @@ export default function ProductGallery({ images, name }: Props) {
         aria-label="Zoom image"
         className="group relative aspect-[4/3] overflow-hidden rounded-lg sm:rounded-xl bg-neutral-100"
       >
-        <img
+        <Image
           src={current}
           alt={`${name} — preview ${active + 1}`}
-          className="h-full w-full object-cover"
+          fill
+          sizes="(max-width: 1024px) 100vw, 600px"
+          priority
+          className="object-cover"
         />
         <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -65,7 +69,7 @@ export default function ProductGallery({ images, name }: Props) {
                   : "border-transparent opacity-70 hover:opacity-100 hover:border-neutral-300"
               }`}
             >
-              <img src={img} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+              <Image src={img} alt="" fill sizes="96px" className="object-cover" />
             </button>
           ))}
         </div>

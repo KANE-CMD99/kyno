@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useCart } from "./CartContext";
 import { useCurrency } from "./CurrencyContext";
 import type { ProductItem } from "@/data/site";
@@ -51,13 +52,19 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       {/* Image / Placeholder — wraps in a Link to product detail */}
       <a href={`/products/${product.id}`} target="_blank" rel="noopener noreferrer" className="block cursor-pointer">
         <div className="relative aspect-[3/2] overflow-hidden rounded-lg bg-neutral-100">
-          <div className="flex h-full items-center justify-center text-5xl">
-            {product.thumbnail && (product.thumbnail.startsWith("/") || product.thumbnail.startsWith("http")) ? (
-              <img src={product.thumbnail} alt={product.name} loading="lazy" decoding="async" className="h-full w-full object-cover" />
-            ) : (
-              product.thumbnail ?? emoji
-            )}
-          </div>
+          {product.thumbnail && (product.thumbnail.startsWith("/") || product.thumbnail.startsWith("http")) ? (
+            <Image
+              src={product.thumbnail}
+              alt={product.name}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
+              className="object-cover"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-5xl">
+              {product.thumbnail ?? emoji}
+            </div>
+          )}
 
           {/* Hover overlay — "View Details" */}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-neutral-900/0 transition-colors group-hover:bg-neutral-900/10">

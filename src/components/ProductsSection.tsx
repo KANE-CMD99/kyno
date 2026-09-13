@@ -1,27 +1,25 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
 import AnimatedSection from "./AnimatedSection";
 import SearchBar from "./SearchBar";
 import { categoryFull } from "@/data/site";
 
-interface SiteProduct {
+export interface SiteProduct {
   id: string; name: string; category: string; price: string;
   originalPrice?: string; creator: string; thumbnail?: string;
 }
 
-export default function ProductsSection() {
-  const [products, setProducts] = useState<SiteProduct[]>([]);
+/**
+ * Products are rendered on the server and passed in, so the storefront grid is
+ * in the initial HTML instead of appearing only after a client fetch.
+ * Search and sort still run in the browser.
+ */
+export default function ProductsSection({ initialProducts }: { initialProducts: SiteProduct[] }) {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("default");
-
-  useEffect(() => {
-    fetch("/api/products")
-      .then((r) => r.json())
-      .then((d) => setProducts(d.products || []))
-      .catch(() => setProducts([]));
-  }, []);
+  const products = initialProducts;
 
   const filtered = useMemo(() => {
     let result = products;

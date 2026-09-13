@@ -7,6 +7,7 @@ import { useLang } from "@/components/LangContext";
 import { useCurrency } from "@/components/CurrencyContext";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import CurrencyNote from "@/components/CurrencyNote";
 
 export default function CheckoutPage() {
   const { items, subtotal, itemCount, hydrated } = useCart();
@@ -114,6 +115,7 @@ export default function CheckoutPage() {
                 <p className="mt-2 text-xs text-neutral-400">
                   Taxes calculated at checkout based on your location.
                 </p>
+                <CurrencyNote className="mt-1" />
               </div>
             </div>
 

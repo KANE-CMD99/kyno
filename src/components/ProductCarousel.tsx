@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { useCurrency } from "./CurrencyContext";
 
 const categoryEmoji: Record<string, string> = {
@@ -72,13 +73,19 @@ export default function ProductCarousel() {
             >
               <Link href={`/products/${product.id}`} target="_blank" rel="noopener noreferrer" className="block">
                 <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100">
-                  <div className="flex h-full items-center justify-center text-6xl transition-transform group-hover:scale-110">
-                    {product.thumbnail && (product.thumbnail.startsWith("/") || product.thumbnail.startsWith("http")) ? (
-                      <img src={product.thumbnail} alt={product.name} className="h-full w-full object-cover" />
-                    ) : (
-                      product.thumbnail ?? (categoryEmoji[product.category] || String.fromCodePoint(0x1F4E6))
-                    )}
-                  </div>
+                  {product.thumbnail && (product.thumbnail.startsWith("/") || product.thumbnail.startsWith("http")) ? (
+                    <Image
+                      src={product.thumbnail}
+                      alt={product.name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+                      className="object-cover transition-transform group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-6xl">
+                      {product.thumbnail ?? (categoryEmoji[product.category] || String.fromCodePoint(0x1F4E6))}
+                    </div>
+                  )}
 
                   {/* Hover overlay */}
                   <div className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-neutral-900/60 to-transparent p-5 opacity-0 transition-opacity group-hover:opacity-100">

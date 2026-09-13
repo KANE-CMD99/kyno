@@ -12,6 +12,7 @@ import FreeDownloadForm from "@/components/FreeDownloadForm";
 import MobileBuyBar from "@/components/MobileBuyBar";
 import AddToCartButton from "@/components/AddToCartButton";
 import PriceDisplay from "@/components/PriceDisplay";
+import CurrencyNote from "@/components/CurrencyNote";
 import ProductComments from "@/components/ProductComments";
 import ProductStructuredData from "@/components/ProductStructuredData";
 
@@ -148,6 +149,7 @@ export default async function ProductPage({ params }: PageProps) {
                   originalClassName="text-lg text-neutral-400 line-through"
                 />
               </div>
+              <CurrencyNote className="mt-1.5" />
 
               {/* CTA */}
               <div className="mt-5">

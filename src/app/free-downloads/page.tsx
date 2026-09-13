@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
@@ -133,8 +134,8 @@ export default function FreeDownloadsPage() {
                       className="rounded-xl border border-neutral-200 bg-white overflow-hidden transition-shadow hover:shadow-md"
                     >
                       {item.thumbnail ? (
-                        <Link href={`/products/${item.id}`} className="block">
-                          <img src={item.thumbnail} alt={item.name} loading="lazy" decoding="async" className="w-full aspect-[3/2] object-cover" />
+                        <Link href={`/products/${item.id}`} className="relative block aspect-[3/2]">
+                          <Image src={item.thumbnail} alt={item.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px" className="object-cover" />
                         </Link>
                       ) : (
                         <div className="w-full aspect-[3/2] bg-neutral-100 flex items-center justify-center">
