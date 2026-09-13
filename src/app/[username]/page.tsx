@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getCreatorByUsername, getCreators } from "@/db/creators";
 import { getAllProducts } from "@/db/products-store";
 import Nav from "@/components/Nav";
@@ -8,6 +9,24 @@ import ProductCard from "@/components/ProductCard";
 
 interface PageProps {
   params: Promise<{ username: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { username } = await params;
+  const creator = await getCreatorByUsername(username.toLowerCase());
+  if (!creator) return { title: "Not Found" };
+  const name = creator.englishName || creator.name;
+  return {
+    title: `${name} — Creator`,
+    description: `Browse digital products by ${name} on Kyno — templates, fonts and design assets, delivered instantly.`,
+    alternates: { canonical: `/${creator.username}` },
+    openGraph: {
+      title: `${name} — Kyno`,
+      description: `Browse digital products by ${name} on Kyno.`,
+      type: "profile",
+      images: [{ url: "/og-default.png", width: 1200, height: 630 }],
+    },
+  };
 }
 
 export async function generateStaticParams() {

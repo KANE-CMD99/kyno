@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getPublishedPosts, getPostBySlug } from "@/db/blog-posts";
 import { getCreators } from "@/db/creators";
+import { metaDescription } from "@/lib/seo";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import "../markdown.css";
@@ -25,16 +26,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = await getPostBySlug(slug);
   if (!post || post.status !== "published") return { title: "Not Found" };
   const url = `${SITE_URL}/blog/${post.slug}`;
+  const image = post.coverImage ? `${SITE_URL}${post.coverImage}` : `${SITE_URL}/og-default.png`;
+  const description = metaDescription(post.excerpt || post.content);
   return {
     title: post.title,
-    description: post.excerpt.slice(0, 160),
+    description,
     alternates: { canonical: url },
     openGraph: {
       title: post.title,
-      description: post.excerpt.slice(0, 160),
+      description,
       type: "article",
       url,
-      ...(post.coverImage ? { images: [{ url: `${SITE_URL}${post.coverImage}`, width: 1200, height: 630 }] } : {}),
+      images: [{ url: image, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description,
+      images: [image],
     },
   };
 }

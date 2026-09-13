@@ -7,7 +7,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin/", "/api/"],
+      // No trailing slash on /admin — "/admin/" does not match the bare
+      // /admin path, which left the admin entry point crawlable.
+      disallow: ["/admin", "/api/", "/login", "/checkout", "/orders", "/creator"],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { SITE } from "@/lib/site-config";
+
+export const metadata: Metadata = {
+  title: "License",
+  description:
+    "What you can and cannot do with a Kyno product — personal and commercial use, unlimited projects, no resale of the files.",
+  alternates: { canonical: "/license" },
+};
 
 export default function LicensePage() {
   return (

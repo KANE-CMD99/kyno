@@ -51,6 +51,9 @@ export default function ProductCard({ product, index }: ProductCardProps) {
     >
       {/* Image / Placeholder — wraps in a Link to product detail */}
       <a href={`/products/${product.id}`} target="_blank" rel="noopener noreferrer" className="block cursor-pointer">
+        {/* Gives the link a descriptive anchor text for crawlers and screen
+            readers; the visible design stays "View Details" on hover. */}
+        <span className="sr-only">{product.name}</span>
         <div className="relative aspect-[3/2] overflow-hidden rounded-lg bg-neutral-100">
           {product.thumbnail && (product.thumbnail.startsWith("/") || product.thumbnail.startsWith("http")) ? (
             <Image

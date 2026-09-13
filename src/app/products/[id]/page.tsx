@@ -2,7 +2,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getProductDetail, getRelatedProducts } from "@/data/product-detail";
+import { getAllProducts } from "@/db/products-store";
 import { categoryFull } from "@/data/site";
+import { metaDescription } from "@/lib/seo";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -20,33 +22,47 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+// Prerender the catalogue (ISR). Without this the route streams, which lands
+// generateMetadata's <title>/description/og tags in <body> rather than <head> —
+// fine for Googlebot (it runs JS) but invisible to social crawlers like
+// Facebook, X, LinkedIn and Slack, which do not.
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const products = await getAllProducts().catch(() => []);
+  return products.map((p) => ({ id: p.id }));
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const detail = await getProductDetail(id);
   if (!detail) return { title: "Not Found" };
-  const url = `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"}/products/${id}`;
-  const imageUrl = detail.previewImages?.[0]?.startsWith("http")
-    ? detail.previewImages[0]
-    : detail.previewImages?.[0]
-      ? `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"}${detail.previewImages[0]}`
-      : undefined;
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
+  const url = `${site}/products/${id}`;
+  const first = detail.previewImages?.[0];
+  const imageUrl = first ? (first.startsWith("http") ? first : `${site}${first}`) : `${site}/og-default.png`;
+  const description = metaDescription(detail.description);
 
   return {
-    title: `${detail.name} — $${detail.price}`,
-    description: detail.description.slice(0, 160),
+    // No price in the title — the SERP would keep showing a stale figure after
+    // a price change, and the price is already in the snippet/price meta.
+    title: `${detail.name} — Kyno`,
+    description,
     alternates: { canonical: url },
     openGraph: {
       title: `${detail.name} — Kyno`,
-      description: detail.description.slice(0, 160),
-      type: "article",
+      description,
+      // "website", not "article" — a product page is not editorial content.
+      // Next's OpenGraph type union doesn't include OG's "product" type.
+      type: "website",
       url,
-      ...(imageUrl ? { images: [{ url: imageUrl, width: 1200, height: 630 }] } : {}),
+      images: [{ url: imageUrl, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title: detail.name,
-      description: detail.description.slice(0, 160),
-      ...(imageUrl ? { images: [imageUrl] } : {}),
+      description,
+      images: [imageUrl],
     },
   };
 }
@@ -71,6 +87,8 @@ export default async function ProductPage({ params }: PageProps) {
         price={detail.price}
         category={detail.category}
         productUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"}/products/${detail.id}`}
+        categoryLabel={categoryFull(detail.category)}
+        categoryUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"}/categories/${detail.category.toLowerCase()}`}
       />
       <Nav />
       <main className="bg-white pt-[105px]">

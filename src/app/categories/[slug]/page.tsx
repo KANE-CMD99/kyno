@@ -18,6 +18,14 @@ function slugToCategory(slug: string): string {
   return CATEGORY_MAP[slug] ?? slug;
 }
 
+// Prerender each category (ISR) so generateMetadata's tags land in <head>.
+// Category pages stream otherwise, and social crawlers don't run JS.
+export const revalidate = 3600;
+
+export function generateStaticParams() {
+  return Object.keys(CATEGORY_MAP).map((slug) => ({ slug }));
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   if (!isValidSlug(slug)) return { title: "Not Found" };

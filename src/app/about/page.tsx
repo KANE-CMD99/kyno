@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Kyno is a small studio selling ready-made resume templates, posters and design assets — pay once, own forever, from $1.",
+  alternates: { canonical: "/about" },
+};
 
 export default function AboutPage() {
   return (

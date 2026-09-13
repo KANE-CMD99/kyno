@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { SITE } from "@/lib/site-config";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "What data Kyno collects, why we collect it, and how to exercise your rights — GDPR and CCPA information included.",
+  alternates: { canonical: "/privacy" },
+};
 
 export default function PrivacyPage() {
   return (

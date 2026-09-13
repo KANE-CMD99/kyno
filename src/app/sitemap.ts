@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { getAllProducts } from "@/db/products-store";
 import { getPublishedPosts } from "@/db/blog-posts";
+import { getCreators } from "@/db/creators";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
 
@@ -17,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.6 },
     { url: `${SITE_URL}/products`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.9 },
     { url: `${SITE_URL}/contact`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
+    { url: `${SITE_URL}/free-downloads`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
     { url: `${SITE_URL}/license`, lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.3 },
     { url: `${SITE_URL}/terms`, lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.3 },
     { url: `${SITE_URL}/privacy`, lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.3 },
@@ -51,10 +53,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getPublishedPosts().catch(() => []);
   const blogRoutes = posts.map((p) => ({
     url: `${SITE_URL}/blog/${p.slug}`,
-    lastModified: new Date(),
+    // Real publish date, so lastmod carries actual change information.
+    lastModified: p.publishedAt ? new Date(p.publishedAt) : new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.7,
   }));
 
-  return [...baseRoutes, blogListRoute, ...categoryRoutes, ...productRoutes, ...blogRoutes];
+  const creators = await getCreators().catch(() => []);
+  const creatorRoutes = creators.map((c) => ({
+    url: `${SITE_URL}/${c.username}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
+  }));
+
+  return [...baseRoutes, blogListRoute, ...categoryRoutes, ...productRoutes, ...blogRoutes, ...creatorRoutes];
 }

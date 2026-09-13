@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { SITE } from "@/lib/site-config";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description:
+    "The terms that apply when you buy from Kyno — digital delivery, payment, refunds and acceptable use.",
+  alternates: { canonical: "/terms" },
+};
 
 export default function TermsPage() {
   return (
