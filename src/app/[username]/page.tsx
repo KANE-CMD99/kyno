@@ -45,8 +45,12 @@ export default async function CreatorProfilePage({ params }: PageProps) {
               <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-neutral-600">{creator.bio}</p>
             )}
             <div className="mt-4 flex items-center justify-center gap-6 text-sm text-neutral-500">
-              <span>{products.length} products</span>
-              <span>{creator.totalSales} sales</span>
+              <span>{products.length} {products.length === 1 ? "product" : "products"}</span>
+              {/* Only show a sales figure once there is one — "0 sales"
+                  advertised on a storefront only signals nobody buys here. */}
+              {creator.totalSales > 0 && (
+                <span>{creator.totalSales} sales</span>
+              )}
             </div>
           </div>
         </section>
