@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { CONSENT_EVENT } from "./AdSenseScript";
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
@@ -13,6 +14,8 @@ export default function CookieBanner() {
   const accept = () => {
     document.cookie = "cookie-consent=accepted; max-age=" + 365 * 24 * 60 * 60 + "; path=/";
     setVisible(false);
+    // Lets AdSenseScript (and anything else consent-gated) load without a reload.
+    window.dispatchEvent(new Event(CONSENT_EVENT));
   };
 
   if (!visible) return null;

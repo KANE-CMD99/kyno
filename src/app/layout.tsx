@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ClientLayout from "@/components/ClientLayout";
 import CookieBanner from "@/components/CookieBanner";
+import AdSenseScript from "@/components/AdSenseScript";
 import OrganizationStructuredData from "@/components/OrganizationStructuredData";
 import "./globals.css";
 
@@ -8,6 +9,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"),
   icons: {
     icon: "/favicon.svg",
+  },
+  // AdSense serves this tag to verify site ownership. Keeping it here means
+  // verification does not depend on the (consent-gated) ad script loading.
+  other: {
+    "google-adsense-account": "ca-pub-9346189548515611",
   },
   title: {
     default: "Kyno — Buy Once, Own Forever | Resume Templates, Posters & Design Assets",
@@ -42,14 +48,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9346189548515611"
-          crossOrigin="anonymous"
-        />
-      </head>
       <body className="antialiased">
+        <AdSenseScript />
         <OrganizationStructuredData />
         <a
           href="#main-content"
