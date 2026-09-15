@@ -361,7 +361,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ```tsx
 import Link from "next/link";
-import { SITE, storeUrl } from "@/lib/site";
+import { storeUrl } from "@/lib/site";
 
 export function Nav() {
   return (
