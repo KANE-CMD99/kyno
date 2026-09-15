@@ -4709,7 +4709,21 @@ Two deliberate decisions were also reversed on evidence: the generator's catalog
 
 ### Plan 2 must-dos
 
-1. **Read every unexercised rationale template before growing the catalog.** With four templates per recipe and 1–3 pairings emitted per recipe, `serif-interface`, `display-neutral`, `script-accent` and `serif-with-serif` leave **7 authored templates that have never rendered and therefore never been read by a human**. The lint cannot surface them — it skips recipes emitting fewer pairings than they have templates. They go live for the first time when the catalog grows, and the diversity check starts enforcing all four at once. Found independently twice.
+1. **Fix the article before the catalog grows — this is now the highest-priority item, and it is a real defect, not a precaution.** Done as part of closing out this plan: all 20 templates were rendered against real font pairs and read. Seven had never rendered on the shipped site (`serif-interface[3]`, `display-neutral[3]`, `serif-with-serif[1,2,3]`, `script-accent[3]`), matching the predicted count. Reading them found this:
+
+   **Three templates hardcode the indefinite article and break on a vowel-initial `trait`:**
+
+   | Template | Renders as | Fires when |
+   |---|---|---|
+   | `display-neutral[3]` — `"A {A_trait} headline over a quiet body: …"` | **"A angular technical grotesque headline…"** | the recipe reaches **4 pairings** — `space-grotesk`'s trait is `"angular technical grotesque"`, so this is wrong on its **first** render |
+   | `didone-humanist[0]` — `"…{B} answers with a {B_trait} body…"` | **"…answers with a un[fussy] geometric sans body"** | `work-sans` (`"unfussy geometric sans"`) pairs with `playfair-display` or `lora` on template 0 |
+   | `serif-interface[1]` — `"…the {A_trait} headline against a {B_trait} body."` | **"…against a unfussy geometric sans body"** | same trait, template 1 |
+
+   **All 16 shipped rationales are correct today** — every current trait reaching an article slot is consonant-initial. So nothing on the live site is wrong; this is latent and becomes visible the moment the catalog grows. The lint cannot catch it: it checks length, placeholders, and font names, and `"A angular"` passes all three.
+
+   Fix by rewording those three templates so no article precedes a `{trait}` placeholder (preferred) or by computing the article in `renderRationale`. **Rewording changes shipped copy** for the pairings that already use these templates, so it belongs to a reviewed change, not a quiet edit — which is why it was not applied to the frozen branch.
+
+   The original reason this item exists: with four templates per recipe and 1–3 pairings emitted per recipe, four recipes leave authored strings that never render, and the lint deliberately skips recipes emitting fewer pairings than they have templates. They go live for the first time when the catalog grows, and the diversity check starts enforcing all four at once.
 2. **Seed a monospace face** before adding any recipe declaring `monospace` — the category exists in the type with zero fonts behind it.
 3. **Adding a font is not enough to reach it.** `StoreModule`'s mapping and the recipe tag vocabulary both gate reachability; a pairing whose styles map to nothing renders no funnel link by design.
 4. **A new dynamic collection needs `assert-pages`'s `expectations` extended** for existence coverage; the font and link checks will cover it automatically. `STATIC_PAGES` (assert-pages) and `STATIC_PATHS` (sitemap) are two hardcoded copies of the same route list — adding a route means editing both.
