@@ -4675,4 +4675,66 @@ The catalog scale-up (to ~40 fonts, ~170 pairings, ~10 populated styles), the pe
 
 **Deliberately deferred to Plan 2:** the ~40-font catalog, the ~170 pairings, per-page OG images, and the GSC submission. These are content-volume and launch steps, and the spec puts them in phase 2 of the phasing section.
 
-**Known soft spot.** Task 11's `PairingPreview` carries an explicit implementer note to simplify its ref handling; the observable requirement (typed text survives a font change, and is read with `textContent`) is what matters, and Task 19 Step 4 verifies it.
+**Known soft spot.** Task 11's `PairingPreview` carried an implementer note to simplify its ref handling; that was resolved during execution, and the observable requirement (typed text survives a font change, and is read with `textContent`) is verified in Task 19.
+
+---
+
+## As Built — 2026-09-16
+
+**Status: the engine is complete and green.** All 21 tasks executed; Task 7 was merged into Task 6 (see below). 31 commits on `main` in `E:\KYNO\web\kyno-top`, every task individually reviewed and approved, then a whole-branch review and one fix wave.
+
+| Measure | Value |
+|---|---|
+| Fonts in the catalog | 8 |
+| Pairings | 16 (2 hand-written `curated`, 14 generated from 5 recipes) |
+| Style hubs | 8 |
+| Pages exported | 37 (+ `404.html`) |
+| Internal links checked | 662 |
+| Tests | 80 |
+| Lighthouse `/` | 94 / 100 / 100 / 100 |
+| Lighthouse `/pairings/playfair-display-lato` | 96 / 100 / 100 / 100 |
+| Build gates | `lint:data` → `next build` → `assert-pages` → `check-links`, all green |
+
+### What changed from this plan during execution
+
+Three things the plan got wrong, all found by reading built output rather than by any check:
+
+1. **Tailwind never compiled.** Task 1 declared `@tailwindcss/postcss` but nobody wrote `postcss.config.mjs`, so the emitted CSS was uncompiled source and *every* utility class in all 21 tasks would have produced no styling — with a green build. Caught by the Task 1 implementer; fixed in Task 2.
+2. **The card grids loaded no fonts.** `PairingCard` declared `font-family` inline while the pages emitted no `@font-face`, so every card rendered in Georgia. The pages' own copy claimed the cards were set in their own faces. It shipped twice and cost three review rounds.
+3. **The store funnel matched a vocabulary the data never produces.** `StoreModule`'s keywords included `portfolio`, `landing`, `poster`, `photo` and others that `useCases` (which equals `recipe.styles`) can never contain — 10 of 12 unreachable, one whole category branch dead, and 4 of 16 pairing pages rendering no funnel link at all. Found by the whole-branch review, because no single-task review could see both halves.
+
+**The pattern, because it will recur.** All three have one shape: *a component or config declares a dependency that a different file must satisfy* — a PostCSS plugin and its config, a `font-family` and its stylesheet, a keyword list and the vocabulary that fills it. Each half is locally correct; nothing errors; the build stays green. **The check that catches it is never a unit test — it is reading the built artifact.** Task 18's `assert-pages` now mechanises the font case; the other two are recorded here so the next person looks for the third.
+
+Two deliberate decisions were also reversed on evidence: the generator's catalog stylesheet now loads eagerly (deferring it saved no font bytes and left 14 of 16 cards in fallback faces), and shuffle now excludes the pairing already on screen (a control that visibly does nothing reads as broken).
+
+### Plan 2 must-dos
+
+1. **Read every unexercised rationale template before growing the catalog.** With four templates per recipe and 1–3 pairings emitted per recipe, `serif-interface`, `display-neutral`, `script-accent` and `serif-with-serif` leave **7 authored templates that have never rendered and therefore never been read by a human**. The lint cannot surface them — it skips recipes emitting fewer pairings than they have templates. They go live for the first time when the catalog grows, and the diversity check starts enforcing all four at once. Found independently twice.
+2. **Seed a monospace face** before adding any recipe declaring `monospace` — the category exists in the type with zero fonts behind it.
+3. **Adding a font is not enough to reach it.** `StoreModule`'s mapping and the recipe tag vocabulary both gate reachability; a pairing whose styles map to nothing renders no funnel link by design.
+4. **A new dynamic collection needs `assert-pages`'s `expectations` extended** for existence coverage; the font and link checks will cover it automatically. `STATIC_PAGES` (assert-pages) and `STATIC_PATHS` (sitemap) are two hardcoded copies of the same route list — adding a route means editing both.
+5. **`package.json` declares `fonts:fetch` → `scripts/fetch-google-fonts.ts`, which does not exist.** Plan 2 must land that script or delete the entry; a handover repo should not ship a script that fails with "Cannot find module".
+6. **`lintData` should reject a font with `weights: []`** before the catalog is opened to hand-typed entries. Because a page's families share one `css2` URL, one empty-weights font would 400 the whole stylesheet and drop *every* family on that page, not just the bad one. Currently unreachable.
+
+### Still-open minor items (deliberately not fixed)
+
+- `/about`, `/privacy`, `/licenses` declare no `openGraph` at all — the only pages without share metadata.
+- The homepage's canonical renders as `https://www.kyno.top` (Next normalises the root trailing slash away) while the sitemap's root `<loc>` is `https://www.kyno.top/`. **Cosmetic only:** the origin root normalises, so unlike a sub-path this is not two URLs to a crawler.
+- `FontPicker`'s `aria-controls` points at an id that only exists while the popup is open; the listbox has no accessible name of its own; focus returns to the trigger on Escape but falls to `<body>` after an option is chosen.
+- `public/og.png` is a committed binary whose only source is `scripts/generate-og-image.ts`; `next build` does not regenerate it, so a design change needs `npm run og:image` and a commit.
+- `src/lib/stats.ts` is a module whose only export is `pairings.length`; `Pairing.recipe` is written into every page payload and read only by the lint script; `data/recipes.ts` and `data/styles.ts` import types from `src/` while `src/lib/pairings.ts` imports JSON from `data/` — a two-way directory edge worth knowing before Plan 2 restructures.
+- No page emits a `preconnect` to `fonts.gstatic.com`, though the snippet the site tells users to paste does — the 8-family homepage is where it would help most.
+- `PairingPreview.tsx` declares `useRef<HTMLHeadingElement>` for a ref now attached to a `<span>`; it compiles only because the types are structurally compatible.
+- `src/lib/lint.ts`'s comment about the "produced no pairings" message names two causes; `isAcceptablePair` rejection is a third.
+
+### What still needs the user before the site is public
+
+The repository side of deployment is complete. These do not:
+
+1. **Create the Cloudflare Pages project** from the `kyno-top` repo — build command `npm run build`, output `out`, production branch `main`.
+2. **Point `kyno.top`'s nameservers at Cloudflare**, and add both `kyno.top` and `www.kyno.top` as custom domains.
+3. **Add the apex → `www` 301 redirect rule.** Every canonical in this codebase is `www`; there is no fallback in the repo.
+4. **Enable Web Analytics and verify the beacon reaches the live origin.** `/privacy` asserts in the present tense that traffic is measured with cookieless Cloudflare Web Analytics. This is the one deployment step that discharges a *claim* rather than a feature — if it cannot be enabled, soften that sentence the same day rather than leaving the page overstating.
+5. **Submit the sitemap to Search Console as the full `https://www.kyno.top/sitemap.xml`** — the sibling site failed submission twice by submitting a non-`www` form.
+6. Re-run Lighthouse against the live origin. Four insight audits fail under `npx serve` purely because it sends no compression or cache headers; Cloudflare supplies both, so they should clear.
+7. **The GitHub push.** `gh` is authenticated as `KANE-CMD99`; nothing has been pushed. Creating and pushing the private `KANE-CMD99/kyno-top` repo was withheld pending the user's word.
