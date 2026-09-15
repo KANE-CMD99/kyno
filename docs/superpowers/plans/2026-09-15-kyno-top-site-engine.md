@@ -1149,6 +1149,17 @@ git commit -m "feat: pairing recipes, generation, and the shared pair predicate"
 - Modify: `src/lib/lint.ts`
 - Create: `src/lib/lint.test.ts`
 - Create: `scripts/lint-data.ts`
+- Modify: `src/lib/types.ts` (add `rationaleTemplate` to `Pairing`)
+- Modify: `src/lib/generate.ts` (record the template index)
+- Regenerate: `data/pairings.json`
+
+> **Why this task also carries what was originally Task 7.** The template-diversity
+> check is meaningless without the real template index: with the index stubbed, every
+> recipe appears to have used one variant, and any recipe emitting at least as many
+> pairings as it has templates reports a false error. Against the seed catalog that is
+> `didone-humanist` (5 pairings) and `serif-interface` (4) — so the gate would be
+> permanently red on data that is correct. Recording the index is not a separate
+> improvement, it is what makes this task's own deliverable green.
 
 **Interfaces:**
 - Consumes: `isAcceptablePair`, `lintReason`, `ALLOWED_LICENSES` from `src/lib/lint.ts` (Task 5); `data/fonts.json`; `data/pairings.json`.
@@ -1194,6 +1205,7 @@ function pairing(overrides: Partial<Pairing> = {}): Pairing {
     b: "beta-sans",
     recipe: "r",
     rationale: goodRationale,
+    rationaleTemplate: 0,
     useCases: ["editorial"],
     styles: ["editorial"],
     samples: { heading: "h", sub: "s", body: "b" },
@@ -1257,9 +1269,12 @@ describe("lintData", () => {
   });
 
   it("rejects a rationale with an unresolved placeholder", () => {
+    // Must clear the 90-character minimum, or lintReason returns "too short" first
+    // and the placeholder branch is never reached.
     const errors = lintData([serif, sans], [
       pairing({
-        rationale: "Alpha Serif pairs with {B_trait} Beta Sans and the combination reads well in body copy.",
+        rationale:
+          "Alpha Serif sets the headline here while {B_trait} Beta Sans carries the body copy, which is the arrangement this page needs.",
       }),
     ]);
     expect(errors.some((e) => e.includes("unresolved"))).toBe(true);
@@ -1271,12 +1286,44 @@ describe("lintData", () => {
   });
 
   it("requires every template variant to be used when a recipe emits enough pairings", () => {
-    const recipes = [{ id: "r", templates: 2 }];
-    const p1 = pairing({ slug: "one", rationale: "Alpha Serif with Beta Sans keeps the headline loud and the body quiet." });
-    const p2 = pairing({ slug: "two", rationale: "Alpha Serif with Beta Sans keeps the headline loud and the body calm." });
-    // Both use template index 0 → variant 1 never appears.
-    const errors = lintData([serif, sans], [p1, p2], recipes);
+    const shapes = [{ id: "r", templates: 2 }];
+    const p1 = pairing({
+      slug: "one",
+      rationaleTemplate: 0,
+      rationale: "Alpha Serif with Beta Sans keeps the headline loud and the body quiet here.",
+    });
+    const p2 = pairing({
+      slug: "two",
+      rationaleTemplate: 0,
+      rationale: "Alpha Serif with Beta Sans keeps the headline loud and the body settled here.",
+    });
+    const errors = lintData([serif, sans], [p1, p2], shapes);
     expect(errors.some((e) => e.includes("template variants"))).toBe(true);
+  });
+
+  it("accepts a recipe that exercises every template variant", () => {
+    const shapes = [{ id: "r", templates: 2 }];
+    const p1 = pairing({
+      slug: "one",
+      rationaleTemplate: 0,
+      rationale: "Alpha Serif with Beta Sans keeps the headline loud and the body quiet here.",
+    });
+    const p2 = pairing({
+      slug: "two",
+      rationaleTemplate: 1,
+      rationale: "Alpha Serif with Beta Sans keeps the headline loud and the body settled here.",
+    });
+    const errors = lintData([serif, sans], [p1, p2], shapes);
+    expect(errors).toEqual([]);
+  });
+
+  it("rejects a recipe that produced no pairings at all", () => {
+    const shapes = [
+      { id: "r", templates: 1 },
+      { id: "monospace-unmatched", templates: 2 },
+    ];
+    const errors = lintData([serif, sans], [pairing()], shapes);
+    expect(errors.some((e) => e.includes("monospace-unmatched: produced no pairings"))).toBe(true);
   });
 });
 ```
@@ -1356,8 +1403,9 @@ export function lintData(
   // that would otherwise quietly ship near-identical copy.
   if (recipes.length > 0) {
     for (const pairing of pairings) {
+      if (pairing.rationaleTemplate === undefined) continue;
       const used = templateUse.get(pairing.recipe) ?? new Set<number>();
-      used.add(0);
+      used.add(pairing.rationaleTemplate);
       templateUse.set(pairing.recipe, used);
     }
     const counts = new Map<string, number>();
@@ -1390,12 +1438,12 @@ export function lintData(
 export type { Font, Pairing };
 ```
 
-> **Note for the implementer:** in this task the template-variant check is exercised only by the unit test. Task 7's `generate-pairings.ts` change makes it meaningful for real data by recording which template index each pairing used.
+> **Note for the implementer:** the template-variant check reads `pairing.rationaleTemplate`, which this task also introduces (in `types.ts` and `generate.ts`). Curated entries legitimately omit it and are skipped by the check.
 
 - [ ] **Step 4: Run the test to verify it passes**
 
 Run: `npx vitest run src/lib/lint.test.ts`
-Expected: PASS (13 tests).
+Expected: PASS (14 tests).
 
 - [ ] **Step 5: Write `scripts/lint-data.ts`**
 
@@ -1448,7 +1496,16 @@ git commit -m "feat: lint-data gate wired into the build"
 
 ---
 
-## Task 7: Record template indices so the diversity check is real
+## Task 7: MERGED INTO TASK 6 — do not execute
+
+> **This task no longer exists as separate work.** Its three changes — adding
+> `Pairing.rationaleTemplate`, recording it in `generate.ts`, and reading it in
+> `lintData` — and its two tests moved into Task 6, because Task 6's own deliverable
+> (`npm run build` going green for the first time) is **unreachable without them**: the
+> stubbed index makes the diversity check report false errors on `didone-humanist`
+> (5 pairings) and `serif-interface` (4), which clear the `count < templates` skip. The
+> steps below are kept only as a record of where the content went. **Execute Task 6 and
+> Task 8; skip this one.**
 
 **Files:**
 - Modify: `src/lib/types.ts` (add `rationaleTemplate` to `Pairing`)
@@ -1558,8 +1615,9 @@ Replace this block from Task 6:
 ```ts
   if (recipes.length > 0) {
     for (const pairing of pairings) {
+      if (pairing.rationaleTemplate === undefined) continue;
       const used = templateUse.get(pairing.recipe) ?? new Set<number>();
-      used.add(0);
+      used.add(pairing.rationaleTemplate);
       templateUse.set(pairing.recipe, used);
     }
     const counts = new Map<string, number>();
