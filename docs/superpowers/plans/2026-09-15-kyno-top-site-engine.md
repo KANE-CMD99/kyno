@@ -735,7 +735,7 @@ git commit -m "feat: google fonts href and fallback stack helpers"
 - Create: `data/pairings.curated.json`
 - Create: `scripts/generate-pairings.ts`
 - Create: `src/lib/generate.test.ts`
-- Modify: `src/lib/lint.ts` (created here, because generation and validation share `isAcceptablePair`)
+- Create: `src/lib/lint.ts` (created here because generation and validation must share `isAcceptablePair`)
 
 **Interfaces:**
 - Consumes: `Font`, `Pairing`, `Recipe` from `src/lib/types.ts`; `data/fonts.json`.
@@ -1426,9 +1426,10 @@ git commit -m "feat: lint-data gate wired into the build"
 - Modify: `src/lib/types.ts` (add `rationaleTemplate` to `Pairing`)
 - Modify: `src/lib/generate.ts`
 - Modify: `src/lib/lint.ts`
-- Modify: `data/pairings.curated.json`
-- Modify: `scripts/generate-pairings.ts`
+- Regenerate: `data/pairings.json` (rewritten by `npm run pairings:generate`)
 - Modify: `src/lib/lint.test.ts`
+
+`data/pairings.curated.json` is deliberately **not** touched: `rationaleTemplate` is optional, and a hand-written pairing legitimately carries no template index.
 
 **Interfaces:**
 - Consumes: everything from Tasks 5 and 6.
@@ -2047,26 +2048,26 @@ const pairing: Pairing = {
 
 describe("pairingTitle", () => {
   it("names both fonts and the combination", () => {
-    const title = pairingTitle(pairing, a, b);
+    const title = pairingTitle(a, b);
     expect(title).toContain("Playfair Display");
     expect(title).toContain("Lato");
   });
 
   it("carries the brand and fits the 60-character budget", () => {
-    const title = pairingTitle(pairing, a, b);
+    const title = pairingTitle(a, b);
     expect(title.endsWith("| Kyno")).toBe(true);
     expect(title.length).toBeLessThanOrEqual(60);
   });
 
   it("truncates the descriptive part, never the brand", () => {
     const long: Font = { ...a, name: "An Extremely Long Typeface Name That Runs On" };
-    const title = pairingTitle(pairing, long, b);
+    const title = pairingTitle(long, b);
     expect(title.length).toBeLessThanOrEqual(60);
     expect(title.endsWith("| Kyno")).toBe(true);
   });
 
   it("reads 'Playfair Display & Lato — Serif + Sans | Kyno' for the fixture", () => {
-    expect(pairingTitle(pairing, a, b)).toBe("Playfair Display & Lato — Serif + Sans | Kyno");
+    expect(pairingTitle(a, b)).toBe("Playfair Display & Lato — Serif + Sans | Kyno");
   });
 });
 
@@ -2205,7 +2206,7 @@ function categoryLabel(font: Font): string {
   }
 }
 
-export function pairingTitle(pairing: Pairing, a: Font, b: Font): string {
+export function pairingTitle(a: Font, b: Font): string {
   return brandTitle(`${a.name} & ${b.name} — ${categoryLabel(a)} + ${categoryLabel(b)}`);
 }
 
@@ -2627,15 +2628,24 @@ export function FontPicker({
   fonts,
   value,
   onSelect,
+  onOpen,
 }: {
   label: string;
   fonts: Font[];
   value: Font;
   onSelect: (font: Font) => void;
+  /** Called the first time the picker is opened, so the caller can load the catalog. */
+  onOpen?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | FontCategory>("all");
+
+  function toggle() {
+    const next = !open;
+    setOpen(next);
+    if (next) onOpen?.();
+  }
 
   const results = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -2658,7 +2668,7 @@ export function FontPicker({
         type="button"
         aria-expanded={open}
         aria-haspopup="listbox"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={toggle}
         className="flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
       >
         <span className="text-[var(--color-text-muted)]">{label}</span>
@@ -2799,8 +2809,12 @@ export function Generator({ fonts, pairings }: { fonts: Font[]; pairings: Pairin
     setHydrated(true);
   }, [fontBySlug]);
 
-  // Preload every catalog family once so the picker previews real letterforms.
+  // The catalog stylesheet is large (every whitelisted family). It is fetched only
+  // once a picker is opened, so the homepage's own load stays at two families.
+  const [catalogLoaded, setCatalogLoaded] = useState(false);
+
   useEffect(() => {
+    if (!catalogLoaded) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = googleFontsHref(fonts);
@@ -2808,7 +2822,7 @@ export function Generator({ fonts, pairings }: { fonts: Font[]; pairings: Pairin
     return () => {
       document.head.removeChild(link);
     };
-  }, [fonts]);
+  }, [catalogLoaded, fonts]);
 
   // Keep the URL shareable without adding history entries.
   useEffect(() => {
@@ -2846,9 +2860,16 @@ export function Generator({ fonts, pairings }: { fonts: Font[]; pairings: Pairin
           label="Heading"
           fonts={fonts}
           value={heading}
+          onOpen={() => setCatalogLoaded(true)}
           onSelect={(font) => setHeadingSlug(font.slug)}
         />
-        <FontPicker label="Body" fonts={fonts} value={body} onSelect={(font) => setBodySlug(font.slug)} />
+        <FontPicker
+          label="Body"
+          fonts={fonts}
+          value={body}
+          onOpen={() => setCatalogLoaded(true)}
+          onSelect={(font) => setBodySlug(font.slug)}
+        />
         <button
           type="button"
           onClick={shuffle}
@@ -3196,7 +3217,7 @@ export async function generateMetadata({
   const body = getFont(pairing.b);
   if (!heading || !body) return {};
 
-  const title = pairingTitle(pairing, heading, body);
+  const title = pairingTitle(heading, body);
   const description = pairingDescription(pairing);
   const path = `/pairings/${pairing.slug}`;
 
