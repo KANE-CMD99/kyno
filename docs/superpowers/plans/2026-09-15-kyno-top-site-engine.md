@@ -1366,6 +1366,14 @@ export function lintData(
     }
     for (const recipe of recipes) {
       const count = counts.get(recipe.id) ?? 0;
+      // A recipe whose matchers fit no font in the catalog is silent otherwise: it
+      // emits nothing, so every per-pairing check below has nothing to inspect.
+      if (count === 0) {
+        errors.push(
+          `recipe ${recipe.id}: produced no pairings — its category/tag matchers match no font in the catalog`,
+        );
+        continue;
+      }
       if (count < recipe.templates) continue;
       const used = templateUse.get(recipe.id) ?? new Set<number>();
       if (used.size < recipe.templates) {
@@ -1387,7 +1395,7 @@ export type { Font, Pairing };
 - [ ] **Step 4: Run the test to verify it passes**
 
 Run: `npx vitest run src/lib/lint.test.ts`
-Expected: PASS (12 tests).
+Expected: PASS (13 tests).
 
 - [ ] **Step 5: Write `scripts/lint-data.ts`**
 
@@ -1474,6 +1482,15 @@ In `src/lib/lint.test.ts`, replace the last test (`"requires every template vari
     });
     const errors = lintData([serif, sans], [p1, p2], shapes);
     expect(errors.some((e) => e.includes("template variants"))).toBe(true);
+  });
+
+  it("rejects a recipe that produced no pairings at all", () => {
+    const shapes = [
+      { id: "r", templates: 1 },
+      { id: "monospace-unmatched", templates: 2 },
+    ];
+    const errors = lintData([serif, sans], [pairing()], shapes);
+    expect(errors.some((e) => e.includes("monospace-unmatched: produced no pairings"))).toBe(true);
   });
 
   it("accepts a recipe that exercises every template variant", () => {
@@ -1564,7 +1581,7 @@ with:
 - [ ] **Step 6: Run the test to verify it passes**
 
 Run: `npx vitest run src/lib/lint.test.ts`
-Expected: PASS (13 tests).
+Expected: PASS (14 tests).
 
 - [ ] **Step 7: Regenerate and re-lint the real data**
 
