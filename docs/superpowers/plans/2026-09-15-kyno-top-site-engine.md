@@ -820,7 +820,7 @@ export const recipes: Recipe[] = [
     rationaleTemplates: [
       "{A} gives the page a {A_trait} voice at heading sizes, and {B} takes over for interface copy without arguing with it.",
       "Use {A} where the text is doing persuasion and {B} where it is doing work — the {A_trait} headline against a {B_trait} body.",
-      "The pairing works because the two faces never compete: {A} is the {A_trait} of the page, and {B} is the neutral {B_trait} that lets it stand out.",
+      "The pairing works because the two faces never compete: {A} is the {A_trait} of the page, and {B} is the {B_trait} that lets it stand out.",
       "{A} for headlines, {B} for everything that has to stay out of the way. A {A_trait} opening line over a {B_trait} paragraph.",
     ],
     styles: ["editorial", "startup", "minimal"],
@@ -832,7 +832,7 @@ export const recipes: Recipe[] = [
     rationaleTemplates: [
       "{A} is too loud to set a paragraph in, which is exactly why it works as a headline — with {B} doing the {B_trait} reading underneath.",
       "Let {A} handle the {A_trait} first impression and {B} handle the reading. Neither face is asked to do the other's job.",
-      "{A}'s {A_trait} forms give the page a hard edge; {B}'s neutral body keeps it usable at length.",
+      "{A}'s {A_trait} forms give the page a hard edge; {B}'s body keeps it usable at length.",
       "A {A_trait} headline over a quiet body: {A} at the top, {B} for the rest, and no third face needed.",
     ],
     styles: ["startup", "bold"],
