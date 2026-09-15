@@ -2940,10 +2940,6 @@ import type { Font, Pairing } from "@/lib/types";
 
 export function Generator({ fonts, pairings }: { fonts: Font[]; pairings: Pairing[] }) {
   const fontBySlug = useMemo(() => new Map(fonts.map((font) => [font.slug, font])), [fonts]);
-  const weights = useMemo(
-    () => pairings.map((pairing) => weightForPairing(pairing, fontBySlug)),
-    [pairings, fontBySlug],
-  );
 
   const initial = pairings[0];
   const [headingSlug, setHeadingSlug] = useState(initial.a);
@@ -2990,7 +2986,14 @@ export function Generator({ fonts, pairings }: { fonts: Font[]; pairings: Pairin
   );
 
   function shuffle() {
-    const next = pickWeighted(pairings, weights);
+    // Exclude the pairing already on screen: a control that visibly does nothing reads
+    // as broken. Weights must be computed for the pool actually drawn from.
+    const candidates = pairings.filter(
+      (pairing) => pairing.a !== headingSlug || pairing.b !== bodySlug,
+    );
+    const pool = candidates.length > 0 ? candidates : pairings;
+    const weights = pool.map((pairing) => weightForPairing(pairing, fontBySlug));
+    const next = pickWeighted(pool, weights);
     if (!next) return;
     setHeadingSlug(next.a);
     setBodySlug(next.b);
@@ -3128,7 +3131,7 @@ Run: `npx next build && npx next dev`
 Check each of these, in the browser:
 - The headline, subtitle, and body are all editable; typing replaces the sample text.
 - Changing the Heading font updates the headline face and **keeps your typed text**.
-- Shuffle changes both fonts, keeps your typed text, and the line under the preview updates.
+- Shuffle always lands on a different pairing (one of its two fonts may repeat — requiring both to differ would exclude valid pairings), keeps your typed text, and the line under the preview updates.
 - The URL becomes `/?h=<slug>&b=<slug>`; pasting that URL into a fresh tab restores the pairing.
 - "View full pairing page →" appears for a checked pairing and is absent otherwise.
 - The card wall renders, each card in its own faces.
@@ -4401,6 +4404,7 @@ Typical fixes, in the order they usually matter:
 - A contrast failure → lighten `--color-text-muted` (currently `#6b6b75`) until it clears 4.5:1 against `--color-surface`.
 - A render-blocking stylesheet → confirm the `<link>` for content fonts stays inside the page rather than the layout.
 - A heading order skip → make sure each page has exactly one `h1` and no level is skipped.
+- **The generator's deep-link double font load — a known issue this task owns.** Measured at the end of Task 13: `/` requests one two-family stylesheet, but `/?h=lora&b=lato` requests **four** families. The prerendered HTML bakes `PairingPreview`'s stylesheet for `pairings[0]`, and after hydration the restored pair's stylesheet is added alongside it rather than replacing it, so both persist. This matters because Task 15's font pages link into the generator with exactly those params — the funnel's main entry point is the one carrying the doubled load. Fix it here, not in Task 13: any fix touches `PairingPreview`, whose frozen-text invariant must be preserved, and this task has the Lighthouse gate that can measure whether the fix worked. A workable direction is for the preview to own a single managed `<link>` element it updates in place rather than rendering a new one per href, while keeping the server-rendered stylesheet for the non-editable (pairing page) case.
 
 - [ ] **Step 4: Verify the keyboard pass**
 
