@@ -3,7 +3,7 @@ import { getAllProducts } from "@/db/products-store";
 import { getPublishedPosts } from "@/db/blog-posts";
 import { getCreators } from "@/db/creators";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com";
 
 const CATEGORY_SLUGS: { slug: string; category: string }[] = [
   { slug: "photos", category: "Photos" },

@@ -10,7 +10,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import "../markdown.css";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com";
 
 interface PageProps {
   params: Promise<{ slug: string }>;

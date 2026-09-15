@@ -1,4 +1,4 @@
-const SITE_URL = "https://www.kyno.ltd";
+const SITE_URL = "https://www.kynocreative.com";
 
 /**
  * Site-wide structured data. Emitted as a single @graph so Organization and

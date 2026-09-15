@@ -4,7 +4,7 @@ import { categories, categoryFull } from "@/data/site";
 import CategoryPageClient from "./CategoryPageClient";
 import { getAllProducts } from "@/db/products-store";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com";
 
 const CATEGORY_MAP: Record<string, string> = {
   photos: "Photos", fonts: "Fonts", templates: "Templates", free: "Free",

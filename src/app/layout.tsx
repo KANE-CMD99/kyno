@@ -6,7 +6,7 @@ import OrganizationStructuredData from "@/components/OrganizationStructuredData"
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com"),
   icons: {
     icon: "/favicon.svg",
   },

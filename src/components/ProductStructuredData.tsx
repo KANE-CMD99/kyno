@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function ProductStructuredData({ name, description, image, price, category, productUrl, categoryLabel, categoryUrl }: Props) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com";
   const imageUrl = image?.startsWith("http") ? image : image ? `${baseUrl}${image}` : undefined;
   const product = {
     "@type": "Product",
