@@ -1859,12 +1859,6 @@ export function relatedPairings(pairing: Pairing, limit = 4): Pairing[] {
 export function fontsWithPairings(): Font[] {
   return fonts.filter((font) => (pairingSlugsByFont.get(font.slug)?.length ?? 0) > 0);
 }
-
-/** Styles that actually have pairings behind them, in the order declared in styles.ts. */
-export function stylesWithPairings(): string[] {
-  const present = new Set(pairings.flatMap((pairing) => pairing.styles));
-  return [...present];
-}
 ```
 
 - [ ] **Step 5: Run the test to verify it passes**
@@ -4141,7 +4135,7 @@ console.log('robots:', fs.readFileSync('out/robots.txt','utf8'));
 "
 ```
 
-Expected: a URL count equal to `5 + pairings.length + fontsWithPairings().length + stylesWithPairings().length`, every URL beginning `https://www.kyno.top`, and a robots.txt pointing at the sitemap.
+Expected: a URL count equal to `5 + pairings.length + fontsWithPairings().length + (number of entries in styles.ts that have at least one pairing)`, every URL beginning `https://www.kyno.top`, and a robots.txt pointing at the sitemap.
 
 - [ ] **Step 4: Commit**
 
