@@ -2526,10 +2526,8 @@ export function PairingPreview({ heading, body, samples, editable = false, size 
       aria-label="Live type preview"
       className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-10"
     >
-      {/* Two families at most, and display=swap, so a swap is a same-category change.
-          `precedence` is what makes React 19 hoist this into <head>; without it the
-          stylesheet renders in place and blocks rendering from mid-body. */}
-      <link rel="stylesheet" precedence="high" href={googleFontsHref([heading, body])} />
+      {/* The page loads the faces; this component only declares them. Same rule as
+          SpecimenBlock — one font stylesheet per page, emitted by the page. */}
 
       {editable ? (
         <>
@@ -2965,20 +2963,8 @@ export function Generator({ fonts, pairings }: { fonts: Font[]; pairings: Pairin
     setHydrated(true);
   }, [fontBySlug]);
 
-  // The catalog stylesheet is large (every whitelisted family). It is fetched only
-  // once a picker is opened, so the homepage's own load stays at two families.
-  const [catalogLoaded, setCatalogLoaded] = useState(false);
-
-  useEffect(() => {
-    if (!catalogLoaded) return;
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = googleFontsHref(fonts);
-    document.head.appendChild(link);
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, [catalogLoaded, fonts]);
+  // The catalog stylesheet is loaded by the page, not here — the card wall below renders
+  // every family, so deferring it bought nothing and left 14 of 16 cards in fallback faces.
 
   // Keep the URL shareable without adding history entries.
   useEffect(() => {
@@ -3129,6 +3115,8 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
       />
+      {/* The wall renders all 16 pairings across all 8 families, so the page loads all 8. */}
+      <link rel="stylesheet" precedence="high" href={googleFontsHref(fonts)} />
       <Generator fonts={fonts} pairings={pairings} />
     </>
   );
@@ -3434,6 +3422,14 @@ export default async function PairingPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(trail)) }}
+      />
+
+      {/* The preview's two fonts AND every related pairing's fonts — the related grid
+          renders faces the preview never shows. */}
+      <link
+        rel="stylesheet"
+        precedence="high"
+        href={googleFontsHref(fontsForPairings([pairing, ...related]))}
       />
 
       <Breadcrumbs
