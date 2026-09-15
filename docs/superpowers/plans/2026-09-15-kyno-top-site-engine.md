@@ -2618,11 +2618,13 @@ git commit -m "feat: editable live type preview component"
 ```tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fallbackStack, googleFontsHref } from "@/lib/fonts";
 import type { Font } from "@/lib/types";
 
 type Tab = "link" | "css" | "html";
+
+const PANEL_ID = "code-tab-panel";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "link", label: "Google Fonts" },
@@ -2633,6 +2635,35 @@ const TABS: { id: Tab; label: string }[] = [
 export function CodeTabs({ heading, body }: { heading: Font; body: Font }) {
   const [tab, setTab] = useState<Tab>("link");
   const [copied, setCopied] = useState(false);
+  const copiedTimer = useRef<number | null>(null);
+
+  // A stray timer would call setState after unmount.
+  useEffect(() => {
+    return () => {
+      if (copiedTimer.current !== null) window.clearTimeout(copiedTimer.current);
+    };
+  }, []);
+
+  function selectTab(next: Tab) {
+    setTab(next);
+    setCopied(false);
+  }
+
+  // role="tab" promises arrow-key navigation and a tabpanel. Implement the contract or
+  // the tablist announces behaviour it does not have.
+  function onTabKeyDown(event: React.KeyboardEvent<HTMLButtonElement>, index: number) {
+    const last = TABS.length - 1;
+    let next: number | null = null;
+    if (event.key === "ArrowRight") next = index === last ? 0 : index + 1;
+    else if (event.key === "ArrowLeft") next = index === 0 ? last : index - 1;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = last;
+    if (next === null) return;
+    event.preventDefault();
+    const target = TABS[next];
+    selectTab(target.id);
+    document.getElementById(`code-tab-${target.id}`)?.focus();
+  }
 
   const linkSnippet = `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />\n<link rel="stylesheet" href="${googleFontsHref([heading, body])}" />`;
   const cssSnippet = `:root {\n  --font-heading: ${fallbackStack(heading)};\n  --font-body: ${fallbackStack(body)};\n}\n\nh1, h2, h3 {\n  font-family: var(--font-heading);\n}\n\nbody {\n  font-family: var(--font-body);\n}`;
@@ -2644,7 +2675,11 @@ export function CodeTabs({ heading, body }: { heading: Font; body: Font }) {
     try {
       await navigator.clipboard.writeText(snippet);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
+      if (copiedTimer.current !== null) window.clearTimeout(copiedTimer.current);
+      copiedTimer.current = window.setTimeout(() => {
+        copiedTimer.current = null;
+        setCopied(false);
+      }, 2000);
     } catch {
       setCopied(false);
     }
@@ -2653,13 +2688,17 @@ export function CodeTabs({ heading, body }: { heading: Font; body: Font }) {
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
       <div role="tablist" aria-label="Code snippet format" className="flex gap-1 border-b border-[var(--color-border)] p-2">
-        {TABS.map((item) => (
+        {TABS.map((item, index) => (
           <button
             key={item.id}
+            id={`code-tab-${item.id}`}
             type="button"
             role="tab"
             aria-selected={tab === item.id}
-            onClick={() => setTab(item.id)}
+            aria-controls={PANEL_ID}
+            tabIndex={tab === item.id ? 0 : -1}
+            onClick={() => selectTab(item.id)}
+            onKeyDown={(event) => onTabKeyDown(event, index)}
             className={`rounded-md px-3 py-1.5 text-sm ${
               tab === item.id
                 ? "bg-[var(--color-bg)] text-[var(--color-text-primary)]"
@@ -2678,7 +2717,12 @@ export function CodeTabs({ heading, body }: { heading: Font; body: Font }) {
           {copied ? "Copied" : "Copy"}
         </button>
       </div>
-      <pre className="overflow-x-auto p-4 text-xs leading-relaxed">
+      <pre
+        id={PANEL_ID}
+        role="tabpanel"
+        aria-labelledby={`code-tab-${tab}`}
+        className="overflow-x-auto p-4 text-xs leading-relaxed"
+      >
         <code>{snippet}</code>
       </pre>
     </div>
