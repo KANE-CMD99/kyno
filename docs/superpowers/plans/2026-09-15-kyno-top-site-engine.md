@@ -1286,41 +1286,47 @@ describe("lintData", () => {
   });
 
   it("requires every template variant to be used when a recipe emits enough pairings", () => {
-    const shapes = [{ id: "r", templates: 2 }];
+    const gamma: Font = { ...sans, slug: "gamma-sans", name: "Gamma Sans" };
+    const shapes = [{ id: "r", templates: 2, variants: [0, 0] }];
     const p1 = pairing({
-      slug: "one",
-      rationaleTemplate: 0,
-      rationale: "Alpha Serif with Beta Sans keeps the headline loud and the body quiet here.",
+      a: "alpha-serif",
+      b: "gamma-sans",
+      slug: "alpha-serif-gamma-sans",
+      rationale:
+        "Alpha Serif with Gamma Sans keeps the headline loud and the body quiet enough to read at length.",
     });
     const p2 = pairing({
       slug: "two",
-      rationaleTemplate: 0,
-      rationale: "Alpha Serif with Beta Sans keeps the headline loud and the body settled here.",
+      rationale:
+        "Alpha Serif with Beta Sans keeps the headline loud and the body settled enough to read at length.",
     });
-    const errors = lintData([serif, sans], [p1, p2], shapes);
+    const errors = lintData([serif, sans, gamma], [p1, p2], shapes);
     expect(errors.some((e) => e.includes("template variants"))).toBe(true);
   });
 
   it("accepts a recipe that exercises every template variant", () => {
-    const shapes = [{ id: "r", templates: 2 }];
+    const gamma: Font = { ...sans, slug: "gamma-sans", name: "Gamma Sans" };
+    const shapes = [{ id: "r", templates: 2, variants: [0, 1] }];
     const p1 = pairing({
-      slug: "one",
-      rationaleTemplate: 0,
-      rationale: "Alpha Serif with Beta Sans keeps the headline loud and the body quiet here.",
+      a: "alpha-serif",
+      b: "gamma-sans",
+      slug: "alpha-serif-gamma-sans",
+      rationale:
+        "Alpha Serif with Gamma Sans keeps the headline loud and the body quiet enough to read at length.",
     });
     const p2 = pairing({
       slug: "two",
-      rationaleTemplate: 1,
-      rationale: "Alpha Serif with Beta Sans keeps the headline loud and the body settled here.",
+      rationale:
+        "Alpha Serif with Beta Sans keeps the headline loud and the body settled enough to read at length.",
     });
-    const errors = lintData([serif, sans], [p1, p2], shapes);
+    const errors = lintData([serif, sans, gamma], [p1, p2], shapes);
     expect(errors).toEqual([]);
   });
 
   it("rejects a recipe that produced no pairings at all", () => {
     const shapes = [
-      { id: "r", templates: 1 },
-      { id: "monospace-unmatched", templates: 2 },
+      { id: "r", templates: 1, variants: [0] },
+      { id: "monospace-unmatched", templates: 2, variants: [] },
     ];
     const errors = lintData([serif, sans], [pairing()], shapes);
     expect(errors.some((e) => e.includes("monospace-unmatched: produced no pairings"))).toBe(true);
@@ -1342,6 +1348,13 @@ export interface RecipeShape {
   id: string;
   /** Number of rationale templates this recipe defines. */
   templates: number;
+  /**
+   * Variant indices the generator produced for this recipe, before curation.
+   * The diversity check reads these rather than the merged pairings: a curated entry
+   * legitimately displaces a generated one, and counting that displacement as
+   * "template never rendered" makes a correctly-rotating recipe fail.
+   */
+  variants: number[];
 }
 
 export function lintData(
@@ -1353,7 +1366,6 @@ export function lintData(
   const fontBySlug = new Map(fonts.map((font) => [font.slug, font]));
   const rationaleOwner = new Map<string, string>();
   const seenPair = new Set<string>();
-  const templateUse = new Map<string, Set<number>>();
 
   for (const font of fonts) {
     if (!(ALLOWED_LICENSES as readonly string[]).includes(font.license)) {
@@ -1401,34 +1413,19 @@ export function lintData(
   // Within a recipe, every template variant must be exercised once the recipe has
   // emitted at least as many pairings as it has templates. Catches rotation bugs
   // that would otherwise quietly ship near-identical copy.
-  if (recipes.length > 0) {
-    for (const pairing of pairings) {
-      if (pairing.rationaleTemplate === undefined) continue;
-      const used = templateUse.get(pairing.recipe) ?? new Set<number>();
-      used.add(pairing.rationaleTemplate);
-      templateUse.set(pairing.recipe, used);
+  for (const recipe of recipes) {
+    if (recipe.variants.length === 0) {
+      errors.push(
+        `recipe ${recipe.id}: produced no pairings — its category/tag matchers match no font in the catalog`,
+      );
+      continue;
     }
-    const counts = new Map<string, number>();
-    for (const pairing of pairings) {
-      counts.set(pairing.recipe, (counts.get(pairing.recipe) ?? 0) + 1);
-    }
-    for (const recipe of recipes) {
-      const count = counts.get(recipe.id) ?? 0;
-      // A recipe whose matchers fit no font in the catalog is silent otherwise: it
-      // emits nothing, so every per-pairing check below has nothing to inspect.
-      if (count === 0) {
-        errors.push(
-          `recipe ${recipe.id}: produced no pairings — its category/tag matchers match no font in the catalog`,
-        );
-        continue;
-      }
-      if (count < recipe.templates) continue;
-      const used = templateUse.get(recipe.id) ?? new Set<number>();
-      if (used.size < recipe.templates) {
-        errors.push(
-          `recipe ${recipe.id}: only ${used.size} of ${recipe.templates} template variants were used across ${count} pairings`,
-        );
-      }
+    if (recipe.variants.length < recipe.templates) continue;
+    const used = new Set(recipe.variants);
+    if (used.size < recipe.templates) {
+      errors.push(
+        `recipe ${recipe.id}: only ${used.size} of ${recipe.templates} template variants were used across ${recipe.variants.length} generated pairings`,
+      );
     }
   }
 
@@ -1451,6 +1448,7 @@ Expected: PASS (14 tests).
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { lintData, type Font, type Pairing } from "../src/lib/lint";
+import { generatePairings } from "../src/lib/generate";
 import { recipes } from "../data/recipes";
 
 const root = resolve(__dirname, "..");
@@ -1459,9 +1457,22 @@ const pairings: Pairing[] = JSON.parse(
   readFileSync(resolve(root, "data/pairings.json"), "utf8"),
 );
 
+// The diversity check reads the generator's output, not the merged file: a curated
+// entry legitimately displaces a generated one, and that displacement must not read
+// as "this recipe never rendered a template it did render".
+const generated = generatePairings(fonts, recipes);
+const variantsByRecipe = new Map<string, number[]>();
+for (const pairing of generated) {
+  if (pairing.rationaleTemplate === undefined) continue;
+  const list = variantsByRecipe.get(pairing.recipe) ?? [];
+  list.push(pairing.rationaleTemplate);
+  variantsByRecipe.set(pairing.recipe, list);
+}
+
 const shapes = recipes.map((recipe) => ({
   id: recipe.id,
   templates: recipe.rationaleTemplates.length,
+  variants: variantsByRecipe.get(recipe.id) ?? [],
 }));
 
 const errors = lintData(fonts, pairings, shapes);
