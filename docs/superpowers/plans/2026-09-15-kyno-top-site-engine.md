@@ -4344,8 +4344,17 @@ function pagesMissingFonts(): string[] {
   const offenders: string[] = [];
 
   for (const file of htmlFiles(out)) {
-    const html = readFileSync(file, "utf8");
-    const declarations = [...html.matchAll(/font-family:\s*([^;"'}]*)/g)]
+    // Decode entities BEFORE matching. The export escapes a quoted family name —
+    // `'Playfair Display'` becomes `&#x27;Playfair Display&#x27;` — and the entity's own
+    // semicolon terminates a `[^;]` capture, so a naive match recovers `&#x27` and no
+    // names at all. The check then reports zero offenders on every page and looks like it
+    // passed. The first draft of this check had exactly that bug; it was caught only by
+    // deliberately breaking a page and finding the check still exited 0.
+    const html = readFileSync(file, "utf8")
+      .replace(/&#x27;/g, "'")
+      .replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"');
+    const declarations = [...html.matchAll(/font-family:\s*([^;"}]*)/g)]
       .map((match) => match[1])
       .join(" ");
     const declared = names.filter((name) => declarations.includes(name));
