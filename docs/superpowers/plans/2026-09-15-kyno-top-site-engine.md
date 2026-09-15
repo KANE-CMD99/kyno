@@ -2687,27 +2687,30 @@ export function CodeTabs({ heading, body }: { heading: Font; body: Font }) {
 
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-      <div role="tablist" aria-label="Code snippet format" className="flex gap-1 border-b border-[var(--color-border)] p-2">
-        {TABS.map((item, index) => (
-          <button
-            key={item.id}
-            id={`code-tab-${item.id}`}
-            type="button"
-            role="tab"
-            aria-selected={tab === item.id}
-            aria-controls={PANEL_ID}
-            tabIndex={tab === item.id ? 0 : -1}
-            onClick={() => selectTab(item.id)}
-            onKeyDown={(event) => onTabKeyDown(event, index)}
-            className={`rounded-md px-3 py-1.5 text-sm ${
-              tab === item.id
-                ? "bg-[var(--color-bg)] text-[var(--color-text-primary)]"
-                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-            }`}
-          >
-            {item.label}
-          </button>
-        ))}
+      <div className="flex gap-1 border-b border-[var(--color-border)] p-2">
+        {/* A tablist holds only tabs — the copy button and spacer live outside it. */}
+        <div role="tablist" aria-label="Code snippet format" className="flex gap-1">
+          {TABS.map((item, index) => (
+            <button
+              key={item.id}
+              id={`code-tab-${item.id}`}
+              type="button"
+              role="tab"
+              aria-selected={tab === item.id}
+              aria-controls={PANEL_ID}
+              tabIndex={tab === item.id ? 0 : -1}
+              onClick={() => selectTab(item.id)}
+              onKeyDown={(event) => onTabKeyDown(event, index)}
+              className={`rounded-md px-3 py-1.5 text-sm ${
+                tab === item.id
+                  ? "bg-[var(--color-bg)] text-[var(--color-text-primary)]"
+                  : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
         <span className="flex-1" />
         <button
           type="button"
