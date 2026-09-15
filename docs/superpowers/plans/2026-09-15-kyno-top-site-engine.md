@@ -2515,8 +2515,10 @@ export function PairingPreview({ heading, body, samples, editable = false, size 
       aria-label="Live type preview"
       className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-10"
     >
-      {/* Two families at most, and display=swap, so a swap is a same-category change. */}
-      <link rel="stylesheet" href={googleFontsHref([heading, body])} />
+      {/* Two families at most, and display=swap, so a swap is a same-category change.
+          `precedence` is what makes React 19 hoist this into <head>; without it the
+          stylesheet renders in place and blocks rendering from mid-body. */}
+      <link rel="stylesheet" precedence="high" href={googleFontsHref([heading, body])} />
 
       {editable ? (
         <>
@@ -3502,7 +3504,7 @@ import type { Font } from "@/lib/types";
 export function SpecimenBlock({ font }: { font: Font }) {
   return (
     <section className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8">
-      <link rel="stylesheet" href={googleFontsHref([font])} />
+      <link rel="stylesheet" precedence="high" href={googleFontsHref([font])} />
       <p
         className="text-5xl leading-none text-[var(--color-text-primary)]"
         style={{ fontFamily: fallbackStack(font) }}
