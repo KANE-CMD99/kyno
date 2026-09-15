@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id } = await params;
   const detail = await getProductDetail(id);
   if (!detail) return { title: "Not Found" };
-  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd";
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com";
   const url = `${site}/products/${id}`;
   const first = detail.previewImages?.[0];
   const imageUrl = first ? (first.startsWith("http") ? first : `${site}${first}`) : `${site}/og-default.png`;
@@ -46,7 +46,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     // No price in the title — the SERP would keep showing a stale figure after
     // a price change, and the price is already in the snippet/price meta.
-    title: `${detail.name} — Kyno`,
+    // No brand suffix either: the root layout's title template appends "— Kyno",
+    // so adding it here produced "… — Kyno — Kyno".
+    title: detail.name,
     description,
     alternates: { canonical: url },
     openGraph: {
@@ -86,9 +88,9 @@ export default async function ProductPage({ params }: PageProps) {
         image={detail.previewImages?.[0]}
         price={detail.price}
         category={detail.category}
-        productUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"}/products/${detail.id}`}
+        productUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com"}/products/${detail.id}`}
         categoryLabel={categoryFull(detail.category)}
-        categoryUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kyno.ltd"}/categories/${detail.category.toLowerCase()}`}
+        categoryUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com"}/categories/${detail.category.toLowerCase()}`}
       />
       <Nav />
       <main className="bg-white pt-[105px]">
