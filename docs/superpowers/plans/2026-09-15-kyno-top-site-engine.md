@@ -3940,7 +3940,7 @@ import { fonts } from "@/lib/pairings";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Font Licenses",
+  title: brandTitle("Font Licenses"),
   description:
     "Every font on Kyno Pairings is open source. This page records the license for each one and explains what is and is not redistributed.",
   alternates: { canonical: `${SITE.url}/licenses` },
@@ -3954,24 +3954,35 @@ export default function LicensesPage() {
 
       <div className="mt-8 space-y-6 leading-relaxed">
         <p>
-          Every font shown here is open source, licensed under the SIL Open Font License 1.1, the
-          Apache License 2.0, or the Ubuntu Font License. All three permit free commercial use and
-          web embedding.
+          Every font shown here is open source, licensed under one of the SIL Open Font License
+          1.1, the Apache License 2.0, or the Ubuntu Font License. Every entry in the catalog
+          today is OFL-1.1; the table below lists each font&apos;s actual license.
         </p>
         <p>
           Font files are served by Google&apos;s CDN, not by this site. Google performs the
           distribution, so this site does not redistribute any font file — and no download link for
           a font file exists anywhere on it.
         </p>
+        {/*
+          The notices must be on the DEPLOYED page, not only in the repository: OFL-1.1 requires
+          the copyright line to accompany the files, and a visitor cannot fetch a repo file.
+          THIRD-PARTY-LICENSES.md stays the in-repo record; this is its deployed copy.
+        */}
         <p>
-          This site self-hosts two fonts for its own interface, Fraunces and Inter. Both are
-          OFL-1.1, so their copyright notices travel with the repository in{" "}
-          <code>THIRD-PARTY-LICENSES.md</code> and the full license text is at{" "}
+          This site self-hosts two fonts for its own interface. Both are OFL-1.1, their notices
+          are reproduced here, and the full license text is at{" "}
           <a href="/licenses/OFL-1.1.txt" className="underline">
             /licenses/OFL-1.1.txt
           </a>
-          .
+          . The same notices are kept in the repository in <code>THIRD-PARTY-LICENSES.md</code>.
         </p>
+        <ul className="space-y-1 text-sm">
+          <li>
+            Fraunces — Copyright 2018 The Fraunces Project Authors
+            (https://github.com/undercasetype/Fraunces)
+          </li>
+          <li>Inter — Copyright 2016 The Inter Project Authors (https://github.com/rsms/inter)</li>
+        </ul>
       </div>
 
       <h2 className="mt-12 text-2xl font-bold">Fonts in this catalog</h2>
@@ -4008,7 +4019,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Privacy",
+  title: brandTitle("Privacy"),
   description:
     "Kyno Pairings sets no cookies, has no accounts, and collects no email. Text you type into the preview never leaves your browser.",
   alternates: { canonical: `${SITE.url}/privacy` },
@@ -4068,7 +4079,7 @@ import { pairsCount } from "@/lib/stats";
 import { SITE, storeUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: brandTitle("About"),
   description:
     "Kyno Pairings is a free font pairing tool built on open-source fonts. Every pairing comes with the reason it works.",
   alternates: { canonical: `${SITE.url}/about` },
@@ -4581,6 +4592,7 @@ Give the user these exact steps:
 4. At the kyno.top registrar, change the nameservers to the two Cloudflare provides. Propagation can take a few hours.
 5. In Cloudflare **Rules → Redirect Rules**, add a rule: when the host equals `kyno.top`, redirect to `https://www.kyno.top${uri.path}` with status **301**. The canonical host is www everywhere in this codebase, so the apex must redirect.
 6. **Analytics & Logs → Web Analytics** → enable for `kyno.top`, then paste the provided beacon `<script>` into `src/app/layout.tsx` inside `<body>` and redeploy.
+   **This step is load-bearing for a claim, not just for measurement.** `/privacy` states in the present tense that traffic is measured with cookieless Cloudflare Web Analytics. Until the beacon is live, that sentence is unbacked. **Verify it is actually there** — fetch the live homepage and confirm the beacon script appears in the served HTML (it is edge-injected, so it will not be in `out/`). If Web Analytics cannot be enabled, the same change must soften the `/privacy` sentence so it is true without it. Do not leave the page claiming a measurement that does not happen.
 
 - [ ] **Step 4: Verify the live site**
 
