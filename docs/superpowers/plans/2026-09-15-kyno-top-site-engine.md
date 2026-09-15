@@ -8,18 +8,18 @@
 
 **Tech Stack:** Next.js 15 (App Router), React 19, TypeScript 5, Tailwind CSS 4, Vitest, tsx, Cloudflare Pages.
 
-**Spec:** `docs/superpowers/specs/2026-09-14-kyno-top-font-pairing-design.md` (in the kyno.ltd repo — read it alongside this plan; it is the source of truth for every requirement below).
+**Spec:** `docs/superpowers/specs/2026-09-14-kyno-top-font-pairing-design.md` (in the kynocreative.com repo — read it alongside this plan; it is the source of truth for every requirement below).
 
 ## Global Constraints
 
-- **New repository.** All work happens in a **new repo**, checked out at `E:\KYNO\web\kyno-top` (a sibling of the kyno.ltd working directory `E:\KYNO\web\web -mian`). Nothing in this plan modifies the kyno.ltd repo except Task 22 Step 5, which is a single-line edit.
+- **New repository.** All work happens in a **new repo**, checked out at `E:\KYNO\web\kyno-top` (a sibling of the kynocreative.com working directory `E:\KYNO\web\web -mian`). Nothing in this plan modifies the kynocreative.com repo except Task 22 Step 5, which is a single-line edit.
 - **Static export only.** `output: 'export'` in `next.config.ts`. **No** route handlers, server actions, middleware, `revalidate`, ISR, or `next/image` optimization. Any of these breaks the export build.
 - **Canonical host:** `https://www.kyno.top` everywhere — canonicals, sitemap, JSON-LD, OG URLs. Never bare `kyno.top`, never `http`.
 - **Site name:** `Kyno Pairings`. **Site chrome type:** Fraunces (headings/brand) + Inter (UI/body), via `next/font/google`.
 - **Content fonts:** loaded from `https://fonts.googleapis.com/css2?…&display=swap`. Only the fonts a page actually renders.
 - **Font licensing (hard rules — do not relax):** only `OFL-1.1`, `Apache-2.0`, or `UFL` fonts may enter the catalog. **No "download font" affordance may ever exist anywhere in the built output.** Content fonts are never self-hosted or served from our origin.
 - **No user data leaves the browser.** The preview's editable text is read with `textContent`, never `innerHTML`. It is never transmitted anywhere.
-- **Anchor text for kyno.ltd links is plain and human** ("Browse Kyno templates"). No keyword-stuffed anchors, no per-page anchor variation, no cross-domain canonicals.
+- **Anchor text for kynocreative.com links is plain and human** ("Browse Kyno templates"). No keyword-stuffed anchors, no per-page anchor variation, no cross-domain canonicals.
 - **Accessibility floor:** every interactive control is keyboard-reachable and has an accessible name. Heading order is never skipped.
 - **`lint:data` must pass before `build`.** It is wired into the build script, not optional.
 
@@ -36,7 +36,7 @@
 | `src/lib/pairings.ts` | Read-only query layer over `data/*.json` |
 | `src/lib/generator.ts` | Pure generator logic: weighted shuffle, URL param parse/build |
 | `src/lib/seo.ts` | Metadata + JSON-LD builders |
-| `src/lib/site.ts` | Site constants and the kyno.ltd UTM link builder |
+| `src/lib/site.ts` | Site constants and the kynocreative.com UTM link builder |
 | `data/fonts.json` | Font catalog (8 fonts in this plan) |
 | `data/recipes.ts` | Pairing principles that generate candidate pairings |
 | `data/pairings.curated.json` | Hand-written pairings, merged over generated ones |
@@ -239,13 +239,13 @@ git commit -m "chore: scaffold kyno.top with static export"
 export const SITE = {
   name: "Kyno Pairings",
   url: "https://www.kyno.top",
-  storeUrl: "https://www.kyno.ltd",
+  storeUrl: "https://www.kynocreative.com",
   tagline: "A free font pairing tool by Kyno.",
 } as const;
 
 export type StoreMedium = "nav" | "footer" | "module";
 
-/** Builds a kyno.ltd URL with the UTM params its analytics attributes on. */
+/** Builds a kynocreative.com URL with the UTM params its analytics attributes on. */
 export function storeUrl(path: string, medium: StoreMedium, content?: string): string {
   const url = new URL(path, SITE.storeUrl);
   url.searchParams.set("utm_source", "kyno-top");
@@ -316,10 +316,10 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  title: {
-    default: `${SITE.name} — Free Font Pairing Generator`,
-    template: `%s — ${SITE.name}`,
-  },
+  // No `title.template` here. Page titles arrive complete and brand-suffixed from
+  // src/lib/seo.ts. A template would append the brand a second time, and would also
+  // lengthen every title after its length budget had already been applied.
+  title: "Kyno Pairings — Free Font Pairing Generator",
   description:
     "Find fonts that belong together. A free font pairing generator built on open-source Google Fonts, with live previews and copy-ready CSS.",
 };
@@ -2050,7 +2050,23 @@ describe("pairingTitle", () => {
     const title = pairingTitle(pairing, a, b);
     expect(title).toContain("Playfair Display");
     expect(title).toContain("Lato");
-    expect(title.length).toBeLessThanOrEqual(70);
+  });
+
+  it("carries the brand and fits the 60-character budget", () => {
+    const title = pairingTitle(pairing, a, b);
+    expect(title.endsWith("| Kyno")).toBe(true);
+    expect(title.length).toBeLessThanOrEqual(60);
+  });
+
+  it("truncates the descriptive part, never the brand", () => {
+    const long: Font = { ...a, name: "An Extremely Long Typeface Name That Runs On" };
+    const title = pairingTitle(pairing, long, b);
+    expect(title.length).toBeLessThanOrEqual(60);
+    expect(title.endsWith("| Kyno")).toBe(true);
+  });
+
+  it("reads 'Playfair Display & Lato — Serif + Sans | Kyno' for the fixture", () => {
+    expect(pairingTitle(pairing, a, b)).toBe("Playfair Display & Lato — Serif + Sans | Kyno");
   });
 });
 
@@ -2075,6 +2091,11 @@ describe("font metadata", () => {
     expect(fontTitle(a).toLowerCase()).toContain("pairing");
   });
 
+  it("carries the brand and fits the 60-character budget", () => {
+    expect(fontTitle(a)).toBe("Playfair Display Pairings | Kyno");
+    expect(fontTitle(a).length).toBeLessThanOrEqual(60);
+  });
+
   it("describes the font from its character field", () => {
     expect(fontDescription(a)).toContain("high-contrast Didone");
   });
@@ -2089,10 +2110,10 @@ describe("styleTitle", () => {
 });
 
 describe("organizationJsonLd", () => {
-  it("declares the kyno.ltd relationship via sameAs", () => {
+  it("declares the kynocreative.com relationship via sameAs", () => {
     const json = organizationJsonLd();
     expect(json["@type"]).toBe("Organization");
-    expect(json.sameAs).toContain("https://www.kyno.ltd");
+    expect(json.sameAs).toContain("https://www.kynocreative.com");
   });
 
   it("uses the canonical www host in its url", () => {
@@ -2138,6 +2159,8 @@ import { SITE } from "./site";
 import type { Font, Pairing, StyleTag } from "./types";
 
 const MAX_DESCRIPTION = 160;
+const MAX_TITLE = 60;
+const TITLE_SUFFIX = " | Kyno";
 
 function absolute(path: string): string {
   return new URL(path, SITE.url).toString();
@@ -2147,6 +2170,17 @@ function clamp(text: string, limit: number): string {
   const clean = text.replace(/\s+/g, " ").trim();
   if (clean.length <= limit) return clean;
   return `${clean.slice(0, limit - 1).trimEnd()}…`;
+}
+
+/**
+ * Composes the complete title, brand included, against a single 60-character budget.
+ * The brand suffix is never the part that gets truncated — a long descriptive phrase
+ * loses its tail first. There is deliberately no `title.template` in the layout, so
+ * this is the only place a title is assembled.
+ */
+function brandTitle(descriptive: string): string {
+  const room = MAX_TITLE - TITLE_SUFFIX.length;
+  return `${clamp(descriptive, room)}${TITLE_SUFFIX}`;
 }
 
 function firstSentence(text: string): string {
@@ -2172,7 +2206,7 @@ function categoryLabel(font: Font): string {
 }
 
 export function pairingTitle(pairing: Pairing, a: Font, b: Font): string {
-  return clamp(`${a.name} & ${b.name} — ${categoryLabel(a)} + ${categoryLabel(b)} Pairing`, 70);
+  return brandTitle(`${a.name} & ${b.name} — ${categoryLabel(a)} + ${categoryLabel(b)}`);
 }
 
 export function pairingDescription(pairing: Pairing): string {
@@ -2180,7 +2214,7 @@ export function pairingDescription(pairing: Pairing): string {
 }
 
 export function fontTitle(font: Font): string {
-  return `${font.name} Pairings — Free Combinations to Try`;
+  return brandTitle(`${font.name} Pairings`);
 }
 
 export function fontDescription(font: Font): string {
@@ -2188,7 +2222,7 @@ export function fontDescription(font: Font): string {
 }
 
 export function styleTitle(style: StyleTag): string {
-  return `${style.name} Font Pairings — Free Combinations`;
+  return brandTitle(`${style.name} Font Pairings`);
 }
 
 export function styleDescription(style: StyleTag): string {
@@ -2260,7 +2294,7 @@ export function breadcrumbJsonLd(trail: { name: string; path: string }[]): Bread
 - [ ] **Step 4: Run the test to verify it passes**
 
 Run: `npx vitest run src/lib/seo.test.ts`
-Expected: PASS (12 tests).
+Expected: PASS (16 tests).
 
 - [ ] **Step 5: Commit**
 
@@ -3802,7 +3836,7 @@ export default function PrivacyPage() {
           </li>
         </ul>
         <p>
-          This site links to the Kyno store at kyno.ltd. Once you follow a link there, that site&apos;s
+          This site links to the Kyno store at kynocreative.com. Once you follow a link there, that site&apos;s
           own privacy policy applies.
         </p>
       </div>
@@ -4290,11 +4324,11 @@ Once DNS resolves, confirm on `https://www.kyno.top`:
 - `https://www.kyno.top/sitemap.xml` returns XML with only `https://www.kyno.top` URLs.
 - `https://www.kyno.top/robots.txt` references the sitemap.
 - A pairing page loads and its canonical tag reads `https://www.kyno.top/pairings/...`.
-- The nav's `Kyno Store →` link lands on kyno.ltd carrying `utm_source=kyno-top`.
+- The nav's `Kyno Store →` link lands on kynocreative.com carrying `utm_source=kyno-top`.
 
-- [ ] **Step 5: Add the reverse `sameAs` in the kyno.ltd repo**
+- [ ] **Step 5: Add the reverse `sameAs` in the kynocreative.com repo**
 
-In `E:\KYNO\web\web -mian`, open `src/components/OrganizationStructuredData.tsx` and add `https://www.kyno.top` to the organization's `sameAs` array, so the two properties declare the relationship from both sides. This is the **only** change this project makes in the kyno.ltd repo.
+In `E:\KYNO\web\web -mian`, open `src/components/OrganizationStructuredData.tsx` and add `https://www.kyno.top` to the organization's `sameAs` array, so the two properties declare the relationship from both sides. This is the **only** change this project makes in the kynocreative.com repo.
 
 ```bash
 cd "/e/KYNO/web/web -mian"
@@ -4302,7 +4336,7 @@ git add src/components/OrganizationStructuredData.tsx
 git commit -m "seo: declare the kyno.top pairing tool in the organization sameAs"
 ```
 
-Deploy kyno.ltd the usual way (tar the source to the VPS, build, then restart PM2 — and remember the build must finish before the restart).
+Deploy kynocreative.com the usual way (tar the source to the VPS, build, then restart PM2 — and remember the build must finish before the restart).
 
 - [ ] **Step 6: Commit**
 
@@ -4350,7 +4384,7 @@ The catalog scale-up (to ~40 fonts, ~170 pairings, ~10 populated styles), the pe
 
 ## Self-Review Notes
 
-**Spec coverage.** Every spec section maps to a task: Information Architecture → Tasks 14–17; Data Model → Tasks 3, 5, 8; Pairing Data Pipeline → Tasks 5–7; Font Licensing → Tasks 6, 16 (plus the global constraints); Generator Page → Tasks 9, 11, 12, 13; Pairing Page → Task 14; Font Page → Task 15; Style Page → Task 15; Visual Design → Task 2; Funnel to kyno.ltd → Tasks 2, 13, 14; SEO → Tasks 10, 14, 15, 17; Tech Stack → Task 1; Deployment → Task 20; Testing/Acceptance → Tasks 6, 18, 19.
+**Spec coverage.** Every spec section maps to a task: Information Architecture → Tasks 14–17; Data Model → Tasks 3, 5, 8; Pairing Data Pipeline → Tasks 5–7; Font Licensing → Tasks 6, 16 (plus the global constraints); Generator Page → Tasks 9, 11, 12, 13; Pairing Page → Task 14; Font Page → Task 15; Style Page → Task 15; Visual Design → Task 2; Funnel to kynocreative.com → Tasks 2, 13, 14; SEO → Tasks 10, 14, 15, 17; Tech Stack → Task 1; Deployment → Task 20; Testing/Acceptance → Tasks 6, 18, 19.
 
 **Deliberately deferred to Plan 2:** the ~40-font catalog, the ~170 pairings, per-page OG images, and the GSC submission. These are content-volume and launch steps, and the spec puts them in phase 2 of the phasing section.
 

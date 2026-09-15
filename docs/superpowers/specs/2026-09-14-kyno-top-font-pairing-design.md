@@ -2,18 +2,18 @@
 
 ## Overview
 
-Build a second site on **kyno.top**: a free, English-language **font pairing generator** whose job is to earn US organic traffic and backlinks for the Kyno brand, then funnel a small share of that traffic to the store at **kyno.ltd**.
+Build a second site on **kyno.top**: a free, English-language **font pairing generator** whose job is to earn US organic traffic and backlinks for the Kyno brand, then funnel a small share of that traffic to the store at **kynocreative.com**.
 
-The store today (kyno.ltd) is a new domain with no Google index presence and almost no backlinks. Opening a second store would split an already-zero authority across two domains. A free tool is the one thing that attacks both problems at once: tools are searchable, shareable, and get linked to by third parties — which is exactly what kyno.ltd lacks.
+The store today (kynocreative.com) is a new domain with no Google index presence and almost no backlinks. Opening a second store would split an already-zero authority across two domains. A free tool is the one thing that attacks both problems at once: tools are searchable, shareable, and get linked to by third parties — which is exactly what kynocreative.com lacks.
 
-> **Note on where the code lives.** This spec is written to `docs/superpowers/specs/` in the kyno.ltd repo for review, but the implementation goes into a **new, separate repository** (`kyno-top`). The two repos are not coupled: nothing in kyno.ltd imports from kyno.top or vice versa. The only link between the sites is hyperlinks and JSON-LD `sameAs`.
+> **Note on where the code lives.** This spec is written to `docs/superpowers/specs/` in the kynocreative.com repo for review, but the implementation goes into a **new, separate repository** (`kyno-top`). The two repos are not coupled: nothing in kynocreative.com imports from kyno.top or vice versa. The only link between the sites is hyperlinks and JSON-LD `sameAs`.
 
 ## Requirements (confirmed with user)
 
 - **Role:** free tool site — optimize for organic traffic + backlinks, not for direct revenue.
 - **Tool:** font pairing generator.
 - **Scope:** programmatic SEO — generator page + one page per pairing + one page per font + one page per style. ~225 pages in phase 1.
-- **Brand:** same **Kyno** brand, cross-linked with kyno.ltd.
+- **Brand:** same **Kyno** brand, cross-linked with kynocreative.com.
 - **Architecture:** independent **static** site, deployed to a CDN. No second server process.
 - **Visual:** dark "stage" theme, site's own type set in **Fraunces** (headings) + **Inter** (UI/body).
 - **Generator layout:** editor-first live preview on top, curated pairing card wall below.
@@ -27,7 +27,7 @@ The store today (kyno.ltd) is a new domain with no Google index presence and alm
 - No ads.
 - No Chinese/multi-language version — English only, US audience.
 - No paid/premium fonts — the tool works entirely with free Google Fonts.
-- No blog on kyno.top. kyno.ltd already has a blog subsystem; a second content site would split authority again.
+- No blog on kyno.top. kynocreative.com already has a blog subsystem; a second content site would split authority again.
 - No checkout, no payment, no email capture on kyno.top.
 
 ## Information Architecture
@@ -60,9 +60,9 @@ A font page is generated for every catalog font that appears in at least one pai
 
 ### Redirects / canonicals
 
-- Canonical host: **`https://www.kyno.top`** (mirrors kyno.ltd's www canonical). Apex → www, 301.
+- Canonical host: **`https://www.kyno.top`** (mirrors kynocreative.com's www canonical). Apex → www, 301.
 - Self-referencing canonical on every page, including `/pairings/[a]-[b]`.
-- No cross-domain canonicals. kyno.top and kyno.ltd are both indexable, independently.
+- No cross-domain canonicals. kyno.top and kynocreative.com are both indexable, independently.
 
 ## Data Model
 
@@ -179,7 +179,7 @@ Concretely: no "Download this font" button anywhere; the copyable snippet points
 
 ### The store's fonts are a separate question
 
-kyno.ltd sells three fonts (Modern Sans Serif, Handwritten Script, Display Typeface). Putting a font-recommendation tool beside a font store means anyone can compare the two, so: **the fonts sold on kyno.ltd should be original work, or carry a license that permits resale.** OFL does permit selling a font, but only with its license and notice attached and without using a Reserved Font Name — reselling a lightly-repackaged Google Font would satisfy neither the letter nor the branding. This is out of scope for this spec, but should be verified before kyno.top ships, because the two properties will be visibly linked.
+kynocreative.com sells three fonts (Modern Sans Serif, Handwritten Script, Display Typeface). Putting a font-recommendation tool beside a font store means anyone can compare the two, so: **the fonts sold on kynocreative.com should be original work, or carry a license that permits resale.** OFL does permit selling a font, but only with its license and notice attached and without using a Reserved Font Name — reselling a lightly-repackaged Google Font would satisfy neither the letter nor the branding. This is out of scope for this spec, but should be verified before kyno.top ships, because the two properties will be visibly linked.
 
 ### Visible output
 
@@ -259,11 +259,11 @@ Uses `generateStaticParams` over all `pairings.json` entries.
 --text-primary:  #F5F5F7;
 --text-secondary:#9A9AA5;
 --text-muted:    #6B6B75;
---accent:        #3B6EF0;   /* kyno.ltd blue, brightened for dark ground */
+--accent:        #3B6EF0;   /* kynocreative.com blue, brightened for dark ground */
 --accent-hover:  #5580F5;
 ```
 
-The accent is deliberately the same blue family as kyno.ltd's `#1A56DB`, so the two sites read as siblings despite opposite grounds. Nothing else is shared: kyno.ltd is light and neutral, kyno.top is dark.
+The accent is deliberately the same blue family as kynocreative.com's `#1A56DB`, so the two sites read as siblings despite opposite grounds. Nothing else is shared: kynocreative.com is light and neutral, kyno.top is dark.
 
 ### Type
 
@@ -276,14 +276,14 @@ The split is deliberate: the two *chrome* fonts are on every page and should be 
 
 Every content font is rendered with an explicit fallback stack of the same category (`'Playfair Display', Georgia, 'Times New Roman', serif`) plus `display=swap`, so a swap is a same-category change rather than a jarring reflow.
 
-## Funnel to kyno.ltd
+## Funnel to kynocreative.com
 
 Three placements only. The rule is that a store link appears **only where it is genuinely relevant**; a pairing whose use cases do not map to anything Kyno sells gets no store module at all.
 
 1. **Nav** — a quiet `Kyno Store →` link on every page.
 2. **Contextual store module** on pairing pages, rendered only when a use case maps to a Kyno category:
 
-   | Pairing use case | Links to (kyno.ltd) |
+   | Pairing use case | Links to (kynocreative.com) |
    |---|---|
    | `portfolio`, `landing`, `website`, `startup` | `/categories/templates` |
    | `poster`, `branding`, `logo`, `display`, `luxury` | `/categories/fonts` |
@@ -292,7 +292,7 @@ Three placements only. The rule is that a store link appears **only where it is 
    Copy is written per mapping, e.g. "Need a portfolio site that already uses a pairing like this? → Browse Kyno templates".
 3. **Footer** — one brand line: "Kyno Pairings is a free tool by Kyno." + link.
 
-**All kyno.ltd links carry UTM parameters** (`?utm_source=kyno-top&utm_medium=tool|nav|footer&utm_campaign=pairings`) so kyno.ltd's existing analytics can attribute referral traffic.
+**All kynocreative.com links carry UTM parameters** (`?utm_source=kyno-top&utm_medium=tool|nav|footer&utm_campaign=pairings`) so kynocreative.com's existing analytics can attribute referral traffic.
 
 ### Explicitly rejected
 
@@ -301,12 +301,12 @@ Three placements only. The rule is that a store link appears **only where it is 
 - Reciprocal link farms between the two domains.
 - Cross-domain canonical tags.
 
-These are the patterns that get classified as a link scheme and penalize both domains. The brand relationship is expressed the legitimate way instead: `Organization` JSON-LD on kyno.top carries `sameAs: ["https://www.kyno.ltd"]`, and kyno.ltd's existing `OrganizationStructuredData` gains `sameAs: ["https://www.kyno.top"]` pointing back. That second change is a one-line edit in the kyno.ltd repo and is the **only** work this project does in the other repository.
+These are the patterns that get classified as a link scheme and penalize both domains. The brand relationship is expressed the legitimate way instead: `Organization` JSON-LD on kyno.top carries `sameAs: ["https://www.kynocreative.com"]`, and kynocreative.com's existing `OrganizationStructuredData` gains `sameAs: ["https://www.kyno.top"]` pointing back. That second change is a one-line edit in the kynocreative.com repo and is the **only** work this project does in the other repository.
 
 ### Success measurement
 
 - **kyno.top:** pages indexed (GSC), organic sessions, referring domains.
-- **kyno.ltd:** sessions with `utm_source=kyno-top`, and brand-name search volume.
+- **kynocreative.com:** sessions with `utm_source=kyno-top`, and brand-name search volume.
 
 Direct conversion from tool users is **not** a phase-1 success metric.
 
@@ -364,7 +364,7 @@ Collecting the CSS href for a page from `lib/fonts.ts` rather than hand-writing 
 
 | Item | Implementation |
 |---|---|
-| Title/description | `generateMetadata` per page, specific per pairing/font/style. No token-swapped template strings |
+| Title/description | `generateMetadata` per page, specific per pairing/font/style. No token-swapped template strings. **No `title.template` in the root layout** — each page returns a complete title with the brand already in it, clamped to 60 characters total |
 | Canonical | self-referencing, `https://www.kyno.top` |
 | Sitemap | `src/app/sitemap.ts`, all ~225 URLs, absolute www URLs |
 | Robots | `robots.ts`, allow all, sitemap reference |
@@ -376,6 +376,8 @@ Collecting the CSS href for a page from `lib/fonts.ts` rather than hand-writing 
 | Noindex | none — every generated page is indexable |
 | `trailingSlash` | `false`; canonical URLs match rendered paths |
 
+> **Why there is no title template.** kynocreative.com already shipped this bug: the root layout's `title.template: "%s — Kyno"` appended the brand to page titles that had added it themselves, so search results read `… — Kyno — Kyno`. A template has a second, quieter failure — it lengthens every title *after* the per-page length budget has already been applied, so a title clamped to 70 characters renders at 86. Composing the whole title in one function, against one budget, removes both.
+
 ## Deployment
 
 1. Create the `kyno-top` repo on GitHub; push the scaffold.
@@ -383,7 +385,7 @@ Collecting the CSS href for a page from `lib/fonts.ts` rather than hand-writing 
 3. Add `kyno.top` as a custom domain in Pages. Move kyno.top's nameservers to Cloudflare (done at the registrar).
 4. Enable Cloudflare Web Analytics and inject the beacon.
 5. Configure apex → www redirect at the Cloudflare level.
-6. GSC: add `kyno.top` as a **Domain** property (DNS TXT verification), submit `https://www.kyno.top/sitemap.xml` as a **full URL** — the same www/apex lesson learned on kyno.ltd. Then use URL Inspection → "Request indexing" for `/` and the highest-value font pages.
+6. GSC: add `kyno.top` as a **Domain** property (DNS TXT verification), submit `https://www.kyno.top/sitemap.xml` as a **full URL** — the same www/apex lesson learned on kynocreative.com. Then use URL Inspection → "Request indexing" for `/` and the highest-value font pages.
 
 **Fallback if Cloudflare is unusable:** `out/` can be rsynced to the existing VPS and served by nginx as static files. This keeps kyno.top off the Node process either way. The cost is losing the CDN, so it is a fallback, not a plan.
 
@@ -402,7 +404,7 @@ Collecting the CSS href for a page from `lib/fonts.ts` rather than hand-writing 
 - `Copy CSS` produces a working snippet in all three tabs.
 - `/?h=x&b=y` restores the pairing.
 - Every pairing page renders its two fonts, its contribution module, and the store module only where a mapping exists.
-- Nav, footer, and store links carry UTM parameters and resolve to real kyno.ltd URLs.
+- Nav, footer, and store links carry UTM parameters and resolve to real kynocreative.com URLs.
 - Keyboard-only pass over generator + one pairing page; preview text edits are reachable and announce correctly.
 
 **Performance**
@@ -436,11 +438,11 @@ Collecting the CSS href for a page from `lib/fonts.ts` rather than hand-writing 
 
 ## Risks
 
-1. **Slow indexing.** A new domain with ~225 programmatic pages on a low-trust TLD may take weeks to index. This is a time-and-backlinks problem, not a configuration problem — kyno.ltd is in the same state today. Mitigations: manual indexing requests, and a tool that is genuinely shareable (design communities, Reddit r/typography, product directories) which brings the backlinks kyno.ltd cannot generate on its own.
+1. **Slow indexing.** A new domain with ~225 programmatic pages on a low-trust TLD may take weeks to index. This is a time-and-backlinks problem, not a configuration problem — kynocreative.com is in the same state today. Mitigations: manual indexing requests, and a tool that is genuinely shareable (design communities, Reddit r/typography, product directories) which brings the backlinks kynocreative.com cannot generate on its own.
    **The failure mode to avoid is panicking at week two and expanding to 1000 pages.**
 
 2. **Google's scaled-content-abuse policy.** Programmatic pages are explicitly in scope for it. Defenses: every page has real utility (live editable preview, working code, genuine rationale), rationale strings are linted for template collapse, the head-term pages are hand-written, and expansion is phased rather than all-at-once. This reduces but does not eliminate the risk — which is why phase 1 is deliberately small and independently valuable even if phase 2 never happens.
 
-3. **`.top` trust.** The TLD has a poor reputation in the US. Accepted for a free tool, which is why no payment or email entry ever happens on kyno.top — those stay on kyno.ltd.
+3. **`.top` trust.** The TLD has a poor reputation in the US. Accepted for a free tool, which is why no payment or email entry ever happens on kyno.top — those stay on kynocreative.com.
 
-4. **Font licensing exposure.** Small, but self-inflicted if avoided. Two places matter: (a) never host a font file — the moment kyno.top serves a download it becomes a redistributor with notice obligations; (b) the fonts sold on kyno.ltd sit one click from a page explaining what is free to use, so they need to be original or carry a resale-permitting license. Both are gated by the rules in [Font Licensing](#font-licensing).
+4. **Font licensing exposure.** Small, but self-inflicted if avoided. Two places matter: (a) never host a font file — the moment kyno.top serves a download it becomes a redistributor with notice obligations; (b) the fonts sold on kynocreative.com sit one click from a page explaining what is free to use, so they need to be original or carry a resale-permitting license. Both are gated by the rules in [Font Licensing](#font-licensing).
