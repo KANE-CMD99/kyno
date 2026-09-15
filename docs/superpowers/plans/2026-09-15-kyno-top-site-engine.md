@@ -855,8 +855,8 @@ export const recipes: Recipe[] = [
     body: { category: "sans-serif", tagsAny: ["neutral", "humanist", "geometric"] },
     rationaleTemplates: [
       "{A} is an accent, not a headline: use it for one short line, then let {B} carry everything else.",
-      "Pair {A}'s {A_trait} informality with {B}'s {B_trait} steadiness, and keep {A} to a few words at a time.",
-      "The {A_trait} script gives the page a personal note; {B} keeps the rest of it readable at {B_trait} default.",
+      "Pair {A}'s {A_trait} with {B}'s {B_trait} body: keep {A} to a few words at a time and let {B} carry the rest.",
+      "{A}'s {A_trait} gives the page a personal note; {B} keeps everything else quiet and readable.",
       "Use {A} where a handwritten touch earns its place and {B} everywhere it does not. The contrast is the whole effect.",
     ],
     styles: ["playful", "wedding"],
