@@ -4319,9 +4319,44 @@ if (wronglyEmitted.length > 0) {
   process.exit(1);
 }
 
+/**
+ * Every page that declares a catalog font must also load a stylesheet for it.
+ *
+ * A component renders `font-family` inline while the *page* is responsible for the
+ * stylesheet, so a page can declare eight faces and load none — the cards then render in
+ * Georgia and nothing errors. This defect shipped twice during the build and cost three
+ * review rounds; the grep for `@font-face` in a built page is what caught it both times.
+ * This is that grep, mechanised, so it does not depend on a reviewer remembering it.
+ */
+function pagesMissingFonts(): string[] {
+  const names = fonts.map((font) => font.name);
+  const offenders: string[] = [];
+
+  for (const file of htmlFiles(out)) {
+    const html = readFileSync(file, "utf8");
+    const declarations = [...html.matchAll(/font-family:\s*([^;"'}]*)/g)]
+      .map((match) => match[1])
+      .join(" ");
+    const declared = names.filter((name) => declarations.includes(name));
+    if (declared.length > 0 && !html.includes("fonts.googleapis.com/css2")) {
+      offenders.push(`${file.replace(out, "")} (${declared.join(", ")})`);
+    }
+  }
+
+  return offenders;
+}
+
+const unfonted = pagesMissingFonts();
+if (unfonted.length > 0) {
+  console.error(`assert-pages: ${unfonted.length} page(s) declare a catalog font but load no stylesheet:`);
+  for (const item of unfonted.slice(0, 20)) console.error(`  - ${item}`);
+  process.exit(1);
+}
+
 console.log(
   `assert-pages OK — ${expectations.length} pages present ` +
-    `(${pairings.length} pairings, ${usedFonts.length} fonts, ${styles.length} styles defined).`,
+    `(${pairings.length} pairings, ${usedFonts.length} fonts, ${styles.length} styles defined); ` +
+    `every page declaring a catalog font loads one.`,
 );
 ```
 
