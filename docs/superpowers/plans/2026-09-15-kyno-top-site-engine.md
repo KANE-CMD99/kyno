@@ -12,7 +12,10 @@
 
 ## Global Constraints
 
-- **New repository.** All work happens in a **new repo**, checked out at `E:\KYNO\web\kyno-top` (a sibling of the kynocreative.com working directory `E:\KYNO\web\web -mian`). Nothing in this plan modifies the kynocreative.com repo except Task 22 Step 5, which is a single-line edit.
+- **New repository.** All work happens in a **new repo**, checked out at `E:\KYNO\web\kyno-top` (a sibling of the kynocreative.com working directory `E:\KYNO\web\web -mian`). Nothing in this plan modifies the kynocreative.com repo except Task 20 Step 5, which is a single-line edit.
+- **Commits carry an explicit identity.** The new repo has no local git identity configured, and writing one is out of scope for this plan. Every commit in it passes the identity inline, mirroring the identity already set on the kynocreative.com repo:
+  `git -c user.name="Kyno Dev" -c user.email="dev@kyno.tech" commit -m "…"`
+- **Node is v24 locally**, not the v22 the sibling repo runs in production. Nothing in this plan depends on the difference; note it only if a build error looks version-related.
 - **Static export only.** `output: 'export'` in `next.config.ts`. **No** route handlers, server actions, middleware, `revalidate`, ISR, or `next/image` optimization. Any of these breaks the export build.
 - **Canonical host:** `https://www.kyno.top` everywhere — canonicals, sitemap, JSON-LD, OG URLs. Never bare `kyno.top`, never `http`.
 - **Site name:** `Kyno Pairings`. **Site chrome type:** Fraunces (headings/brand) + Inter (UI/body), via `next/font/google`.
@@ -62,7 +65,7 @@
 
 **Interfaces:**
 - Consumes: nothing.
-- Produces: a repo where `npm run build` emits `out/index.html`. Every later task adds to this.
+- Produces: a repo where `npx next build` emits `out/index.html`. (`npm run build` also runs `npm run lint:data`, whose script does not exist until Task 6 — see Step 7.) Every later task adds to this.
 
 > **Before starting:** the target directory is outside the current working directory. Request access to `E:\KYNO\web` (or `E:\KYNO\web\kyno-top`) before creating files there.
 
@@ -223,6 +226,7 @@ git commit -m "chore: scaffold kyno.top with static export"
 ## Task 2: Dark theme, chrome fonts, and site shell
 
 **Files:**
+- Create: `postcss.config.mjs`
 - Modify: `src/app/globals.css`
 - Modify: `src/app/layout.tsx`
 - Create: `src/lib/site.ts`
@@ -256,7 +260,23 @@ export function storeUrl(path: string, medium: StoreMedium, content?: string): s
 }
 ```
 
-- [ ] **Step 2: Write the theme into `src/app/globals.css`**
+- [ ] **Step 2: Write `postcss.config.mjs`, then the theme in `src/app/globals.css`**
+
+Task 1 added `@tailwindcss/postcss` to `devDependencies` but no PostCSS config, so Tailwind currently emits nothing — the placeholder page has no classes, which is why it looked fine. This step is what actually turns Tailwind on. Without it every utility class in every later task silently produces no CSS.
+
+`postcss.config.mjs` (this is the exact shape the kynocreative.com repo uses):
+
+```js
+const defaultConfig = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default defaultConfig;
+```
+
+Then `src/app/globals.css`:
 
 ```css
 @import "tailwindcss";
@@ -4325,6 +4345,22 @@ gh repo create KANE-CMD99/kyno-top --private --source=. --remote=origin --push
 ```
 
 If `gh` is not authenticated for that account, create the empty repo in the GitHub UI and run `git remote add origin <url> && git push -u origin main`. Confirm the branch name matches Cloudflare's production branch setting.
+
+**Before pushing: check the lockfile's registry.** Task 1 ran `npm install` from a machine that could not reach `registry.npmjs.org`, so `package-lock.json` resolves every package from `registry.npmmirror.com`:
+
+```bash
+grep -o "registry\.[a-z.]*" package-lock.json | sort -u
+```
+
+If that prints anything other than `registry.npmjs.org`, regenerate the lockfile against the official registry before Cloudflare starts building from it — a China mirror is not reliably reachable from Cloudflare's build infrastructure:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install --registry=https://registry.npmjs.org
+npm ci && npm run build   # confirm the regenerated lockfile still resolves and builds
+```
+
+Commit the regenerated lockfile as its own commit before proceeding.
 
 - [ ] **Step 3: Hand over the Cloudflare and DNS steps**
 
