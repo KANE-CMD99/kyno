@@ -1669,7 +1669,7 @@ git commit -m "feat: record rationale template index and enforce template divers
 ## Task 8: Query layer over the data
 
 **Files:**
-- Create: `src/lib/pairings.ts`
+- Create: `src/lib/pairings.ts` (helper for card-page font loading is added in Task 15's section)
 - Create: `src/lib/pairings.test.ts`
 - Create: `data/styles.ts`
 
@@ -1858,6 +1858,16 @@ export function relatedPairings(pairing: Pairing, limit = 4): Pairing[] {
 
 export function fontsWithPairings(): Font[] {
   return fonts.filter((font) => (pairingSlugsByFont.get(font.slug)?.length ?? 0) > 0);
+}
+
+/**
+ * The distinct fonts a set of pairings renders, in catalog order. Pages that display card
+ * grids need this: `PairingCard` declares `font-family` inline, so a page that renders
+ * cards must also load the faces or every card falls back to Georgia/system-ui.
+ */
+export function fontsForPairings(subset: Pairing[]): Font[] {
+  const slugs = new Set(subset.flatMap((pairing) => [pairing.a, pairing.b]));
+  return fonts.filter((font) => slugs.has(font.slug));
 }
 ```
 
@@ -2273,13 +2283,14 @@ function clamp(text: string, limit: number): string {
   return `${clean.slice(0, limit - 1).trimEnd()}…`;
 }
 
+/** Exported so hub pages can brand their title without hand-writing the suffix. */
 /**
  * Composes the complete title, brand included, against a single 60-character budget.
  * The brand suffix is never the part that gets truncated — a long descriptive phrase
  * loses its tail first. There is deliberately no `title.template` in the layout, so
  * this is the only place a title is assembled.
  */
-function brandTitle(descriptive: string): string {
+export function brandTitle(descriptive: string): string {
   const room = MAX_TITLE - TITLE_SUFFIX.length;
   return `${clamp(descriptive, room)}${TITLE_SUFFIX}`;
 }
@@ -3539,6 +3550,16 @@ git commit -m "feat: pairing detail page with contribution split and store modul
 - Create: `src/app/fonts/[slug]/page.tsx`
 - Create: `src/app/styles/[slug]/page.tsx`
 - Create: `src/components/SpecimenBlock.tsx`
+- Modify: `src/lib/pairings.ts` (add `fontsForPairings`)
+- Modify: `src/lib/seo.ts` (export `brandTitle`)
+
+> **Every page that renders a card grid must load the faces those cards render.**
+> `PairingCard` sets `font-family` inline from `fallbackStack`, so a page that renders cards
+> and loads no stylesheet shows every sample in Georgia/system-ui — which is what shipped
+> before review caught it: `out/pairings.html` had 32 inline `font-family` declarations and
+> **zero** `@font-face`. The card grid's fonts come from `fontsForPairings`, and each page
+> emits exactly one `<link precedence="high">` for the union it displays. Do not add a second
+> one per component — the double-stylesheet pattern is a known issue recorded against Task 19.
 
 **Interfaces:**
 - Consumes: `pairings`, `fontsWithPairings`, `fontPairings`, `getFont`, `pairingsByStyle` (Task 8); `styles` from `data/styles.ts`; `fontTitle`, `fontDescription`, `styleTitle`, `styleDescription` (Task 10); `PairingCard`, `Breadcrumbs`.
@@ -3554,7 +3575,6 @@ import type { Font } from "@/lib/types";
 export function SpecimenBlock({ font }: { font: Font }) {
   return (
     <section className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8">
-      <link rel="stylesheet" precedence="high" href={googleFontsHref([font])} />
       <p
         className="text-5xl leading-none text-[var(--color-text-primary)]"
         style={{ fontFamily: fallbackStack(font) }}
@@ -3598,19 +3618,39 @@ export function SpecimenBlock({ font }: { font: Font }) {
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { PairingCard } from "@/components/PairingCard";
-import { getFont, pairings } from "@/lib/pairings";
+import { googleFontsHref } from "@/lib/fonts";
+import { fontsForPairings, getFont, pairings } from "@/lib/pairings";
 import { SITE } from "@/lib/site";
+import { brandTitle, breadcrumbJsonLd } from "@/lib/seo";
+
+const INDEX_DESCRIPTION =
+  "Every pairing in the Kyno Pairings catalog, each one previewed in its own two fonts with copy-ready CSS.";
 
 export const metadata: Metadata = {
-  title: "All Font Pairings",
-  description:
-    "Every pairing in the Kyno Pairings catalog, each one previewed in its own two fonts with copy-ready CSS.",
+  title: brandTitle("All Font Pairings"),
+  description: INDEX_DESCRIPTION,
   alternates: { canonical: `${SITE.url}/pairings` },
+  openGraph: {
+    title: brandTitle("All Font Pairings"),
+    description: INDEX_DESCRIPTION,
+    url: `${SITE.url}/pairings`,
+  },
 };
+
+const INDEX_TRAIL = [
+  { name: "Home", path: "/" },
+  { name: "Pairings", path: "/pairings" },
+];
 
 export default function PairingsIndex() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(INDEX_TRAIL)) }}
+      />
+      {/* The index's whole content is the catalog, so it loads the whole catalog. */}
+      <link rel="stylesheet" precedence="high" href={googleFontsHref(fontsForPairings(pairings))} />
       <Breadcrumbs trail={[{ name: "Home", href: "/" }, { name: "Pairings" }]} />
       <h1 className="mt-6 text-4xl font-bold sm:text-5xl">All font pairings</h1>
       <p className="mt-4 max-w-2xl">
@@ -3717,6 +3757,9 @@ export default async function FontPage({ params }: { params: Promise<{ slug: str
       ) : null}
 
       <div className="mt-10">
+        {/* One union link: it already includes the page font, because every pairing in
+            `found` contains it. SpecimenBlock deliberately does not load its own. */}
+        <link rel="stylesheet" precedence="high" href={googleFontsHref(fontsForPairings(found))} />
         <SpecimenBlock font={font} />
       </div>
 
@@ -3808,6 +3851,8 @@ export default async function StylePage({ params }: { params: Promise<{ slug: st
 
       <h1 className="mt-6 text-4xl font-bold sm:text-5xl">{style.name} font pairings</h1>
       <p className="mt-4 max-w-2xl">{style.description}</p>
+
+      <link rel="stylesheet" precedence="high" href={googleFontsHref(fontsForPairings(found))} />
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {found.map((pairing) => {
