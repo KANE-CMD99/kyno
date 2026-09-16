@@ -4766,6 +4766,29 @@ Verified from outside: 12 path types return 200 with expected byte sizes (`/`, `
    ```
    This is nginx/Pages syntax applied to the wrong product. The plan and this document used it; the live 301 header is what caught it.
 
+### Post-launch audit — 2026-09-17
+
+A full crawl of the live site (37 sitemap URLs, per-page parse, headers, redirects). **Passing everywhere:** 37/37 pages return 200; 37 unique titles and 37 unique descriptions, all within budget and all branded; canonicals self-referencing and correct; the font contract holds on all 33 pages that declare a catalog font; 37/37 pages carry a store link with UTM; the analytics beacon is on every page; robots and sitemap are clean; the 404 returns 404 with site chrome; the apex 301s with paths and query strings preserved.
+
+Seven findings. **Five were fixable in the repo and are fixed and verified live:**
+
+| # | Finding | Fix | Verified |
+|---|---|---|---|
+| 2 | No HSTS | `public/_headers` | `Strict-Transport-Security: max-age=31536000` present |
+| 3 | `/about`, `/privacy`, `/licenses` had **no Open Graph tags at all** — the only three pages without them | added `openGraph` with `/og.png` | 4/4 og tags on each |
+| 4 | No `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy` | same `_headers` file | all four present |
+| 5 | The same three pages had no JSON-LD | added `WebPage` + `BreadcrumbList` | 2 valid blocks each |
+| 7 | Sitemap root `…kyno.top/` vs canonical `…kyno.top` | sitemap emits `SITE.url` for the root | the two now match |
+
+`public/_headers` is where any response header Next cannot emit belongs — Cloudflare Workers static assets read it from the deployed directory. Verified by reading the headers on the live origin, not by the file's presence. It also carries `immutable` caching for `/_next/static/*`, which the build's content hashing makes safe.
+
+**Two findings are zone settings, not repo work, and remain open:**
+
+- **`http://www.kyno.top/` serves 200 over plaintext** — no HTTPS upgrade. Fix: Cloudflare → **SSL/TLS → Edge Certificates → Always Use HTTPS**. This is the one with real weight: content is served unencrypted, and a crawler sees two protocols.
+- **Trailing-slash redirects are `307`, not `301`.** `html_handling = "drop-trailing-slash"` was tried and **did not change the status code** — Cloudflare normalises assets with a temporary redirect regardless of the mode. Getting a permanent one needs a zone Redirect Rule: when `http.host eq "www.kyno.top" and http.request.uri.path matches "^/.+/$"`, then Dynamic → `concat("https://www.kyno.top", regex_replace(http.request.uri.path, "/$", ""))`, status 301. The destination is already correct, so this is polish.
+
+**One audit-script bug, of the same family as the others.** The first run reported a 164-character meta description on `/pairings/lora-work-sans`. It was measuring the **HTML-entity-encoded** attribute — `Lora&#x27;s` is four characters longer than `Lora's` — so a compliant 154-character description read as a violation. Fixed by decoding before measuring. This is the third instance of the same trap: a check that can't fail, a check that recovered no family names because entities truncated the capture, and now a check that measured the wrong string.
+
 ### What still needs the user
 
 **Search Console.** Add `kyno.top` as a **Domain** property, verify by DNS TXT, and submit the sitemap as the **full `https://www.kyno.top/sitemap.xml`** — the sibling site failed submission twice by submitting a non-`www` form. Then URL Inspection → Request indexing for `/`, `/pairings`, and a font page.
