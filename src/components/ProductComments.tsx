@@ -6,6 +6,7 @@ interface Comment {
   id: string;
   productId: string;
   name: string;
+  rating?: number;
   text: string;
   createdAt: string;
 }
@@ -16,11 +17,25 @@ interface Props {
 
 const INITIAL_SHOW = 10;
 
+function Stars({ value, className = "" }: { value: number; className?: string }) {
+  return (
+    <span className={`inline-flex leading-none ${className}`} aria-label={`${value} out of 5 stars`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <span key={n} className={n <= value ? "text-amber-400" : "text-neutral-300"}>
+          ★
+        </span>
+      ))}
+    </span>
+  );
+}
+
 export default function ProductComments({ productId }: Props) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const [text, setText] = useState("");
+  const [rating, setRating] = useState(0);
+  const [hovered, setHovered] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [msg, setMsg] = useState("");
   const [showAll, setShowAll] = useState(false);
@@ -38,37 +53,55 @@ export default function ProductComments({ productId }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !text.trim()) return;
+    if (!name.trim() || !text.trim() || rating < 1) return;
     setSubmitting(true);
     setMsg("");
     const res = await fetch("/api/comments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId, name: name.trim(), text: text.trim() }),
+      body: JSON.stringify({ productId, name: name.trim(), text: text.trim(), rating }),
     });
     if (res.ok) {
-      setName(""); setText("");
-      setMsg("Comment posted!");
+      setName(""); setText(""); setRating(0);
+      setMsg("Thanks — your review is posted!");
       setTimeout(() => setMsg(""), 3000);
       loadComments();
     } else {
-      setMsg("Failed to post comment.");
+      const data = await res.json().catch(() => ({}));
+      setMsg(data.error || "Failed to post review.");
     }
     setSubmitting(false);
   };
 
+  // Only comments that actually carry a rating count toward the average.
+  const rated = comments.filter((c) => typeof c.rating === "number" && c.rating >= 1 && c.rating <= 5);
+  const average = rated.length
+    ? Math.round((rated.reduce((sum, c) => sum + (c.rating as number), 0) / rated.length) * 10) / 10
+    : 0;
+
   const displayed = showAll ? comments : comments.slice(0, INITIAL_SHOW);
   const hasMore = comments.length > INITIAL_SHOW;
+  const canSubmit = name.trim().length > 0 && text.trim().length > 0 && rating >= 1 && !submitting;
 
   return (
     <section className="bg-white px-4 sm:px-6 py-14 sm:py-20">
       <div className="mx-auto max-w-2xl">
-        <h2 className="text-xl font-bold text-neutral-900">Comments</h2>
-        <p className="mt-1 text-sm text-neutral-500">
-          {comments.length} comment{comments.length !== 1 ? "s" : ""}
-        </p>
+        <h2 className="text-xl font-bold text-neutral-900">Reviews</h2>
+        <div className="mt-1 flex items-center gap-3 text-sm text-neutral-500">
+          {rated.length > 0 ? (
+            <>
+              <Stars value={Math.round(average)} />
+              <span className="font-medium text-neutral-700">{average.toFixed(1)}</span>
+              <span>
+                from {rated.length} review{rated.length !== 1 ? "s" : ""}
+              </span>
+            </>
+          ) : (
+            <span>No reviews yet — be the first to rate this product.</span>
+          )}
+        </div>
 
-        {/* Comment form */}
+        {/* Review form */}
         <form onSubmit={handleSubmit} className="mt-6 space-y-3">
           <input
             type="text"
@@ -78,6 +111,29 @@ export default function ProductComments({ productId }: Props) {
             required
             className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
+
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-neutral-600">Your rating</span>
+            <div className="flex items-center" onMouseLeave={() => setHovered(0)}>
+              {[1, 2, 3, 4, 5].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setRating(n)}
+                  onMouseEnter={() => setHovered(n)}
+                  aria-label={`${n} star${n > 1 ? "s" : ""}`}
+                  aria-pressed={rating === n}
+                  className={`px-0.5 text-2xl leading-none transition-colors ${
+                    n <= (hovered || rating) ? "text-amber-400" : "text-neutral-300 hover:text-amber-300"
+                  }`}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+            {rating > 0 && <span className="text-xs text-neutral-400">{rating}/5</span>}
+          </div>
+
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -89,25 +145,26 @@ export default function ProductComments({ productId }: Props) {
           <div className="flex items-center gap-3">
             <button
               type="submit"
-              disabled={submitting || !name.trim() || !text.trim()}
+              disabled={!canSubmit}
               className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
             >
-              {submitting ? "Posting..." : "Post Comment"}
+              {submitting ? "Posting..." : "Post Review"}
             </button>
+            {rating < 1 && <span className="text-xs text-neutral-400">Pick a star rating to post</span>}
             {msg && (
-              <span className={`text-xs ${msg.includes("Failed") ? "text-red-500" : "text-green-600"}`}>
+              <span className={`text-xs ${msg.includes("Failed") || msg.includes("must be") ? "text-red-500" : "text-green-600"}`}>
                 {msg}
               </span>
             )}
           </div>
         </form>
 
-        {/* Comments list */}
+        {/* Reviews list */}
         <div className="mt-8 space-y-4">
           {loading ? (
-            <p className="text-sm text-neutral-400">Loading comments...</p>
+            <p className="text-sm text-neutral-400">Loading reviews...</p>
           ) : comments.length === 0 ? (
-            <p className="text-sm text-neutral-400">No comments yet. Be the first!</p>
+            <p className="text-sm text-neutral-400">No reviews yet. Be the first!</p>
           ) : (
             displayed.map((c) => (
               <div key={c.id} className="rounded-lg border border-neutral-200 bg-white p-4">
@@ -116,6 +173,9 @@ export default function ProductComments({ productId }: Props) {
                     {c.name.charAt(0).toUpperCase()}
                   </span>
                   <span className="text-sm font-semibold text-neutral-900">{c.name}</span>
+                  {typeof c.rating === "number" && c.rating >= 1 && c.rating <= 5 && (
+                    <Stars value={c.rating} className="text-sm" />
+                  )}
                   <span className="text-xs text-neutral-400">
                     {new Date(c.createdAt).toLocaleDateString()}
                   </span>
@@ -135,7 +195,7 @@ export default function ProductComments({ productId }: Props) {
             >
               {showAll
                 ? "Show less"
-                : `Show all ${comments.length} comments`}
+                : `Show all ${comments.length} reviews`}
             </button>
           </div>
         )}

@@ -7,6 +7,8 @@ export interface Comment {
   productId: string;
   name: string;
   email: string;
+  /** 1–5 stars. Optional: anything left before ratings existed has none. */
+  rating?: number;
   text: string;
   createdAt: string;
 }
@@ -46,4 +48,18 @@ export function addComment(comment: Omit<Comment, "id" | "createdAt">): Comment 
   all.push(newComment);
   writeComments(all);
   return newComment;
+}
+
+/**
+ * Average of the ratings left so far, and how many contributed. Comments
+ * without a rating are ignored, so this stays an honest reflection of the
+ * people who actually scored the product.
+ */
+export function getRatingSummary(productId: string): { average: number; count: number } {
+  const rated = getCommentsForProduct(productId).filter(
+    (c) => typeof c.rating === "number" && c.rating >= 1 && c.rating <= 5
+  );
+  if (rated.length === 0) return { average: 0, count: 0 };
+  const sum = rated.reduce((total, c) => total + (c.rating as number), 0);
+  return { average: Math.round((sum / rated.length) * 10) / 10, count: rated.length };
 }
