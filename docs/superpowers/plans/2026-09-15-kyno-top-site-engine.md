@@ -4770,6 +4770,8 @@ Verified from outside: 12 path types return 200 with expected byte sizes (`/`, `
 
 **Search Console.** Add `kyno.top` as a **Domain** property, verify by DNS TXT, and submit the sitemap as the **full `https://www.kyno.top/sitemap.xml`** — the sibling site failed submission twice by submitting a non-`www` form. Then URL Inspection → Request indexing for `/`, `/pairings`, and a font page.
 
+**Web Analytics — done, and it needed a code change.** `/privacy` asserts in the present tense that traffic is measured with cookieless Cloudflare Web Analytics. The beacon was **not** on the live origin: Cloudflare's automatic injection covers origin-served HTML, not Worker-generated responses, so enabling the site in the dashboard was not enough. This was caught by fetching the live origin with a cache-busting query before and after, not by trusting the toggle. The beacon now lives in `src/app/layout.tsx`, is present in all 38 built pages, and was confirmed live by finding `beacon.min.js` and the site token in the response from `https://www.kyno.top/?cb=<n>`. The claim is true.
+
 **Optional, whenever:**
 - `SSL/TLS → Edge Certificates → Always Use HTTPS` — moves HTTP requests to HTTPS at the edge.
 - **The article fix, before Plan 2 grows the catalog.** Three rationale templates hardcode the indefinite article and break on a vowel-initial `trait` — `display-neutral[3]` emits "A angular technical grotesque headline…" the first time that recipe reaches four pairings. Nothing on the live site is wrong today; the lint cannot see it. See the first Plan 2 must-do.
