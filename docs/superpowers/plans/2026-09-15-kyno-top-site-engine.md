@@ -4741,14 +4741,35 @@ Two deliberate decisions were also reversed on evidence: the generator's catalog
 - `PairingPreview.tsx` declares `useRef<HTMLHeadingElement>` for a ref now attached to a `<span>`; it compiles only because the types are structurally compatible.
 - `src/lib/lint.ts`'s comment about the "produced no pairings" message names two causes; `isAcceptablePair` rejection is a third.
 
-### What still needs the user before the site is public
+### Deployed — 2026-09-16
 
-The repository side of deployment is complete. These do not:
+**Live at https://www.kyno.top.** The repository side was complete; the deployment is now done too.
 
-1. **Create the Cloudflare Pages project** from the `kyno-top` repo — build command `npm run build`, output `out`, production branch `main`.
-2. **Point `kyno.top`'s nameservers at Cloudflare**, and add both `kyno.top` and `www.kyno.top` as custom domains.
-3. **Add the apex → `www` 301 redirect rule.** Every canonical in this codebase is `www`; there is no fallback in the repo.
-4. **Enable Web Analytics and verify the beacon reaches the live origin.** `/privacy` asserts in the present tense that traffic is measured with cookieless Cloudflare Web Analytics. This is the one deployment step that discharges a *claim* rather than a feature — if it cannot be enabled, soften that sentence the same day rather than leaving the page overstating.
-5. **Submit the sitemap to Search Console as the full `https://www.kyno.top/sitemap.xml`** — the sibling site failed submission twice by submitting a non-`www` form.
-6. Re-run Lighthouse against the live origin. Four insight audits fail under `npx serve` purely because it sends no compression or cache headers; Cloudflare supplies both, so they should clear.
-7. **The GitHub push.** `gh` is authenticated as `KANE-CMD99`; nothing has been pushed. Creating and pushing the private `KANE-CMD99/kyno-top` repo was withheld pending the user's word.
+| Measure | Value |
+|---|---|
+| Host | Cloudflare Worker `kyno-top` with static assets, serving `out/` |
+| Source | `main` on `KANE-CMD99/kyno-top` (private), push-to-deploy |
+| Build gates in Cloudflare's build | all four green (37 pages, 738 internal links) |
+| Canonical host | `https://www.kyno.top` — matches the serving host exactly |
+| Apex | `kyno.top` → 301 → `www.kyno.top`, **path and query string preserved** |
+| Duplicate host | `workers.dev` closed via `workers_dev = false` |
+
+Verified from outside: 12 path types return 200 with expected byte sizes (`/`, `/pairings`, a pairing page, a font page, a style page, `/about`, `/privacy`, `/licenses`, the OFL text, `robots.txt`, `sitemap.xml`, `og.png`); a nonexistent path returns the custom 404; the apex preserves deep paths and query strings through the redirect.
+
+### Two corrections that only the live deployment could surface
+
+1. **The plan assumed Cloudflare Pages; Cloudflare's Git flow now provisions a Worker with static assets.** Its create screen has no "Build output directory" field at all — it has Build command and Deploy command. There is no way to pick Pages through that flow any more. `wrangler.toml` supplies what Pages' output-directory field would have: `[assets] directory = "./out"`. The outcome is equivalent — `out/` on Cloudflare's edge with push-to-deploy.
+
+2. **`${uri.path}` is not Cloudflare Redirect Rules syntax.** The apex redirect was first written with `https://www.kyno.top${uri.path}` and deployed with the placeholder sent *literally*, so `kyno.top/about` redirected to the nonsense URL `https://www.kyno.top${uri.path}/`. Cloudflare's redirect rules use `concat()`:
+   ```
+   concat("https://www.kyno.top", http.request.uri.path)
+   ```
+   This is nginx/Pages syntax applied to the wrong product. The plan and this document used it; the live 301 header is what caught it.
+
+### What still needs the user
+
+**Search Console.** Add `kyno.top` as a **Domain** property, verify by DNS TXT, and submit the sitemap as the **full `https://www.kyno.top/sitemap.xml`** — the sibling site failed submission twice by submitting a non-`www` form. Then URL Inspection → Request indexing for `/`, `/pairings`, and a font page.
+
+**Optional, whenever:**
+- `SSL/TLS → Edge Certificates → Always Use HTTPS` — moves HTTP requests to HTTPS at the edge.
+- **The article fix, before Plan 2 grows the catalog.** Three rationale templates hardcode the indefinite article and break on a vowel-initial `trait` — `display-neutral[3]` emits "A angular technical grotesque headline…" the first time that recipe reaches four pairings. Nothing on the live site is wrong today; the lint cannot see it. See the first Plan 2 must-do.
