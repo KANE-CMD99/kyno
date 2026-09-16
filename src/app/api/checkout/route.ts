@@ -80,10 +80,12 @@ export async function POST(req: Request) {
         },
         quantity: i.quantity,
       })),
-      // No payment_method_types here on purpose: omitting it lets Stripe use
-      // the account's default payment method configuration, so methods can be
-      // turned on or off from the Stripe dashboard without a code change.
-      // Passing payment_method_types alongside a configuration is an error.
+      // Which payment methods appear is decided by this Stripe configuration,
+      // so adding or removing one is a dashboard toggle rather than a deploy.
+      // Referenced explicitly instead of relying on the account default, which
+      // this store does not control. Note: passing payment_method_types as well
+      // is an error — the configuration already determines the list.
+      payment_method_configuration: "pmc_1TmNhvHKmhLcv5FtOcwDxnIo",
       billing_address_collection: "auto",
       ...(process.env.STRIPE_AUTOMATIC_TAX === "true"
         ? {
