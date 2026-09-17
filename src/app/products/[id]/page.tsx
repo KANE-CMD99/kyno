@@ -78,7 +78,8 @@ export default async function ProductPage({ params }: PageProps) {
 
   const hasFeatures = detail.features.filter(Boolean).length > 0;
   const hasIncludes = detail.includes.filter(Boolean).length > 0;
-  const images = detail.previewImages.filter(Boolean).slice(0, 3);
+  // Cap lives in ProductGallery — it owns the thumbnail strip layout.
+  const images = detail.previewImages.filter(Boolean);
 
   return (
     <>

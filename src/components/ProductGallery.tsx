@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function ProductGallery({ images, name }: Props) {
-  const safe = images.filter(Boolean).slice(0, 3);
+  const safe = images.filter(Boolean).slice(0, 12);
   const [active, setActive] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const current = safe[Math.min(active, safe.length - 1)];
@@ -55,7 +55,7 @@ export default function ProductGallery({ images, name }: Props) {
       </button>
 
       {safe.length > 1 && (
-        <div className="flex gap-2 sm:gap-3">
+        <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-1">
           {safe.map((img, i) => (
             <button
               key={img}
