@@ -6,11 +6,16 @@ const STORE_PATH = path.join(DATA_DIR, "blog-posts.json");
 
 export type BlogStatus = "draft" | "pending" | "published";
 
+/** 文章分类的固定取值 —— 列表页的筛选 tab 需要一个稳定的集合，所以不做自由输入。 */
+export const BLOG_CATEGORIES = ["Resume Tips", "Design", "Printables", "Career"] as const;
+
 export interface BlogPost {
   id: string;
   slug: string;
   title: string;
   excerpt: string;
+  /** 展示用分类；取值来自 BLOG_CATEGORIES。老文章没有此字段。 */
+  category?: string;
   coverImage?: string;
   content: string;
   publishedAt?: string;

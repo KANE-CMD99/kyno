@@ -64,6 +64,7 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
       slug,
       title: title.trim(),
       excerpt: excerpt.trim(),
+      category: post?.category || undefined,
       coverImage: coverImage || undefined,
       content,
       submit: mode === "submit",

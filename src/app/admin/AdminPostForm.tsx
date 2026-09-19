@@ -52,7 +52,7 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
     if (!title.trim()) { setError("Title is required"); return; }
     if (!content.trim()) { setError("Content is required"); return; }
     setSaving(true);
-    const input = { slug, title: title.trim(), excerpt: excerpt.trim(), coverImage: coverImage || undefined, content, status, author };
+    const input = { slug, title: title.trim(), excerpt: excerpt.trim(), category: post?.category || undefined, coverImage: coverImage || undefined, content, status, author };
     const result = isEditing
       ? await adminUpdatePost(post!.id, input)
       : await adminCreatePost(input);

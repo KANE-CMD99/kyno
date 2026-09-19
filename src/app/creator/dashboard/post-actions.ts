@@ -16,6 +16,8 @@ export type CreatorPostInput = {
   slug: string;
   title: string;
   excerpt: string;
+  /** 必填但可为 undefined —— 漏传的调用点应当在编译期就暴露。 */
+  category: string | undefined;
   coverImage?: string;
   content: string;
   /** true = submit for admin review, false = keep as a private draft. */
@@ -49,6 +51,7 @@ export async function creatorCreatePost(input: CreatorPostInput) {
       slug,
       title: input.title.trim(),
       excerpt: input.excerpt.trim(),
+      category: input.category,
       coverImage: input.coverImage || undefined,
       content: input.content,
       status,
@@ -84,6 +87,7 @@ export async function creatorUpdatePost(id: string, input: CreatorPostInput) {
       slug,
       title: input.title.trim(),
       excerpt: input.excerpt.trim(),
+      category: input.category,
       coverImage: input.coverImage || undefined,
       content: input.content,
       status,

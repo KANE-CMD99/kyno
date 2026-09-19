@@ -9,6 +9,8 @@ type BlogPostInput = {
   slug: string;
   title: string;
   excerpt: string;
+  /** 必填但可为 undefined —— 漏传的调用点应当在编译期就暴露。 */
+  category: string | undefined;
   coverImage?: string;
   content: string;
   status: BlogStatus;
@@ -82,6 +84,7 @@ export async function adminApprovePost(id: string) {
       slug: existing.slug,
       title: existing.title,
       excerpt: existing.excerpt,
+      category: existing.category,
       coverImage: existing.coverImage,
       content: existing.content,
       author: existing.author,
@@ -107,6 +110,7 @@ export async function adminRejectPost(id: string) {
       slug: existing.slug,
       title: existing.title,
       excerpt: existing.excerpt,
+      category: existing.category,
       coverImage: existing.coverImage,
       content: existing.content,
       author: existing.author,
