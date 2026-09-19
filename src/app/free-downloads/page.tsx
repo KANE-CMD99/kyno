@@ -1,17 +1,10 @@
-import type { Metadata } from "next";
 import { getAllProducts } from "@/db/products-store";
 import FreeDownloadsClient, { type FreeProduct } from "./FreeDownloadsClient";
 
 // Prerender so the free products are in the HTML: they are the site's main
 // lead magnet and were previously only reachable after a client-side fetch.
+// (Title/description/canonical live in this route's layout.tsx.)
 export const revalidate = 3600;
-
-export const metadata: Metadata = {
-  title: "Free Downloads",
-  description:
-    "Free resume templates, printables and design assets. Enter your email and we'll send the download link — no signup required.",
-  alternates: { canonical: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com"}/free-downloads` },
-};
 
 const categoryEmoji: Record<string, string> = {
   Photos: "📷",
