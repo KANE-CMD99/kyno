@@ -13,15 +13,18 @@ const CATEGORY_SLUGS: { slug: string; category: string }[] = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // No lastModified on these: we have no real content-update time for them, and
+  // emitting the generation timestamp makes every URL share one date, which
+  // Google reads as a low-quality signal. Omitted beats fabricated.
   const baseRoutes = [
-    { url: SITE_URL, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 1 },
-    { url: `${SITE_URL}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.6 },
-    { url: `${SITE_URL}/products`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.9 },
-    { url: `${SITE_URL}/contact`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
-    { url: `${SITE_URL}/free-downloads`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-    { url: `${SITE_URL}/license`, lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.3 },
-    { url: `${SITE_URL}/terms`, lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.3 },
-    { url: `${SITE_URL}/privacy`, lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.3 },
+    { url: SITE_URL, changeFrequency: "weekly" as const, priority: 1 },
+    { url: `${SITE_URL}/about`, changeFrequency: "monthly" as const, priority: 0.6 },
+    { url: `${SITE_URL}/products`, changeFrequency: "weekly" as const, priority: 0.9 },
+    { url: `${SITE_URL}/contact`, changeFrequency: "monthly" as const, priority: 0.5 },
+    { url: `${SITE_URL}/free-downloads`, changeFrequency: "weekly" as const, priority: 0.8 },
+    { url: `${SITE_URL}/license`, changeFrequency: "yearly" as const, priority: 0.3 },
+    { url: `${SITE_URL}/terms`, changeFrequency: "yearly" as const, priority: 0.3 },
+    { url: `${SITE_URL}/privacy`, changeFrequency: "yearly" as const, priority: 0.3 },
   ];
 
   let products: Awaited<ReturnType<typeof getAllProducts>>;
@@ -36,19 +39,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const populatedCategories = new Set(products.map((p) => p.category));
   const categoryRoutes = CATEGORY_SLUGS.filter(({ category }) => populatedCategories.has(category)).map(({ slug }) => ({
     url: `${SITE_URL}/categories/${slug}`,
-    lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
   }));
 
   const productRoutes = products.map((p) => ({
     url: `${SITE_URL}/products/${p.id}`,
-    lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.9,
   }));
 
-  const blogListRoute = { url: `${SITE_URL}/blog`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.6 };
+  const blogListRoute = { url: `${SITE_URL}/blog`, changeFrequency: "weekly" as const, priority: 0.6 };
 
   const posts = await getPublishedPosts().catch(() => []);
   const blogRoutes = posts.map((p) => ({
@@ -59,13 +60,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // A creator page with no products is thin content, and the placeholder
+  // accounts are unreachable from anywhere on the site — both are exactly what
+  // Google's "crawled, not indexed" penalty is for. Only list creators that
+  // actually have something to show.
+  const creatorsWithProducts = new Set(products.map((p) => p.creator));
   const creators = await getCreators().catch(() => []);
-  const creatorRoutes = creators.map((c) => ({
-    url: `${SITE_URL}/${c.username}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.6,
-  }));
+  const creatorRoutes = creators
+    .filter((c) => creatorsWithProducts.has(c.username))
+    .map((c) => ({
+      url: `${SITE_URL}/${c.username}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    }));
 
   return [...baseRoutes, blogListRoute, ...categoryRoutes, ...productRoutes, ...blogRoutes, ...creatorRoutes];
 }

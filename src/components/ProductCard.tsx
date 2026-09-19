@@ -120,7 +120,7 @@ export default function ProductCard({ product, index }: ProductCardProps) {
         <div className="mt-1.5 flex items-center justify-center gap-2">
           <span className="text-sm font-bold text-neutral-900">{displayPrice}</span>
           {hasSale && (
-            <span className="text-xs text-neutral-400 line-through">{displayOriginal}</span>
+            <span className="text-xs text-neutral-500 line-through">{displayOriginal}</span>
           )}
         </div>
       </div>

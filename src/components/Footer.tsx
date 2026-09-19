@@ -9,7 +9,7 @@ export default function Footer() {
           {/* Brand column */}
           <div>
             <Logo dark />
-            <p className="mt-3 text-sm leading-relaxed text-neutral-500">
+            <p className="mt-3 text-sm leading-relaxed text-neutral-400">
               Premium creative assets for designers and content creators.
             </p>
           </div>
@@ -25,7 +25,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-sm text-neutral-500 transition-colors hover:text-white"
+                      className="text-sm text-neutral-400 transition-colors hover:text-white"
                     >
                       {link.label}
                     </a>
@@ -36,7 +36,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-600">
+        <div className="mt-12 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-400">
           &copy; {new Date().getFullYear()} Kyno. All rights reserved.
         </div>
       </div>

@@ -28,12 +28,16 @@ export const metadata: Metadata = {
     title: "Kyno — Buy Once, Own Forever",
     description:
       "Premium resume templates, posters, and design assets for creators. Pay once, own forever — from $1.",
+    // Inherited by every page that doesn't set its own image. Without it the
+    // homepage and the static pages shared as a bare link with no card.
+    images: [{ url: "/og-default.png", width: 1200, height: 630, alt: "Kyno — resume templates, posters and design assets" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Kyno — Buy Once, Own Forever",
     description:
       "Premium resume templates, posters, and design assets for creators. Pay once, own forever — from $1.",
+    images: ["/og-default.png"],
   },
   robots: {
     index: true,

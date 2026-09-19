@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { getProductDetail, getRelatedProducts } from "@/data/product-detail";
 import { getAllProducts } from "@/db/products-store";
 import { categoryFull } from "@/data/site";
-import { metaDescription } from "@/lib/seo";
+import { metaDescription, pageTitle } from "@/lib/seo";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -46,9 +46,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     // No price in the title — the SERP would keep showing a stale figure after
     // a price change, and the price is already in the snippet/price meta.
-    // No brand suffix either: the root layout's title template appends "— Kyno",
-    // so adding it here produced "… — Kyno — Kyno".
-    title: detail.name,
+    // pageTitle drops the template's brand suffix when the name is long enough
+    // that the two together would run past what Google displays. (Previously
+    // adding the brand here produced "… — Kyno — Kyno".)
+    title: pageTitle(detail.name),
     description,
     alternates: { canonical: url },
     openGraph: {
@@ -58,7 +59,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       // Next's OpenGraph type union doesn't include OG's "product" type.
       type: "website",
       url,
-      images: [{ url: imageUrl, width: 1200, height: 630 }],
+      // No width/height: product shots are square-ish mockups (e.g. 2000×2000),
+      // not the 1200×630 card this used to claim. Declaring a shape the file
+      // isn't makes scrapers lay out the wrong preview, so let them measure the
+      // real image instead.
+      images: [{ url: imageUrl }],
     },
     twitter: {
       card: "summary_large_image",
@@ -97,7 +102,7 @@ export default async function ProductPage({ params }: PageProps) {
       <main className="bg-white pt-[105px]">
         {/* Breadcrumb */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-6 sm:pt-8">
-          <p className="text-xs sm:text-sm text-neutral-400 truncate">
+          <p className="text-xs sm:text-sm text-neutral-500 truncate">
             <Link href="/" className="hover:text-neutral-600 transition-colors">Home</Link>
             <span className="mx-1.5 sm:mx-2">/</span>
             <Link href={`/categories/${detail.category.toLowerCase()}`} className="hover:text-neutral-600 transition-colors">{categoryFull(detail.category)}</Link>
@@ -122,7 +127,7 @@ export default async function ProductPage({ params }: PageProps) {
                        : detail.category === "Free" ? String.fromCodePoint(0x1F381)
                        : String.fromCodePoint(0x1F4D0)}
                     </span>
-                    <p className="mt-3 text-sm text-neutral-400">Product preview</p>
+                    <p className="mt-3 text-sm text-neutral-500">Product preview</p>
                   </div>
                 </div>
               )}
@@ -167,7 +172,7 @@ export default async function ProductPage({ params }: PageProps) {
                   price={detail.price}
                   originalPrice={detail.originalPrice}
                   className="text-3xl font-bold text-neutral-900"
-                  originalClassName="text-lg text-neutral-400 line-through"
+                  originalClassName="text-lg text-neutral-500 line-through"
                 />
               </div>
               <CurrencyNote className="mt-1.5" />

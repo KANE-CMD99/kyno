@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getPublishedPosts, getPostBySlug } from "@/db/blog-posts";
 import { getCreators } from "@/db/creators";
-import { metaDescription } from "@/lib/seo";
+import { metaDescription, pageTitle } from "@/lib/seo";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import "../markdown.css";
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const image = post.coverImage ? `${SITE_URL}${post.coverImage}` : `${SITE_URL}/og-default.png`;
   const description = metaDescription(post.excerpt || post.content);
   return {
-    title: post.title,
+    title: pageTitle(post.title),
     description,
     alternates: { canonical: url },
     openGraph: {
@@ -37,7 +38,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       type: "article",
       url,
-      images: [{ url: image, width: 1200, height: 630 }],
+      // Cover art is 1600×900 or 1:1 depending on the post, so no fixed size is
+      // declared — a wrong one makes scrapers crop the preview badly.
+      images: [{ url: image }],
     },
     twitter: {
       card: "summary_large_image",
@@ -87,7 +90,17 @@ export default async function BlogPostPage({ params }: PageProps) {
             <span>{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : ""}</span>
           </div>
           {post.coverImage && (
-            <img src={post.coverImage} alt={post.title} className="mt-6 w-full rounded-xl object-cover" />
+            // Covers are mixed 16:9 and 1:1, so no intrinsic size is declared —
+            // width/height of 0 plus `sizes` is Next's documented pattern for a
+            // fluid image, and it keeps each cover at its own aspect ratio.
+            <Image
+              src={post.coverImage}
+              alt={post.title}
+              width={0}
+              height={0}
+              sizes="(max-width: 768px) 100vw, 720px"
+              className="mt-6 h-auto w-full rounded-xl"
+            />
           )}
           <div className="markdown-body mt-8">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>

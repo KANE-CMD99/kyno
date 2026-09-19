@@ -61,9 +61,11 @@ export function categoryShort(value: string): string {
   return CATEGORY_DISPLAY[value]?.short ?? value;
 }
 
+// Fonts is intentionally absent: the category has no products, so linking to it
+// only offers visitors a "No products in this category yet" dead end. Put it
+// back when the first font product goes live.
 export const categoryPills: NavLink[] = [
   { label: categoryShort("Photos"), href: "/categories/photos" },
-  { label: categoryShort("Fonts"), href: "/categories/fonts" },
   { label: categoryShort("Templates"), href: "/categories/templates" },
   { label: "Free", href: "/categories/free" },
 ];
@@ -150,7 +152,6 @@ export const footerColumns = [
     title: "Products",
     links: [
       { label: categoryFull("Photos"), href: "/categories/photos" },
-      { label: categoryFull("Fonts"), href: "/categories/fonts" },
       { label: categoryFull("Templates"), href: "/categories/templates" },
       { label: "Free Downloads", href: "/free-downloads" },
     ],

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { BlogPost } from "@/db/blog-posts";
 
 export default function HeroSection({ posts }: { posts: BlogPost[] }) {
@@ -28,7 +29,7 @@ export default function HeroSection({ posts }: { posts: BlogPost[] }) {
             </a>
           </div>
 
-          <p className="mt-4 text-sm text-neutral-400">Instant download &middot; No subscription</p>
+          <p className="mt-4 text-sm text-neutral-500">Instant download &middot; No subscription</p>
         </div>
 
         {/* Right: Recent blog posts */}
@@ -46,7 +47,7 @@ export default function HeroSection({ posts }: { posts: BlogPost[] }) {
               {posts.slice(0, 3).map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`} className="flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-3 transition-shadow hover:shadow-md">
                   {post.coverImage ? (
-                    <img src={post.coverImage} alt="" loading="lazy" decoding="async" className="h-14 w-20 shrink-0 rounded-md object-cover" />
+                    <Image src={post.coverImage} alt="" width={80} height={56} className="h-14 w-20 shrink-0 rounded-md object-cover" />
                   ) : (
                     <div className="flex h-14 w-20 shrink-0 items-center justify-center rounded-md bg-neutral-100 text-xl">📝</div>
                   )}
