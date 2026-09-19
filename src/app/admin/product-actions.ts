@@ -2,8 +2,10 @@
 
 import { createProduct, updateProduct, deleteProduct, getAllProducts } from "@/db/products-store";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/admin-auth";
 
 export async function adminGetProducts() {
+  await requireAdmin();
   return await getAllProducts();
 }
 
@@ -11,6 +13,7 @@ export async function adminCreateProduct(input: {
   name: string; category: string; price: number; originalPrice?: number;
   creator: string; description: string; features: string[]; includes: string[];
 }) {
+  await requireAdmin();
   try {
     const finalCategory = input.price === 0 ? "Free" : input.category;
     const product = await createProduct({ ...input, category: finalCategory, previewImages: [] });
@@ -26,6 +29,7 @@ export async function adminUpdateProduct(id: string, input: {
   name: string; category: string; price: number; originalPrice?: number;
   creator: string; description: string; features: string[]; includes: string[];
 }) {
+  await requireAdmin();
   try {
     const finalCategory = input.price === 0 ? "Free" : input.category;
     const result = await updateProduct(id, { ...input, category: finalCategory, previewImages: [] });
@@ -39,6 +43,7 @@ export async function adminUpdateProduct(id: string, input: {
 }
 
 export async function adminDeleteProduct(id: string) {
+  await requireAdmin();
   try {
     await deleteProduct(id);
     revalidatePath("/");

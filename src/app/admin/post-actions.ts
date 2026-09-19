@@ -2,6 +2,7 @@
 
 import { createPost, updatePost, deletePost, getAllPosts, getPostById, slugify } from "@/db/blog-posts";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/admin-auth";
 import type { BlogPost, BlogStatus } from "@/db/blog-posts";
 
 type BlogPostInput = {
@@ -31,10 +32,12 @@ function revalidate() {
 }
 
 export async function adminGetPosts(): Promise<BlogPost[]> {
+  await requireAdmin();
   return await getAllPosts();
 }
 
 export async function adminCreatePost(input: BlogPostInput) {
+  await requireAdmin();
   try {
     const post = await createPost(normalize(input));
     revalidate();
@@ -45,6 +48,7 @@ export async function adminCreatePost(input: BlogPostInput) {
 }
 
 export async function adminUpdatePost(id: string, input: BlogPostInput) {
+  await requireAdmin();
   try {
     // Editing a creator-submitted post must not drop its ownership.
     const existing = await getPostById(id);
@@ -58,6 +62,7 @@ export async function adminUpdatePost(id: string, input: BlogPostInput) {
 }
 
 export async function adminDeletePost(id: string) {
+  await requireAdmin();
   try {
     await deletePost(id);
     revalidate();
@@ -69,6 +74,7 @@ export async function adminDeletePost(id: string) {
 
 /** Approve a creator-submitted post — publishes it live. */
 export async function adminApprovePost(id: string) {
+  await requireAdmin();
   try {
     const existing = await getPostById(id);
     if (!existing) return { success: false, error: "Post not found" };
@@ -93,6 +99,7 @@ export async function adminApprovePost(id: string) {
 
 /** Send a post back to its author as a draft. */
 export async function adminRejectPost(id: string) {
+  await requireAdmin();
   try {
     const existing = await getPostById(id);
     if (!existing) return { success: false, error: "Post not found" };
