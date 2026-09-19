@@ -50,3 +50,32 @@ test("image inserts markdown image syntax with the uploaded url", () => {
 test("bold on a reversed selection is handled the same as a normal one", () => {
   assert.equal(applyFormat("hello", 4, 1, "bold").value, "h**ell**o");
 });
+
+test("heading at the very start of a document that begins with a newline", () => {
+  // start === 0 时不能走 lastIndexOf("\n", -1) —— 那会被钳到 0，把前缀加到第二行。
+  const r = applyFormat("\nabc", 0, 0, "h2");
+  assert.equal(r.value, "## \nabc");
+  assert.equal(r.selectionStart, 0);
+  assert.equal(r.selectionEnd, 3);
+});
+
+test("h3 uses three hashes", () => {
+  assert.equal(applyFormat("abc", 1, 1, "h3").value, "### abc");
+});
+
+test("italic on an empty selection inserts and selects a placeholder", () => {
+  const r = applyFormat("abc", 3, 3, "italic");
+  assert.equal(r.value, "abc*italic text*");
+  assert.equal(r.value.slice(r.selectionStart, r.selectionEnd), "italic text");
+});
+
+test("link with no url falls back to a bare https://", () => {
+  const r = applyFormat("click", 0, 5, "link");
+  assert.equal(r.value, "[click](https://)");
+  assert.equal(r.value.slice(r.selectionStart, r.selectionEnd), "click");
+});
+
+test("image with a non-empty selection replaces it rather than wrapping", () => {
+  // (1, 3) 选中的是 "bc"，整体被替换掉；"c" 在选区之内，不能残留。
+  assert.equal(applyFormat("abc", 1, 3, "image", "/x.png").value, "a![](/x.png)");
+});

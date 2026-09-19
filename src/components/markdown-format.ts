@@ -14,7 +14,9 @@ function mapLines(
   end: number,
   prefix: (index: number) => string
 ): FormatResult {
-  const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+  // start === 0 必须单独处理：`lastIndexOf("\n", -1)` 按规范会被钳到 0，
+  // 于是文档开头那个换行会被误当成「光标前的那一行」的分隔符，把前缀加到第二行上。
+  const lineStart = start === 0 ? 0 : value.lastIndexOf("\n", start - 1) + 1;
   const lineEndIdx = value.indexOf("\n", end);
   const lineEnd = lineEndIdx === -1 ? value.length : lineEndIdx;
   const block = value.slice(lineStart, lineEnd);
