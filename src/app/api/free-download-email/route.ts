@@ -3,8 +3,17 @@ import { getProductById } from "@/db/products-store";
 import { createOrder } from "@/db/storage";
 import { sendDownloadEmail } from "@/lib/email";
 import { isEmail } from "@/lib/validation";
+import { clientIp, isRateLimited, TOO_MANY } from "@/lib/rate-limit";
+
+// Every accepted call sends a real email, so an unmetered script could drain
+// the Resend quota and leave paying customers without their download links.
+const RATE_LIMIT = 5;
 
 export async function POST(req: Request) {
+  if (isRateLimited("free-download-email", clientIp(req), RATE_LIMIT)) {
+    return NextResponse.json(TOO_MANY, { status: 429 });
+  }
+
   try {
     const { email, productId } = await req.json();
     if (!isEmail(email) || typeof productId !== "string" || !productId) {

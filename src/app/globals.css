@@ -38,3 +38,16 @@ input[type="password"]::-ms-clear,
 input[type="password"]::-webkit-credentials-auto-fill-button {
   display: none;
 }
+
+/* Honour the OS "reduce motion" setting for plain CSS animation and transition
+   (framer-motion handles its own via MotionConfig in ClientLayout). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

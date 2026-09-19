@@ -91,7 +91,7 @@ export default function ContactPage() {
                   <div>
                     <label htmlFor="contact-name" className="block text-xs font-medium text-neutral-700">Name</label>
                     <input
-                      id="contact-name" type="text" value={name} onChange={(e) => setName(e.target.value)}
+                      id="contact-name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)}
                       className="mt-1.5 block w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       placeholder="Your name"
                     />
@@ -99,7 +99,7 @@ export default function ContactPage() {
                   <div>
                     <label htmlFor="contact-email" className="block text-xs font-medium text-neutral-700">Email</label>
                     <input
-                      id="contact-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                      id="contact-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
                       className="mt-1.5 block w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       placeholder="you@example.com"
                     />

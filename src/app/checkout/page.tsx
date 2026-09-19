@@ -23,6 +23,10 @@ export default function CheckoutPage() {
       <>
         <Nav />
         <main className="flex min-h-[80vh] items-center justify-center bg-[#FAFAFA] pt-[105px]">
+          {/* This is the only branch the server renders, so it is where the
+              document's heading has to live — without it the served page had
+              no <h1> at all. */}
+          <h1 className="sr-only">{t("checkout.title")}</h1>
           <p className="text-sm text-neutral-500">{t("checkout.loading_cart")}</p>
         </main>
         <Footer />
@@ -145,6 +149,7 @@ export default function CheckoutPage() {
                     <input
                       id="email"
                       type="email"
+                      autoComplete="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}

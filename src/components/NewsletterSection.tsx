@@ -57,6 +57,7 @@ export default function NewsletterSection() {
             <div className="flex gap-3">
               <input
                 type="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
                 placeholder="your@email.com"

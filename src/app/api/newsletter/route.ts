@@ -3,10 +3,16 @@ import fs from "fs";
 import path from "path";
 import { DATA_DIR } from "@/lib/data-dir";
 import { isEmail } from "@/lib/validation";
+import { clientIp, isRateLimited, TOO_MANY } from "@/lib/rate-limit";
 
 const SUBSCRIBERS_FILE = "newsletter-subscribers.json";
+const RATE_LIMIT = 5;
 
 export async function POST(req: Request) {
+  if (isRateLimited("newsletter", clientIp(req), RATE_LIMIT)) {
+    return NextResponse.json(TOO_MANY, { status: 429 });
+  }
+
   try {
     const { email } = await req.json();
     if (!isEmail(email)) {

@@ -118,7 +118,11 @@ export default function ProductCard({ product, index }: ProductCardProps) {
           in {categoryFull(product.category)}
         </p>
         <div className="mt-1.5 flex items-center justify-center gap-2">
-          <span className="text-sm font-bold text-neutral-900">{displayPrice}</span>
+          {/* A free item already carries the FREE badge above; the matching
+              "$0.00" only restated it and read as an unfinished listing. */}
+          {!isFree && (
+            <span className="text-sm font-bold text-neutral-900">{displayPrice}</span>
+          )}
           {hasSale && (
             <span className="text-xs text-neutral-500 line-through">{displayOriginal}</span>
           )}

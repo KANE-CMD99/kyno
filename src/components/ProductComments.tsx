@@ -105,6 +105,7 @@ export default function ProductComments({ productId }: Props) {
         <form onSubmit={handleSubmit} className="mt-6 space-y-3">
           <input
             type="text"
+            autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Your name"

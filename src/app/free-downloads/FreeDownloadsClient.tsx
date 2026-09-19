@@ -150,6 +150,7 @@ export default function FreeDownloadsClient({ products }: { products: FreeProduc
                             <div className="flex gap-2">
                               <input
                                 type="email"
+                                autoComplete="email"
                                 value={email}
                                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
                                 placeholder="your@email.com"

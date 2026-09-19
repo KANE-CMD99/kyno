@@ -2,16 +2,24 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { SITE } from "@/lib/site-config";
 import { isEmail } from "@/lib/validation";
+import { clientIp, isRateLimited, TOO_MANY } from "@/lib/rate-limit";
 
 // Caps stop the form being used as a relay for bulk/spam payloads, which
 // would damage the domain's sending reputation.
 const MAX_LENGTHS = { name: 100, email: 254, subject: 200, message: 5000 } as const;
+
+// Each accepted submission sends an email, so cap how often one caller can do it.
+const RATE_LIMIT = 3;
 
 function isFilledString(v: unknown, max: number): v is string {
   return typeof v === "string" && v.trim().length > 0 && v.length <= max;
 }
 
 export async function POST(req: Request) {
+  if (isRateLimited("contact", clientIp(req), RATE_LIMIT)) {
+    return NextResponse.json(TOO_MANY, { status: 429 });
+  }
+
   try {
     const { name, email, subject, message } = await req.json();
 

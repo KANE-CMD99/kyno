@@ -49,6 +49,7 @@ export default function OrdersPage() {
           <form onSubmit={handleLookup} className="mt-8 flex gap-2">
             <input
               type="email"
+              autoComplete="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}

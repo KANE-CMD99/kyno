@@ -166,14 +166,20 @@ export default async function ProductPage({ params }: PageProps) {
                 )}
               </div>
 
-              {/* Price */}
+              {/* Price — a free item says so, rather than headlining "$0.00" */}
               <div className="mt-6 flex items-center gap-3">
-                <PriceDisplay
-                  price={detail.price}
-                  originalPrice={detail.originalPrice}
-                  className="text-3xl font-bold text-neutral-900"
-                  originalClassName="text-lg text-neutral-500 line-through"
-                />
+                {detail.price === 0 ? (
+                  <span className="rounded-md bg-emerald-100 px-3 py-1 text-xl font-bold text-emerald-700">
+                    Free
+                  </span>
+                ) : (
+                  <PriceDisplay
+                    price={detail.price}
+                    originalPrice={detail.originalPrice}
+                    className="text-3xl font-bold text-neutral-900"
+                    originalClassName="text-lg text-neutral-500 line-through"
+                  />
+                )}
               </div>
               <CurrencyNote className="mt-1.5" />
 
