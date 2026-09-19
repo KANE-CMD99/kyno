@@ -37,6 +37,9 @@ export async function POST(req: Request) {
       const { error } = await resend.emails.send({
         from: SITE.fromEmail,
         to: [SITE.adminEmail],
+        // Set the sender as reply-to so hitting Reply answers the customer
+        // directly, rather than the no-reply address the mail is sent from.
+        replyTo: email.trim(),
         subject: `[Kyno Contact] ${subject.trim()}`,
         text: body,
       });

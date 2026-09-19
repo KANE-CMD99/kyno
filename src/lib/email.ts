@@ -61,6 +61,9 @@ export async function sendDownloadEmail(orders: OrderRecord[], to: string): Prom
   const { data, error } = await resend.emails.send({
     from: SITE.fromEmail,
     to: [to],
+    // The sending domain accepts no inbound mail (no MX), so a customer hitting
+    // reply would get a bounce. Point replies at the address we actually read.
+    replyTo: SITE.contactEmail,
     subject: orders.length === 1
       ? `Your download: ${orders[0].productName}`
       : `Your downloads (${orders.length} items)`,
