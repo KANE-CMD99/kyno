@@ -103,7 +103,18 @@ export default async function BlogPostPage({ params }: PageProps) {
             />
           )}
           <div className="markdown-body mt-8">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                table: ({ node, ...props }) => (
+                  <div className="table-scroll" tabIndex={0} role="region" aria-label="Table">
+                    <table {...props} />
+                  </div>
+                ),
+              }}
+            >
+              {post.content}
+            </ReactMarkdown>
           </div>
         </article>
       </main>
