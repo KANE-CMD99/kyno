@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getPublishedPosts } from "@/db/blog-posts";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import BlogCard from "@/components/BlogCard";
+import PostList from "@/components/PostList";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com";
 
@@ -42,9 +42,7 @@ export default async function BlogPage() {
                 <p className="text-sm text-neutral-400">No posts yet. Check back soon!</p>
               </div>
             ) : (
-              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {posts.map((p) => <BlogCard key={p.id} post={p} />)}
-              </div>
+              <PostList posts={posts} />
             )}
           </div>
         </section>
