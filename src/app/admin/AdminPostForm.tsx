@@ -4,7 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { adminCreatePost, adminUpdatePost } from "./post-actions";
 import { slugify } from "@/db/slug.mjs";
+import { BLOG_CATEGORIES } from "@/lib/blog-categories";
+import { deriveExcerpt } from "@/lib/blog-content";
 import type { BlogPost, BlogStatus } from "@/db/blog-posts";
+import MarkdownEditor from "@/components/MarkdownEditor";
 
 interface AdminPostFormProps {
   post: BlogPost | null;
@@ -16,6 +19,8 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
   const [slug, setSlug] = useState(post?.slug || "");
   const [slugTouched, setSlugTouched] = useState(!!post?.slug);
   const [excerpt, setExcerpt] = useState(post?.excerpt || "");
+  const [excerptTouched, setExcerptTouched] = useState(!!post?.excerpt);
+  const [category, setCategory] = useState(post?.category || "");
   const [coverImage, setCoverImage] = useState(post?.coverImage || "");
   const [content, setContent] = useState(post?.content || "");
   const [status, setStatus] = useState<BlogStatus>(post?.status || "draft");
@@ -30,6 +35,11 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
   const handleTitleChange = (v: string) => {
     setTitle(v);
     if (!slugTouched) setSlug(slugify(v));
+  };
+
+  const handleContentChange = (next: string) => {
+    setContent(next);
+    if (!excerptTouched) setExcerpt(deriveExcerpt(next));
   };
 
   const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +62,7 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
     if (!title.trim()) { setError("Title is required"); return; }
     if (!content.trim()) { setError("Content is required"); return; }
     setSaving(true);
-    const input = { slug, title: title.trim(), excerpt: excerpt.trim(), category: post?.category || undefined, coverImage: coverImage || undefined, content, status, author };
+    const input = { slug, title: title.trim(), excerpt: excerpt.trim(), category: category || undefined, coverImage: coverImage || undefined, content, status, author };
     const result = isEditing
       ? await adminUpdatePost(post!.id, input)
       : await adminCreatePost(input);
@@ -74,7 +84,12 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
 
       <div className="rounded-xl border border-neutral-200 bg-white p-6 space-y-5">
         <div>
-          <label className="block text-xs font-medium text-neutral-700">Title</label>
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-medium text-neutral-700">Title</label>
+            <span className={title.length > 60 ? "text-amber-600" : "text-neutral-400"}>
+              {title.length}/60
+            </span>
+          </div>
           <input value={title} onChange={(e) => handleTitleChange(e.target.value)} required className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
         </div>
         <div className="grid gap-5 sm:grid-cols-2">
@@ -88,8 +103,18 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
           </div>
         </div>
         <div>
+          <label className="block text-xs font-medium text-neutral-700">Category</label>
+          <select value={category} onChange={(e) => setCategory(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500">
+            <option value="">—</option>
+            {BLOG_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </div>
+        <div>
           <label className="block text-xs font-medium text-neutral-700">Excerpt (shown on cards)</label>
-          <textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} rows={2} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-none" />
+          <textarea value={excerpt} onChange={(e) => { setExcerpt(e.target.value); setExcerptTouched(true); }} rows={2} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-none" />
+          {!excerptTouched && (
+            <span className="mt-1.5 block text-xs text-neutral-400">Auto-generated from the post body — edit freely</span>
+          )}
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-700">Cover image (optional)</label>
@@ -107,7 +132,13 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-700">Content (Markdown)</label>
-          <textarea value={content} onChange={(e) => setContent(e.target.value)} rows={16} placeholder={"## Heading\n\nWrite your post in Markdown..."} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm font-mono outline-none focus:border-blue-500" />
+          <div className="mt-1.5">
+            <MarkdownEditor
+              value={content}
+              onChange={handleContentChange}
+              uploadUrl="/admin/api/upload"
+            />
+          </div>
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-700">Status</label>

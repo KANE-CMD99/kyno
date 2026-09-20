@@ -6,8 +6,9 @@ const STORE_PATH = path.join(DATA_DIR, "blog-posts.json");
 
 export type BlogStatus = "draft" | "pending" | "published";
 
-/** 文章分类的固定取值 —— 列表页的筛选 tab 需要一个稳定的集合，所以不做自由输入。 */
-export const BLOG_CATEGORIES = ["Resume Tips", "Design", "Printables", "Career"] as const;
+/** 文章分类的固定取值 —— 列表页的筛选 tab 需要一个稳定的集合，所以不做自由输入。
+ *  定义在 `@/lib/blog-categories`（零依赖），这样客户端组件也能取值而不会把 `fs` 拖进 bundle。 */
+export { BLOG_CATEGORIES } from "@/lib/blog-categories";
 
 export interface BlogPost {
   id: string;

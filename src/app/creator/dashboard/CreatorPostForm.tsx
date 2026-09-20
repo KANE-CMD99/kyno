@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { creatorCreatePost, creatorUpdatePost } from "./post-actions";
 import { useLang } from "@/components/LangContext";
 import { slugify } from "@/db/slug.mjs";
+import { BLOG_CATEGORIES } from "@/lib/blog-categories";
+import { deriveExcerpt } from "@/lib/blog-content";
 import type { BlogPost } from "@/db/blog-posts";
+import MarkdownEditor from "@/components/MarkdownEditor";
 
 interface CreatorPostFormProps {
   post: BlogPost | null;
@@ -17,6 +20,8 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
   const [slug, setSlug] = useState(post?.slug || "");
   const [slugTouched, setSlugTouched] = useState(!!post?.slug);
   const [excerpt, setExcerpt] = useState(post?.excerpt || "");
+  const [excerptTouched, setExcerptTouched] = useState(!!post?.excerpt);
+  const [category, setCategory] = useState(post?.category || "");
   const [coverImage, setCoverImage] = useState(post?.coverImage || "");
   const [content, setContent] = useState(post?.content || "");
   const [uploading, setUploading] = useState(false);
@@ -31,6 +36,11 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
   const handleTitleChange = (v: string) => {
     setTitle(v);
     if (!slugTouched) setSlug(slugify(v));
+  };
+
+  const handleContentChange = (next: string) => {
+    setContent(next);
+    if (!excerptTouched) setExcerpt(deriveExcerpt(next));
   };
 
   const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +74,7 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
       slug,
       title: title.trim(),
       excerpt: excerpt.trim(),
-      category: post?.category || undefined,
+      category: category || undefined,
       coverImage: coverImage || undefined,
       content,
       submit: mode === "submit",
@@ -121,7 +131,12 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
 
       <div className="rounded-xl border border-neutral-200 bg-white p-6 space-y-5">
         <div>
-          <label className="block text-xs font-medium text-neutral-700">{t("blog.field_title")}</label>
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-medium text-neutral-700">{t("blog.field_title")}</label>
+            <span className={title.length > 60 ? "text-amber-600" : "text-neutral-400"}>
+              {title.length}/60
+            </span>
+          </div>
           <input
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
@@ -139,13 +154,27 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
           />
         </div>
         <div>
+          <label className="block text-xs font-medium text-neutral-700">{t("blog.field_category")}</label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+          >
+            <option value="">—</option>
+            {BLOG_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </div>
+        <div>
           <label className="block text-xs font-medium text-neutral-700">{t("blog.field_excerpt")}</label>
           <textarea
             value={excerpt}
-            onChange={(e) => setExcerpt(e.target.value)}
+            onChange={(e) => { setExcerpt(e.target.value); setExcerptTouched(true); }}
             rows={2}
             className="mt-1.5 block w-full resize-none rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
           />
+          {!excerptTouched && (
+            <span className="mt-1.5 block text-xs text-neutral-400">{t("blog.excerpt_auto")}</span>
+          )}
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-700">{t("blog.field_cover")}</label>
@@ -165,13 +194,13 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-700">{t("blog.field_content")}</label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={16}
-            placeholder={"## Heading\n\nWrite your post in Markdown..."}
-            className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 font-mono text-sm outline-none focus:border-blue-500"
-          />
+          <div className="mt-1.5">
+            <MarkdownEditor
+              value={content}
+              onChange={handleContentChange}
+              uploadUrl="/api/creator/upload"
+            />
+          </div>
         </div>
       </div>
     </form>
