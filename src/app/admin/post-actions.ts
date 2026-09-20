@@ -57,8 +57,11 @@ export async function adminUpdatePost(id: string, input: BlogPostInput) {
     const next = normalize(input);
     const result = await updatePost(id, {
       ...next,
-      // 保留原发布日期：重新编辑不能改变文章在列表里的位置。
-      publishedAt: existing?.publishedAt ?? next.publishedAt,
+      // 三态要分清，不能只写 `existing?.publishedAt ?? next.publishedAt`：
+      //   已发布 + 原本有日期 → 保留原日期（编辑不改排序）
+      //   已发布 + 原本无日期 → 用 normalize 生成的新日期（首次发布）
+      //   改回草稿            → 清空（草稿不该带发布日期，否则日后重新发布会沿用旧日期）
+      publishedAt: next.publishedAt ? existing?.publishedAt ?? next.publishedAt : undefined,
       authorId: existing?.authorId,
     });
     if (!result) return { success: false, error: "Post not found" };

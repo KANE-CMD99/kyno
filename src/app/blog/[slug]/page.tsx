@@ -61,10 +61,11 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (!post || post.status !== "published") notFound();
 
   // Link the byline to the author's creator profile when the post was
-  // submitted from a creator dashboard.
-  const authorUsername = post.authorId
-    ? (await getCreators()).find((c) => c.id === post.authorId)?.username
+  // submitted from a creator dashboard. 同一个查询顺带取头像与简介 —— 文末作者卡要用。
+  const creator = post.authorId
+    ? (await getCreators()).find((c) => c.id === post.authorId)
     : undefined;
+  const authorUsername = creator?.username;
 
   const relatedPosts = selectRelatedPosts(await getPublishedPosts(), post.id, 3);
   const products = await getAllProducts().catch(() => []);
@@ -173,6 +174,8 @@ export default async function BlogPostPage({ params }: PageProps) {
         <PostEndMatter
           post={post}
           authorUsername={authorUsername}
+          authorAvatar={creator?.avatarUrl}
+          authorBio={creator?.bio}
           relatedPosts={relatedPosts}
           relatedProducts={relatedProducts}
         />

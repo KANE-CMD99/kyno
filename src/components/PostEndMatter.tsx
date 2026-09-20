@@ -15,8 +15,12 @@ export interface RelatedProduct {
 
 interface Props {
   post: BlogPost;
-  /** Creator profile username —— 没有时作者卡只显示名字，不显示「View Store」。 */
+  /** Creator profile username —— 没有时整张作者卡不渲染（作者不是 creator）。 */
   authorUsername?: string;
+  /** CreatorRecord.avatarUrl —— 站内路径时才走 next/image，见下方说明。 */
+  authorAvatar?: string;
+  /** CreatorRecord.bio */
+  authorBio?: string;
   relatedPosts: BlogPost[];
   relatedProducts: RelatedProduct[];
 }
@@ -82,31 +86,56 @@ function RelatedProductCard({ product }: { product: RelatedProduct }) {
   );
 }
 
-export default function PostEndMatter({ post, authorUsername, relatedPosts, relatedProducts }: Props) {
+export default function PostEndMatter({
+  post,
+  authorUsername,
+  authorAvatar,
+  authorBio,
+  relatedPosts,
+  relatedProducts,
+}: Props) {
+  // 头像可能存成外链，而 next.config 没有配 remotePatterns —— 扔给 next/image 会
+  // 直接抛错把整页打成 500。所以只对站内路径走优化器，其余一律退回首字母圆牌。
+  const optimizableAvatar = authorAvatar?.startsWith("/") ? authorAvatar : "";
+
   return (
     // 浅灰底 + 顶部细线，与正文形成视觉断点。
     <section className="mt-14 border-t border-neutral-200 bg-neutral-50 px-6 py-12">
-      <div className="mx-auto max-w-3xl">
-        <div className="flex items-center gap-4 rounded-xl border border-neutral-200 bg-white p-6">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-lg font-bold text-white">
-            {(post.author || "").trim().charAt(0).toUpperCase() || "K"}
-          </div>
-          <div className="min-w-0">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-neutral-400">Written by</p>
-            <p className="mt-0.5 truncate text-base font-semibold text-neutral-900">{post.author}</p>
-          </div>
-          {authorUsername && (
+      {/* 块间距统一交给 [&>*+*]，不写在各个块上：作者卡被省略时 KEEP READING 才是
+          第一个子元素，否则它会带着 mt-12 叠在 section 的 py-12 上，顶部空出一倍。 */}
+      <div className="mx-auto max-w-3xl [&>*+*]:mt-12">
+        {/* 作者不是 creator 时（没有 username）整张卡省略，不留空壳。 */}
+        {authorUsername && (
+          <div className="flex items-start gap-4 rounded-xl border border-neutral-200 bg-white p-6">
+            {optimizableAvatar ? (
+              <Image
+                src={optimizableAvatar}
+                alt=""
+                width={48}
+                height={48}
+                className="h-12 w-12 shrink-0 rounded-full object-cover"
+              />
+            ) : (
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-lg font-bold text-white">
+                {(post.author || "").trim().charAt(0).toUpperCase() || "K"}
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-neutral-400">Written by</p>
+              <p className="mt-0.5 truncate text-base font-semibold text-neutral-900">{post.author}</p>
+              {authorBio && <p className="mt-1 text-sm leading-relaxed text-neutral-500">{authorBio}</p>}
+            </div>
             <Link
               href={`/${authorUsername}`}
               className="ml-auto shrink-0 rounded-lg border border-neutral-300 px-4 py-2 text-xs font-semibold text-neutral-700 transition-colors hover:border-neutral-900 hover:text-neutral-900"
             >
               View Store
             </Link>
-          )}
-        </div>
+          </div>
+        )}
 
         {relatedPosts.length > 0 && (
-          <div className="mt-12">
+          <div>
             <BlockHeading>KEEP READING</BlockHeading>
             <div className="grid gap-4 sm:grid-cols-3">
               {relatedPosts.map((p) => (
@@ -117,7 +146,7 @@ export default function PostEndMatter({ post, authorUsername, relatedPosts, rela
         )}
 
         {relatedProducts.length > 0 && (
-          <div className="mt-12">
+          <div>
             <BlockHeading tone="emerald">SHOP THE LOOK</BlockHeading>
             <div className="grid gap-4 sm:grid-cols-3">
               {relatedProducts.map((p) => (
@@ -127,7 +156,7 @@ export default function PostEndMatter({ post, authorUsername, relatedPosts, rela
           </div>
         )}
 
-        <div className="mt-12">
+        <div>
           <NewsletterSection />
         </div>
       </div>
