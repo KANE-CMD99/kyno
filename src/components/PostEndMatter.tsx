@@ -100,10 +100,12 @@ export default function PostEndMatter({
 
   return (
     // 浅灰底 + 顶部细线，与正文形成视觉断点。
-    <section className="mt-14 border-t border-neutral-200 bg-neutral-50 px-6 py-12">
+    <section className="mt-14 border-t border-neutral-200 bg-neutral-50 py-12">
       {/* 块间距统一交给 [&>*+*]，不写在各个块上：作者卡被省略时 KEEP READING 才是
-          第一个子元素，否则它会带着 mt-12 叠在 section 的 py-12 上，顶部空出一倍。 */}
-      <div className="mx-auto max-w-3xl [&>*+*]:mt-12">
+          第一个子元素，否则它会带着 mt-12 叠在 section 的 py-12 上，顶部空出一倍。
+          px-6 挪到内层（而非 section）：section 上的内边距会把内容盒撑成 768px，
+          比正文的 max-w-3xl px-6（720px）宽出 48px，与上文对不齐。 */}
+      <div className="mx-auto max-w-3xl px-6 [&>*+*]:mt-12">
         {/* 作者不是 creator 时（没有 username）整张卡省略，不留空壳。 */}
         {authorUsername && (
           <div className="flex items-start gap-4 rounded-xl border border-neutral-200 bg-white p-6">

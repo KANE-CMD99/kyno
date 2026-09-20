@@ -110,7 +110,11 @@ export default function MarkdownEditor({ value, onChange, uploadUrl }: Props) {
 
   return (
     <div className="overflow-hidden rounded-xl border border-neutral-300 bg-white">
-      <div className="flex flex-wrap items-center gap-0.5 border-b border-neutral-200 bg-neutral-50 px-2 py-1.5">
+      <div
+        className={`${
+          previewOpen ? "hidden lg:flex" : "flex"
+        } flex-wrap items-center gap-0.5 border-b border-neutral-200 bg-neutral-50 px-2 py-1.5`}
+      >
         {TOOLBAR.map(({ action, label, ariaLabel }) => (
           <button
             key={action}

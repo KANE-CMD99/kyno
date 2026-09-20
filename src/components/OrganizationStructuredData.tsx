@@ -46,7 +46,7 @@ export default function OrganizationStructuredData() {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(ld).replace(/</g, "\\u003c") }}
     />
   );
 }

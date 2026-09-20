@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm";
 import { getPublishedPosts, getPostBySlug } from "@/db/blog-posts";
 import { getCreators } from "@/db/creators";
 import { getAllProducts } from "@/db/products-store";
-import { readingMinutes, selectRelatedPosts, selectRelatedProducts } from "@/lib/blog-content";
+import { formatPostDate, readingMinutes, selectRelatedPosts, selectRelatedProducts } from "@/lib/blog-content";
 import { metaDescription, pageTitle } from "@/lib/seo";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -114,7 +114,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <article>
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
           />
 
           {/* Hero —— 全宽封面，标题压图。整块在正文窄栏之外，所以不受 max-w-3xl 约束。 */}
@@ -144,7 +144,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 {post.publishedAt && (
                   <>
                     <span aria-hidden="true">·</span>
-                    <time dateTime={post.publishedAt}>{new Date(post.publishedAt).toLocaleDateString()}</time>
+                    <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
                   </>
                 )}
                 <span aria-hidden="true">·</span>
