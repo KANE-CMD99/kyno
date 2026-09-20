@@ -4766,6 +4766,25 @@ Verified from outside: 12 path types return 200 with expected byte sizes (`/`, `
    ```
    This is nginx/Pages syntax applied to the wrong product. The plan and this document used it; the live 301 header is what caught it.
 
+### Phase-1 catalog complete — 2026-09-20
+
+The engine shipped with an eight-font seed catalog so every code path could be exercised; the catalog itself was deferred. It is now filled in, and the site matches the spec's phase-1 shape.
+
+| | Seed | Now | Spec phase 1 |
+|---|---|---|---|
+| Fonts | 8 | **40** (serif 12, sans 14, display 6, handwriting 5, monospace 3) | ~40 |
+| Pairings | 16 | **173** (2 curated + 171 generated) | ~170 |
+| Style hubs | 8 | **9** | ~10 |
+| Pages | 37 | **227** | ~225 |
+| Internal links | 662 | **5,645** | — |
+
+**Two things had to be fixed before the catalog could grow, and both were foreseen in the notes above.**
+
+1. **The article defect.** Seven templates — not the three originally spotted — wrote an indefinite article directly before a `{trait}` placeholder, which cannot agree with a noun substituted at render time. They were found by scanning every template systematically rather than only the ones whose *current* eight fonts happened to trigger. Rewritten to possessive and definite constructions, and `lintData` now fails the build on article disagreement; proven by injecting `"a angular technical grotesque"` into real data and watching the gate reject it. All 173 generated rationales were then read.
+2. **`/licenses` said "every entry in the catalog today is OFL-1.1"** — true at eight fonts, false at forty once Roboto and Roboto Slab (Apache-2.0) arrived. The sentence is now derived from the catalog, so it cannot go stale again. This is the same shape as the analytics claim and the pairing count: **a page asserting a fact about data that changes must read the data.**
+
+**What the scale-up exposed that the seed catalog could not.** The five original recipes were tuned for eight fonts; at forty their `tagsAny` filters matched far too broadly and produced **325** pairings, and no recipe reached the three new monospace faces at all — a font that pairs with nothing gets no page and breaks the `/licenses` links to it. Four recipes had their filters narrowed and two monospace recipes were added, landing at the ~170 target. A recipe set sized for a small catalog is not a recipe set sized for a large one; the count is the signal.
+
 ### Post-launch audit — 2026-09-17
 
 A full crawl of the live site (37 sitemap URLs, per-page parse, headers, redirects). **Passing everywhere:** 37/37 pages return 200; 37 unique titles and 37 unique descriptions, all within budget and all branded; canonicals self-referencing and correct; the font contract holds on all 33 pages that declare a catalog font; 37/37 pages carry a store link with UTM; the analytics beacon is on every page; robots and sitemap are clean; the 404 returns 404 with site chrome; the apex 301s with paths and query strings preserved.
