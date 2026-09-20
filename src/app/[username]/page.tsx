@@ -16,10 +16,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const creator = await getCreatorByUsername(username.toLowerCase());
   if (!creator) return { title: "Not Found" };
   const name = creator.englishName || creator.name;
+
+  // A creator with no products is a near-empty page carrying only a name and a
+  // bio. The sitemap already leaves these out; without this they were still
+  // indexable if Google found them, which is the thin content Search Console
+  // reports as "crawled/discovered but not indexed". Keep them out of the index
+  // but let crawlers follow any links out.
+  const products = await getAllProducts().catch(() => []);
+  const hasProducts = products.some(
+    (p) => p.creatorId === creator.id || p.creator === creator.name
+  );
+
   return {
     title: `${name} — Creator`,
     description: `Browse digital products by ${name} on Kyno — templates, fonts and design assets, delivered instantly.`,
     alternates: { canonical: `/${creator.username}` },
+    ...(hasProducts ? {} : { robots: { index: false, follow: true } }),
     openGraph: {
       title: `${name} — Kyno`,
       description: `Browse digital products by ${name} on Kyno.`,
