@@ -54,7 +54,13 @@ export async function adminUpdatePost(id: string, input: BlogPostInput) {
   try {
     // Editing a creator-submitted post must not drop its ownership.
     const existing = await getPostById(id);
-    const result = await updatePost(id, { ...normalize(input), authorId: existing?.authorId });
+    const next = normalize(input);
+    const result = await updatePost(id, {
+      ...next,
+      // 保留原发布日期：重新编辑不能改变文章在列表里的位置。
+      publishedAt: existing?.publishedAt ?? next.publishedAt,
+      authorId: existing?.authorId,
+    });
     if (!result) return { success: false, error: "Post not found" };
     revalidate();
     return { success: true };
