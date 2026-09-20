@@ -16,7 +16,11 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function BlogPage() {
-  const posts = await getPublishedPosts();
+  // 剥掉正文再交给客户端组件：`PostList` 是 client component，传进去的每个字段都会
+  // 被序列化进 `/blog` 的 RSC payload —— 也就是可索引的 HTML 本身。列表页一个字都
+  // 不渲染正文，20 篇真实文章的正文会给这个页面平白加上约 160 KB。
+  // 只改类型没用（类型是编译期的，props 按运行时数据序列化），必须在边界上真的删掉。
+  const posts = (await getPublishedPosts()).map(({ content, ...listItem }) => listItem);
 
   return (
     <>

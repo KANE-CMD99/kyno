@@ -6,6 +6,7 @@ import {
   filterByCategory,
   selectRelatedPosts,
   selectRelatedProducts,
+  formatPostDate,
 } from "./blog-content.ts";
 
 test("deriveExcerpt skips headings and returns the first prose paragraph", () => {
@@ -32,6 +33,22 @@ test("readingMinutes is at least 1 and rounds to the nearest minute", () => {
   assert.equal(readingMinutes("short"), 1);
   assert.equal(readingMinutes("word ".repeat(220)), 1);
   assert.equal(readingMinutes("word ".repeat(330)), 2);
+});
+
+test("formatPostDate is exact and locale-independent", () => {
+  // 钉死确切字符串：不能只看「像日期」，否则换成任何 locale 的实现都能通过。
+  assert.equal(formatPostDate("2026-09-11T01:11:54.349Z"), "9/11/2026");
+  // 同一天的另一个时刻仍然同一天 —— 固定 UTC 后与运行环境的 locale/时区无关。
+  assert.equal(formatPostDate("2026-09-11T23:59:00.000Z"), "9/11/2026");
+  assert.equal(formatPostDate("2026-01-05T00:00:00.000Z"), "1/5/2026");
+});
+
+test("formatPostDate pins UTC, so the day never shifts to the visitor's zone", () => {
+  const iso = "2026-09-11T01:11:54.349Z";
+  const la = new Date(iso).toLocaleDateString("en-US", { timeZone: "America/Los_Angeles" });
+  // 美西看到的是 9/10 —— 与固定 UTC 的输出必须不同，证明我们没用访客的时区。
+  assert.equal(la, "9/10/2026");
+  assert.notEqual(formatPostDate(iso), la);
 });
 
 test("filterByCategory returns everything for null and matches exactly otherwise", () => {

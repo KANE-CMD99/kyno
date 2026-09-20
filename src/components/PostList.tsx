@@ -3,18 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { filterByCategory } from "@/lib/blog-content";
+import { filterByCategory, formatPostDate } from "@/lib/blog-content";
 import { BLOG_CATEGORIES } from "@/lib/blog-categories";
-import BlogCard from "./BlogCard";
-// 只取类型：`import type` 会被编译期完全擦除，所以 `@/db/blog-posts` 的 `fs`
-// 不会进浏览器 bundle（分类集合走零依赖的 `@/lib/blog-categories`）。
-import type { BlogPost } from "@/db/blog-posts";
+import BlogCard, { type BlogListItem } from "./BlogCard";
 
 /**
  * 筛选状态纯客户端：**不写 URL**，没有 `?category=`、没有 router.push / replaceState。
  * 可索引的重复列表页对 SEO 是负收益，筛选结果不需要自己的地址。
+ *
+ * `BlogListItem` 而不是 `BlogPost`：正文会被整段序列化进 /blog 的 RSC payload，
+ * 而这里一个字都不渲染。
  */
-export default function PostList({ posts }: { posts: BlogPost[] }) {
+export default function PostList({ posts }: { posts: BlogListItem[] }) {
   const [category, setCategory] = useState<string | null>(null);
 
   // 空分类是死路：tab 集合只列出真的有文章的分类。
@@ -76,7 +76,7 @@ export default function PostList({ posts }: { posts: BlogPost[] }) {
 }
 
 /** 置顶大卡：左图右文 + 摘要。封面列在 sm 以上撑满卡片高度。 */
-function FeaturedCard({ post }: { post: BlogPost }) {
+function FeaturedCard({ post }: { post: BlogListItem }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -110,9 +110,7 @@ function FeaturedCard({ post }: { post: BlogPost }) {
         )}
         {post.publishedAt && (
           <p className="mt-4 text-xs text-neutral-400">
-            <time dateTime={post.publishedAt}>
-              {new Date(post.publishedAt).toLocaleDateString()}
-            </time>
+            <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
           </p>
         )}
       </div>

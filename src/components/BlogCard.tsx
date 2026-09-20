@@ -1,6 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { BlogPost } from "@/db/blog-posts";
+import { formatPostDate } from "@/lib/blog-content";
+
+/**
+ * 列表里用到的字段 —— 刻意去掉正文。
+ *
+ * `<PostList>` 是客户端组件，传进去的每个字段都会被序列化进 `/blog` 的 RSC
+ * payload（也就在可索引的 HTML 里）。正文是长 markdown，而列表页一个字都不渲染，
+ * 20 篇真实文章的正文会给首页式页面平白加上约 160 KB。完整 `BlogPost` 结构上
+ * 可赋给本类型，所以服务端的 `PostEndMatter` / `blog/page.tsx` 无需改动。
+ */
+export type BlogListItem = Omit<BlogPost, "content">;
 
 /**
  * 竖版卡片：顶部 16:9 封面，下方分类 / 标题 / 摘要 / 日期。
@@ -10,7 +21,7 @@ import type { BlogPost } from "@/db/blog-posts";
  * 卡片用 flex-col + 摘要下面的 `mt-auto` 把日期顶到底部，同一行里高度不齐时
  * 日期仍然对齐。
  */
-export default function BlogCard({ post }: { post: BlogPost }) {
+export default function BlogCard({ post }: { post: BlogListItem }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -42,9 +53,7 @@ export default function BlogCard({ post }: { post: BlogPost }) {
         <p className="mt-1.5 line-clamp-2 text-xs text-neutral-500">{post.excerpt}</p>
         {post.publishedAt && (
           <p className="mt-auto pt-3 text-[11px] text-neutral-400">
-            <time dateTime={post.publishedAt}>
-              {new Date(post.publishedAt).toLocaleDateString()}
-            </time>
+            <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
           </p>
         )}
       </div>

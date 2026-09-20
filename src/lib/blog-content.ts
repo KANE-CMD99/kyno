@@ -49,6 +49,12 @@ export function readingMinutes(content: string): number {
   return Math.max(1, Math.round(words / WORDS_PER_MINUTE));
 }
 
+/** 日期统一按 UTC 的 en-US 输出：时间戳是 UTC，而访客的时区与语言各不相同 ——
+ *  用本地时区会让美西访客看到早一天，用本地 locale 会让服务端与客户端渲染不一致（水合不匹配）。 */
+export function formatPostDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", { timeZone: "UTC" });
+}
+
 /** `null` = 全部；否则精确匹配。没有分类的老文章只出现在「全部」里。 */
 export function filterByCategory<T extends { category?: string }>(
   posts: T[],
