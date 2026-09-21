@@ -23,6 +23,10 @@ export default function OrganizationStructuredData() {
         },
         description:
           "Ready-made resume templates, posters and design assets — pay once, own forever.",
+        // Same operator, second property: a free font-pairing tool whose every
+        // page links here. Naming it tells search engines the two sites are one
+        // organisation rather than unrelated sites trading links.
+        sameAs: ["https://www.kyno.top"],
         contactPoint: {
           "@type": "ContactPoint",
           email: "33429296@qq.com",

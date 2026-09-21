@@ -161,6 +161,12 @@ export const footerColumns = [
     links: [
       { label: "Blog", href: "/blog" },
       { label: "Free Downloads", href: "/free-downloads" },
+      // Our other property. Until this link existed the relationship ran one
+      // way only — kyno.top linked here from all 227 of its pages and nothing
+      // linked back, so it earned no authority from this site and its own
+      // pages struggled to be indexed, which stalled the whole funnel. The UTM
+      // tags exist so the click-through can actually be measured.
+      { label: "Font Pairing Tool", href: "https://www.kyno.top/?utm_source=kynocreative&utm_medium=footer" },
       { label: "My Orders", href: "/orders" },
       { label: "License", href: "/license" },
       { label: "Help Center", href: "/contact" },
