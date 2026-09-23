@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
     return [
       // /index duplicates the homepage; send it to the canonical URL.
       { source: "/index", destination: "/", permanent: true },
+      // The fonts category was dropped from the catalogue when the store
+      // settled on resume templates, printables and menus. kyno.top still
+      // points 134 of its 254 pairing pages here — those clicks were landing
+      // on a 404. /products is the honest target: the store sells no fonts,
+      // so there is nothing more specific to send them to.
+      { source: "/categories/fonts", destination: "/products", permanent: true },
     ];
   },
   async headers() {

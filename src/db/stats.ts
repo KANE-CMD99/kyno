@@ -17,6 +17,45 @@ export interface DailyStats {
   revenue: number;
   downloads: number;
   customerEmails: string[];
+  /** Visits per source label, e.g. "kyno-top/module", "google.com", "direct". */
+  sources: Record<string, number>;
+}
+
+/** What the pageview beacon knows about where the visitor came from. */
+export interface VisitContext {
+  path?: string;
+  referrer?: string;
+  source?: string;
+  medium?: string;
+  campaign?: string;
+  content?: string;
+}
+
+// The label vocabulary is open — any referrer hostname can appear — and a bot
+// inventing new referrers must not be able to grow the stats file forever.
+const MAX_SOURCE_LABELS = 60;
+
+/** Hostname of a referrer, or "" for none and for our own pages. */
+function referrerHost(referrer: string): string {
+  if (!referrer) return "";
+  try {
+    const host = new URL(referrer).hostname.replace(/^www\./, "");
+    if (host === "kynocreative.com" || host.endsWith(".kynocreative.com")) return "";
+    return host;
+  } catch {
+    return "";
+  }
+}
+
+/**
+ * A tagged arrival is named by its campaign parameters: those are the ones we
+ * chose, so they are the ones that can be compared against each other (kyno.top
+ * reports four separate mediums on purpose). Untagged arrivals fall back to the
+ * referring host, then to "direct".
+ */
+export function sourceLabel(ctx: VisitContext): string {
+  if (ctx.source) return ctx.medium ? `${ctx.source}/${ctx.medium}` : ctx.source;
+  return referrerHost(ctx.referrer || "") || "direct";
 }
 
 let cache: DailyStats | null = null;
@@ -47,8 +86,11 @@ function readStats(): DailyStats {
       revenue: 0,
       downloads: 0,
       customerEmails: [],
+      sources: {},
     };
   }
+  // A file written before this field existed is still today's file.
+  if (!cache.sources) cache.sources = {};
   return cache;
 }
 
@@ -59,12 +101,22 @@ function writeStats(stats: DailyStats) {
   cache = stats;
 }
 
-export function recordVisit(ip: string) {
+export function recordVisit(ip: string, context: VisitContext = {}) {
   const stats = readStats();
   stats.visits += 1;
   if (!stats.uniqueIPs.includes(ip)) {
     stats.uniqueIPs.push(ip);
   }
+
+  const label = sourceLabel(context);
+  if (stats.sources[label] !== undefined) {
+    stats.sources[label] += 1;
+  } else if (Object.keys(stats.sources).length < MAX_SOURCE_LABELS) {
+    stats.sources[label] = 1;
+  } else {
+    stats.sources.other = (stats.sources.other || 0) + 1;
+  }
+
   writeStats(stats);
 }
 
@@ -123,12 +175,12 @@ export function getHistory(): HistoricalEntry[] {
 // Aggregate all customer emails from orders
 // ──────────────────────────────────────────────
 
-export function getAllCustomerEmails(): { email: string; name: string; date: string; product: string }[] {
+export function getAllCustomerEmails(): { email: string; name: string; date: string; product: string; source: string }[] {
   try {
     const ordersPath = path.join(DATA_DIR, "orders.json");
     if (!fs.existsSync(ordersPath)) return [];
     const orders = JSON.parse(fs.readFileSync(ordersPath, "utf-8")) as Array<{
-      customerEmail?: string; customerName?: string; createdAt: string; productName: string;
+      customerEmail?: string; customerName?: string; createdAt: string; productName: string; referral?: string;
     }>;
     return orders
       .filter((o) => o.customerEmail)
@@ -137,21 +189,30 @@ export function getAllCustomerEmails(): { email: string; name: string; date: str
         name: o.customerName || "",
         date: o.createdAt?.slice(0, 10) || "",
         product: o.productName || "",
+        // Which channel the buyer arrived from — the answer the whole exercise
+        // is for. Empty for orders placed before this was recorded.
+        source: o.referral || "",
       }));
   } catch { return []; }
 }
 
+/** Quotes a CSV field so a comma or quote in a customer name cannot shift columns. */
+function csvField(value: string): string {
+  return `"${String(value).replace(/"/g, '""')}"`;
+}
+
 export function exportCustomerEmailsCSV(): string {
   const records = getAllCustomerEmails();
-  const unique = new Map<string, { name: string; date: string }>();
+  const unique = new Map<string, { name: string; date: string; source: string }>();
   records.forEach((r) => {
     if (!unique.has(r.email) || unique.get(r.email)!.date < r.date) {
-      unique.set(r.email, { name: r.name, date: r.date });
+      unique.set(r.email, { name: r.name, date: r.date, source: r.source });
     }
   });
-  const header = "Email,Name,Last Purchase Date";
+  const header = "Email,Name,Last Purchase Date,Came From";
   const rows = Array.from(unique.entries()).map(
-    ([email, { name, date }]) => `${email},${name},${date}`
+    ([email, { name, date, source }]) =>
+      [csvField(email), csvField(name), csvField(date), csvField(source)].join(",")
   );
   return [header, ...rows].join("\n");
 }

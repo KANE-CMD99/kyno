@@ -84,6 +84,7 @@ export async function POST(req: Request) {
       customerName: name,
       createdAt: new Date().toISOString(),
       stripeSessionId: session.id,
+      referral: session.metadata?.ref_label || undefined,
     });
     created.push(order);
   }

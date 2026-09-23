@@ -19,7 +19,7 @@ function writeJSON(file: string, data: unknown) {
 }
 
 export interface UserRecord { id: number; name: string; email: string; passwordHash: string; createdAt: string; }
-export interface OrderRecord { id: number; userId: number; productId: string; productName: string; price: number; customerEmail?: string; customerName?: string; downloadToken: string; downloadClaimed: boolean; createdAt: string; stripeSessionId?: string; emailSentAt?: string; }
+export interface OrderRecord { id: number; userId: number; productId: string; productName: string; price: number; customerEmail?: string; customerName?: string; downloadToken: string; downloadClaimed: boolean; createdAt: string; stripeSessionId?: string; emailSentAt?: string; referral?: string; }
 
 // ====== USERS ======
 export async function getUsers(): Promise<UserRecord[]> {
@@ -62,6 +62,7 @@ function mapOrderRow(o: Record<string, unknown>): OrderRecord {
     downloadClaimed: o.download_claimed as boolean, createdAt: o.created_at as string,
     stripeSessionId: (o.stripe_session_id as string) || undefined,
     emailSentAt: (o.email_sent_at as string) || undefined,
+    referral: (o.referral as string) || undefined,
   };
 }
 
@@ -101,6 +102,7 @@ export async function createOrder(order: Omit<OrderRecord, "id" | "downloadToken
       price: order.price, customer_email: order.customerEmail || "", customer_name: order.customerName || "",
       download_token: token, download_claimed: false, created_at: order.createdAt,
       stripe_session_id: order.stripeSessionId || null, email_sent_at: order.emailSentAt || null,
+      referral: order.referral || null,
     }).select().single();
     return { ...order, id: data.id, downloadToken: token, downloadClaimed: false };
   }

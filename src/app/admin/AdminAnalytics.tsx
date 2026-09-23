@@ -11,6 +11,7 @@ interface StatsData {
     revenue: number;
     downloads: number;
     customerEmails: string[];
+    sources: Record<string, number>;
   };
   history: Array<{
     date: string;
@@ -20,9 +21,10 @@ interface StatsData {
     revenue: number;
     downloads: number;
     customerEmails: string[];
+    sources?: Record<string, number>;
     timestamp: string;
   }>;
-  customers: Array<{ email: string; name: string; date: string; product: string }>;
+  customers: Array<{ email: string; name: string; date: string; product: string; source?: string }>;
   total: { customers: number; orders: number; revenue: number };
 }
 
@@ -48,6 +50,9 @@ export default function AdminAnalytics() {
     (c, i, arr) => arr.findIndex((x) => x.email === c.email) === i
   );
 
+  const sourceRows = Object.entries(today.sources || {}).sort((a, b) => b[1] - a[1]);
+  const sourceTotal = sourceRows.reduce((sum, [, n]) => sum + n, 0);
+
   return (
     <div className="space-y-10">
       {/* Today's Stats Cards */}
@@ -61,6 +66,42 @@ export default function AdminAnalytics() {
           <StatCard label="Customers" value={today.customerEmails.length} sub="emails collected" />
           <StatCard label="Total" value={total.customers} sub={`${total.orders} orders · $${total.revenue.toFixed(2)}`} />
         </div>
+      </div>
+
+      {/* Traffic sources. This is what the UTM scheme across both sites exists
+          for: kyno.top tags its four placements separately so they can be read
+          against each other instead of guessed at. */}
+      <div>
+        <h2 className="text-xl font-bold text-neutral-900">Where today&apos;s visitors came from</h2>
+        {sourceRows.length === 0 ? (
+          <p className="mt-2 text-sm text-neutral-500">
+            No visits recorded yet today. Recording started 2026-09-24 — earlier days have no
+            source data.
+          </p>
+        ) : (
+          <div className="mt-4 overflow-hidden rounded-xl border border-neutral-200 bg-white">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-neutral-200 bg-neutral-50">
+                  <th className="px-5 py-3 font-medium text-neutral-500">Source</th>
+                  <th className="px-5 py-3 font-medium text-neutral-500">Visits</th>
+                  <th className="px-5 py-3 font-medium text-neutral-500">Share</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sourceRows.map(([label, count]) => (
+                  <tr key={label} className="border-b border-neutral-100">
+                    <td className="px-5 py-3 font-medium text-neutral-900">{label}</td>
+                    <td className="px-5 py-3">{count}</td>
+                    <td className="px-5 py-3 text-neutral-500">
+                      {sourceTotal ? `${Math.round((count / sourceTotal) * 100)}%` : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Recent History */}
@@ -118,6 +159,7 @@ export default function AdminAnalytics() {
                 <th className="px-5 py-3 font-medium text-neutral-500">Name</th>
                 <th className="px-5 py-3 font-medium text-neutral-500">Last Purchase</th>
                 <th className="px-5 py-3 font-medium text-neutral-500">Product</th>
+                <th className="px-5 py-3 font-medium text-neutral-500">Came from</th>
               </tr>
             </thead>
             <tbody>
@@ -127,10 +169,11 @@ export default function AdminAnalytics() {
                   <td className="px-5 py-3 text-neutral-600">{c.name}</td>
                   <td className="px-5 py-3 text-neutral-500">{c.date}</td>
                   <td className="px-5 py-3 text-neutral-500">{c.product}</td>
+                  <td className="px-5 py-3 text-neutral-500">{c.source || "—"}</td>
                 </tr>
               ))}
               {uniqueCustomers.length === 0 && (
-                <tr><td colSpan={4} className="px-5 py-12 text-center text-neutral-400">No customer emails yet.</td></tr>
+                <tr><td colSpan={5} className="px-5 py-12 text-center text-neutral-400">No customer emails yet.</td></tr>
               )}
             </tbody>
           </table>

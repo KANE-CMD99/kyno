@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getProductById } from "@/db/products-store";
+import { sourceLabel, type VisitContext } from "@/db/stats";
 import { isEmail } from "@/lib/validation";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder", {
@@ -26,7 +27,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { items, email, name } = await req.json();
+    const { items, email, name, referral } = await req.json();
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ error: "No items in cart" }, { status: 400 });
@@ -74,6 +75,9 @@ export async function POST(req: Request) {
         // roughly six products. The webhook re-resolves the display name.
         items: JSON.stringify(resolvedItems.map((i) => [i.id, i.quantity, i.price])),
         aff_code: affCode,
+        // Which channel this order came from, using the same label the visit
+        // counter uses so the two can be read against each other.
+        ref_label: sourceLabel((referral || {}) as VisitContext),
       },
       line_items: resolvedItems.map((i) => ({
         price_data: {

@@ -8,6 +8,7 @@ import { useCurrency } from "@/components/CurrencyContext";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CurrencyNote from "@/components/CurrencyNote";
+import { readReferral } from "@/lib/referral";
 
 export default function CheckoutPage() {
   const { items, subtotal, itemCount, hydrated } = useCart();
@@ -74,6 +75,9 @@ export default function CheckoutPage() {
           })),
           email,
           name,
+          // First-touch campaign from this tab, so the order can be credited to
+          // the channel that actually brought the buyer.
+          referral: readReferral(),
         }),
       });
 
