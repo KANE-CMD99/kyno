@@ -17,7 +17,7 @@ export default function HeroSection({ posts }: { posts: BlogPost[] }) {
           </h1>
 
           <p className="mx-auto mt-6 max-w-lg text-lg leading-relaxed text-neutral-500 md:mx-0">
-            Resume templates, posters &amp; design assets — yours forever, from $1.
+            Resume templates, printables &amp; menu templates — yours forever, from $4.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row md:justify-start">

@@ -5,7 +5,7 @@ import type { ProductRecord } from "@/db/products-store";
 import { useLang } from "@/components/LangContext";
 import { categoryFull } from "@/data/site";
 
-const CATEGORIES = ["Photos", "Fonts", "Templates", "Free"];
+const CATEGORIES = ["Photos", "Templates", "Free"];
 
 interface Props {
   product: ProductRecord | null;

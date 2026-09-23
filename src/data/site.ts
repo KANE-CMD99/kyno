@@ -6,12 +6,6 @@ export interface CategoryItem {
   href: string;
 }
 
-export interface ServiceItem {
-  title: string;
-  description: string;
-  emoji: string;
-}
-
 export interface ProductItem {
   id: string;
   name: string;
@@ -41,13 +35,12 @@ export const navLinks: NavLink[] = [
 
 /**
  * Display names for the internal category values stored on products.
- * The values themselves ("Photos", "Fonts", "Templates") are what the data,
+ * The values themselves ("Photos", "Templates") are what the data,
  * filters, admin dropdowns and URLs use — only the labels shown to visitors
  * are overridden here, so nothing has to be migrated.
  */
 export const CATEGORY_DISPLAY: Record<string, { full: string; short: string }> = {
-  Photos: { full: "Travel Guides & Photos", short: "Travel & Photos" },
-  Fonts: { full: "Font Collection", short: "Font Collection" },
+  Photos: { full: "Photos & Frame Mats", short: "Photos & Mats" },
   Templates: { full: "Template Collection", short: "Template Collection" },
 };
 
@@ -61,9 +54,8 @@ export function categoryShort(value: string): string {
   return CATEGORY_DISPLAY[value]?.short ?? value;
 }
 
-// Fonts is intentionally absent: the category has no products, so linking to it
-// only offers visitors a "No products in this category yet" dead end. Put it
-// back when the first font product goes live.
+// Every category here must have products behind it — a link to an empty
+// category is a dead end for visitors and thin content for search engines.
 export const categoryPills: NavLink[] = [
   { label: categoryShort("Photos"), href: "/categories/photos" },
   { label: categoryShort("Templates"), href: "/categories/templates" },
@@ -74,77 +66,24 @@ export const categories: CategoryItem[] = [
   {
     id: "photos",
     title: categoryFull("Photos"),
-    description: "Travel guides and high-resolution photo collections for your projects.",
+    description: "Printable frame mats and photo inserts, sized for standard US frames.",
     emoji: String.fromCodePoint(0x1F4F7),
-    href: "#",
-  },
-  {
-    id: "fonts",
-    title: categoryFull("Fonts"),
-    description: "Curated typefaces and font families for distinctive design.",
-    emoji: String.fromCodePoint(0x1F524),
     href: "#",
   },
   {
     id: "templates",
     title: categoryFull("Templates"),
-    description: "Premium website, UI & design templates to accelerate your workflow.",
+    description: "ATS-friendly resume and CV templates, plus editable restaurant and café menu templates.",
     emoji: String.fromCodePoint(0x1F4D0),
     href: "#",
   },
   {
     id: "free",
     title: "Free Downloads",
-    description: "Free digital products — fonts, photos, templates, and more at no cost.",
+    description: "Free resume templates and printable samples — download at no cost.",
     emoji: "🎁",
     href: "#",
   },
-];
-
-export const services: ServiceItem[] = [
-  {
-    title: "Stock Photos",
-    description: "Curated photo presets and high-resolution image packs.",
-    emoji: String.fromCodePoint(0x1F4F7),
-  },
-  {
-    title: "Fonts",
-    description: "Premium typefaces and font families for modern design projects.",
-    emoji: String.fromCodePoint(0x1F524),
-  },
-  {
-    title: "Templates",
-    description: "Professional design templates for websites, UI, and presentations.",
-    emoji: String.fromCodePoint(0x1F4D0),
-  },
-  {
-    title: "Free Downloads",
-    description: "No-cost digital assets shared by our creator community.",
-    emoji: "🎁",
-  },
-];
-
-export const products: ProductItem[] = [
-  // Photos
-  { id: "1", name: "Photo Presets Bundle", category: "Photos", price: "$1", creator: "Kyno" },
-  { id: "2", name: "Aerial Landscapes Pack", category: "Photos", price: "$1", creator: "Kyno" },
-  { id: "3", name: "Minimal Backgrounds", category: "Photos", price: "$1", creator: "Kyno" },
-  // Fonts
-  { id: "4", name: "Modern Sans Serif", category: "Fonts", price: "$1", creator: "Kyno" },
-  { id: "5", name: "Handwritten Script", category: "Fonts", price: "$1", creator: "Kyno" },
-  { id: "6", name: "Display Typeface", category: "Fonts", price: "$1", creator: "Kyno" },
-  // Templates
-  { id: "7", name: "Ultimate UI Kit", category: "Templates", price: "$1", creator: "Kyno" },
-  { id: "8", name: "Design System Pro", category: "Templates", price: "$1", creator: "Kyno" },
-  { id: "9", name: "Portfolio Template", category: "Templates", price: "$1", creator: "Kyno" },
-  { id: "10", name: "Landing Page Kit", category: "Templates", price: "$1", creator: "Kyno" },
-];
-
-export const productSections = [
-  { title: "Popular Photos", category: "Photos", href: "#" },
-  { title: "Popular Fonts", category: "Fonts", href: "#" },
-  { title: "Popular Templates", category: "Templates", href: "#" },
-  { title: "Free Downloads", category: "Free", href: "#" },
 ];
 
 export const footerColumns = [
@@ -186,40 +125,5 @@ export const footerColumns = [
       { label: "Terms of Service", href: "/terms" },
       { label: "License", href: "/license" },
     ],
-  },
-];
-
-export const stats: StatItem[] = [
-  { value: "100%", label: "Digital Delivery" },
-  { value: "Instant", label: "Secure Checkout" },
-  { value: "Lifetime", label: "Access" },
-];
-
-export interface TestimonialItem {
-  name: string;
-  role: string;
-  quote: string;
-}
-
-export const testimonials: TestimonialItem[] = [
-  {
-    name: "Sarah Chen",
-    role: "Product Designer",
-    quote: "Kyno's UI kit saved me weeks of design work. The components are thoughtfully built and easy to customize. My go-to resource for every new project.",
-  },
-  {
-    name: "Marcus Rivera",
-    role: "Frontend Developer",
-    quote: "The font collection is incredible. Clean licensing, beautiful typefaces, and the web font kit just works out of the box. Highly recommended.",
-  },
-  {
-    name: "Emily Park",
-    role: "Content Creator",
-    quote: "I use their photo presets on every shoot. Consistent, professional look in one click. My clients keep asking how I edit my photos.",
-  },
-  {
-    name: "James Wilson",
-    role: "Creative Director",
-    quote: "Kyno templates are the best investment we made this year. From landing pages to design systems, everything is polished and production-ready.",
   },
 ];

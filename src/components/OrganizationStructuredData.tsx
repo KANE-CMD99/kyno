@@ -22,7 +22,7 @@ export default function OrganizationStructuredData() {
           height: 512,
         },
         description:
-          "Ready-made resume templates, posters and design assets — pay once, own forever.",
+          "Ready-made resume templates, printables and menu templates — pay once, own forever.",
         // Same operator, second property: a free font-pairing tool whose every
         // page links here. Naming it tells search engines the two sites are one
         // organisation rather than unrelated sites trading links.
@@ -40,7 +40,7 @@ export default function OrganizationStructuredData() {
         url: SITE_URL,
         name: "Kyno",
         description:
-          "Ready-made resume templates, posters and design assets — pay once, own forever.",
+          "Ready-made resume templates, printables and menu templates — pay once, own forever.",
         publisher: { "@id": `${SITE_URL}/#organization` },
         inLanguage: "en",
       },

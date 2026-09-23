@@ -14,7 +14,6 @@ interface ProductCardProps {
 
 const categoryEmoji: Record<string, string> = {
   Templates: String.fromCodePoint(0x1F4D0),
-  Fonts: String.fromCodePoint(0x1F524),
   Graphics: String.fromCodePoint(0x2728),
   Photos: String.fromCodePoint(0x1F4F7),
   Icons: String.fromCodePoint(0x1F4CC),

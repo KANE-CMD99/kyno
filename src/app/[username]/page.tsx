@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${name} — Creator`,
-    description: `Browse digital products by ${name} on Kyno — templates, fonts and design assets, delivered instantly.`,
+    description: `Browse digital products by ${name} on Kyno — templates, printables and menu templates, delivered instantly.`,
     alternates: { canonical: `/${creator.username}` },
     ...(hasProducts ? {} : { robots: { index: false, follow: true } }),
     openGraph: {

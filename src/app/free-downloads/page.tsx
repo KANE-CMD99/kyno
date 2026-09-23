@@ -8,7 +8,6 @@ export const revalidate = 3600;
 
 const categoryEmoji: Record<string, string> = {
   Photos: "📷",
-  Fonts: "🔤",
   Templates: "📐",
   Free: "🎁",
 };

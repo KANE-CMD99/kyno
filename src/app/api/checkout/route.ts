@@ -80,11 +80,13 @@ export async function POST(req: Request) {
         },
         quantity: i.quantity,
       })),
-      // Which payment methods appear is decided by this Stripe configuration,
-      // so adding or removing one is a dashboard toggle rather than a deploy.
-      // Referenced explicitly instead of relying on the account default, which
-      // this store does not control. Note: passing payment_method_types as well
-      // is an error — the configuration already determines the list.
+      // The configuration decides which methods are *enabled*, not which ones
+      // Stripe actually renders: it additionally gates on presentment currency
+      // (WeChat Pay only appears for CNY/HKD on this account), amount minimums
+      // and the customer's location, so a method can be on here and still never
+      // show. Referenced explicitly instead of relying on the account default,
+      // which this store does not control. Note: passing payment_method_types
+      // as well is an error — the configuration already determines the list.
       payment_method_configuration: "pmc_1TmNhvHKmhLcv5FtOcwDxnIo",
       billing_address_collection: "auto",
       ...(process.env.STRIPE_AUTOMATIC_TAX === "true"

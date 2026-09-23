@@ -7,7 +7,7 @@ import { getAllProducts } from "@/db/products-store";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com";
 
 const CATEGORY_MAP: Record<string, string> = {
-  photos: "Photos", fonts: "Fonts", templates: "Templates", free: "Free",
+  photos: "Photos", templates: "Templates", free: "Free",
 };
 
 function isValidSlug(slug: string): boolean {

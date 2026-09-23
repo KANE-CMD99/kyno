@@ -56,11 +56,11 @@ export default function ProductsSection({ initialProducts }: { initialProducts: 
           </p>
         ) : (
           <>
-            {(["Photos", "Fonts", "Templates", "Free"] as const).map((cat) => {
+            {(["Photos", "Templates", "Free"] as const).map((cat) => {
               const allItems = filtered.filter((p) => p.category === cat);
               if (allItems.length === 0) return null;
-              // Show max 4 per category — "Photos" and "Fonts" limited, "Templates" and "Free" unlimited
-              const limitCats = ["Photos", "Fonts"];
+              // Show max 4 per category — "Photos" limited, "Templates" and "Free" unlimited
+              const limitCats = ["Photos"];
               const items = limitCats.includes(cat) ? allItems.slice(0, 4) : allItems;
               return (
                 <div key={cat} className="text-center">

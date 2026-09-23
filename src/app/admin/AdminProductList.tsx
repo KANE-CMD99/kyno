@@ -11,11 +11,10 @@ interface AdminProductListProps {
   onAdd: (category?: string) => void;
 }
 
-const CATEGORIES = ["Photos", "Fonts", "Templates"] as const;
+const CATEGORIES = ["Photos", "Templates"] as const;
 
 const categoryEmoji: Record<string, string> = {
   Photos: String.fromCodePoint(0x1F4F7),
-  Fonts: String.fromCodePoint(0x1F524),
   Templates: String.fromCodePoint(0x1F4D0),
 };
 

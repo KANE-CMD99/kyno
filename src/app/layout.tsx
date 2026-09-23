@@ -16,27 +16,27 @@ export const metadata: Metadata = {
     "google-adsense-account": "ca-pub-9346189548515611",
   },
   title: {
-    default: "Kyno — Buy Once, Own Forever | Resume Templates, Posters & Design Assets",
+    default: "Kyno — Buy Once, Own Forever | Resume Templates, Printables & Menu Templates",
     template: "%s — Kyno",
   },
   description:
-    "Premium resume templates, posters, and design assets for creators. Pay once, own forever — from $1.",
+    "Premium resume templates, printables, and menu templates. Pay once, own forever — from $4.",
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: "Kyno",
     title: "Kyno — Buy Once, Own Forever",
     description:
-      "Premium resume templates, posters, and design assets for creators. Pay once, own forever — from $1.",
+      "Premium resume templates, printables, and menu templates. Pay once, own forever — from $4.",
     // Inherited by every page that doesn't set its own image. Without it the
     // homepage and the static pages shared as a bare link with no card.
-    images: [{ url: "/og-default.png", width: 1200, height: 630, alt: "Kyno — resume templates, posters and design assets" }],
+    images: [{ url: "/og-default.png", width: 1200, height: 630, alt: "Kyno — resume templates, printables and menu templates" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Kyno — Buy Once, Own Forever",
     description:
-      "Premium resume templates, posters, and design assets for creators. Pay once, own forever — from $1.",
+      "Premium resume templates, printables, and menu templates. Pay once, own forever — from $4.",
     images: ["/og-default.png"],
   },
   robots: {

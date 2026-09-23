@@ -123,7 +123,6 @@ export default async function ProductPage({ params }: PageProps) {
                   <div className="text-center">
                     <span className="text-7xl">
                       {detail.category === "Photos" ? String.fromCodePoint(0x1F4F7)
-                       : detail.category === "Fonts" ? String.fromCodePoint(0x1F524)
                        : detail.category === "Free" ? String.fromCodePoint(0x1F381)
                        : String.fromCodePoint(0x1F4D0)}
                     </span>

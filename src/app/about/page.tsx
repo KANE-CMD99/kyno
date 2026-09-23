@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Kyno is a small studio selling ready-made resume templates, posters and design assets — pay once, own forever, from $1.",
+    "Kyno is an independent studio selling ready-made resume templates, printables and menu templates — pay once, own forever, from $4.",
   alternates: { canonical: "/about" },
 };
 
@@ -33,8 +33,8 @@ export default function AboutPage() {
               Premium digital assets for creators
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-neutral-500">
-              Kyno is an independent studio crafting high-quality stock photos, fonts,
-              and design templates for designers and content creators worldwide.
+              Kyno is an independent studio crafting high-quality resume templates,
+              printables, and menu templates for job seekers, small businesses, and creators worldwide.
             </p>
           </div>
         </section>

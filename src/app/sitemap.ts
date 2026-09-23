@@ -7,7 +7,6 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.c
 
 const CATEGORY_SLUGS: { slug: string; category: string }[] = [
   { slug: "photos", category: "Photos" },
-  { slug: "fonts", category: "Fonts" },
   { slug: "templates", category: "Templates" },
   { slug: "free", category: "Free" },
 ];

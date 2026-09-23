@@ -130,7 +130,6 @@ function CartItemRow({
 }) {
   const emoji =
     item.category === "Photos" ? String.fromCodePoint(0x1F4F7)
-    : item.category === "Fonts" ? String.fromCodePoint(0x1F524)
     : String.fromCodePoint(0x1F4D0);
   const { format } = useCurrency();
 

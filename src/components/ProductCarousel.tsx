@@ -8,7 +8,6 @@ import { useCurrency } from "./CurrencyContext";
 
 const categoryEmoji: Record<string, string> = {
   Photos: String.fromCodePoint(0x1F4F7),
-  Fonts: String.fromCodePoint(0x1F524),
   Templates: String.fromCodePoint(0x1F4D0),
   Free: "🎁",
 };

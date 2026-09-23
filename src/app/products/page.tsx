@@ -11,12 +11,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.c
 export const metadata: Metadata = {
   title: "All Products",
   description:
-    "Browse every template, font and photo pack on Kyno — pay once, own forever, from $1.",
+    "Browse every resume template, printable and menu template on Kyno — pay once, own forever, from $4.",
   alternates: { canonical: `${SITE_URL}/products` },
   openGraph: {
     title: "All Products — Kyno",
     description:
-      "Browse every template, font and photo pack on Kyno — pay once, own forever, from $1.",
+      "Browse every resume template, printable and menu template on Kyno — pay once, own forever, from $4.",
     type: "website",
     url: `${SITE_URL}/products`,
   },
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-const CATEGORY_ORDER = ["Templates", "Fonts", "Photos", "Free"];
+const CATEGORY_ORDER = ["Templates", "Photos", "Free"];
 
 export default async function ProductsIndexPage() {
   const products = await getAllProducts();

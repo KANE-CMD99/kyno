@@ -12,7 +12,7 @@ interface AdminProductFormProps {
   onSaved: () => void;
 }
 
-const CATEGORIES = ["Photos", "Fonts", "Templates"];
+const CATEGORIES = ["Photos", "Templates"];
 
 export default function AdminProductForm({ product, defaultCategory, onSaved }: AdminProductFormProps) {
   const [name, setName] = useState(product?.name || "");
