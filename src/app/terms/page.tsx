@@ -63,7 +63,7 @@ export default function TermsPage() {
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">5. Intellectual Property</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-              All products, images, fonts, templates, and content on Kyno are protected by copyright
+              All products, images, templates, and content on Kyno are protected by copyright
               and owned by Kyno or its licensors. Purchasing a product grants you a license to use it;
               it does not transfer ownership or copyright.
             </p>
