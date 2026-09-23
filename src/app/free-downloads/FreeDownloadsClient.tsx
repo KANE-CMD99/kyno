@@ -32,7 +32,7 @@ export default function FreeDownloadsClient({ products }: { products: FreeProduc
   const handleClaim = async (item: FreeProduct) => {
     if (!email.trim()) return;
     setError("");
-    // Send email with a one-time download link — user downloads from their inbox.
+    // Email the download link — the user downloads from their inbox.
     // Only report success once the server confirms it actually sent.
     try {
       const res = await fetch("/api/free-download-email", {
@@ -154,7 +154,7 @@ export default function FreeDownloadsClient({ products }: { products: FreeProduc
                                 value={email}
                                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
                                 placeholder="your@email.com"
-                                className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-xs outline-none focus:border-blue-500"
+                                className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-base outline-none focus:border-blue-500"
                               />
                               <button
                                 onClick={() => handleClaim(item)}

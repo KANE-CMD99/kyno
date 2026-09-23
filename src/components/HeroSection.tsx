@@ -40,7 +40,7 @@ export default function HeroSection({ posts }: { posts: BlogPost[] }) {
           </div>
           {posts.length === 0 ? (
             <div className="rounded-lg border border-dashed border-neutral-300 bg-white p-8 text-center">
-              <p className="text-sm text-neutral-400">Blog posts coming soon</p>
+              <p className="text-sm text-neutral-500">Blog posts coming soon</p>
             </div>
           ) : (
             <div className="space-y-3">

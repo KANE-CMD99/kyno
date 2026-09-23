@@ -54,11 +54,21 @@ export default function TermsPage() {
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">4. Refund Policy</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-              Due to the digital nature of our products, all sales are final. We do not offer refunds
-              or exchanges once a product has been downloaded. If you experience technical issues with
-              a product, please contact us at {SITE.contactEmail} and we will work to resolve the problem.
-              Exceptions may be made at our sole discretion in cases of duplicate purchases or
-              demonstrable product defects.
+              If a product is not what you expected, you can request a refund within 7 days of
+              purchase and we will refund you in full to your original payment method. You do not
+              need to give a reason, and it makes no difference whether you have already downloaded
+              the files.
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+              To request a refund, email us at {SITE.contactEmail} with the address you used at
+              checkout. Refunds are issued within 5 business days of your request. Please note that
+              once a refund is issued, the licence to use the product ends and you should delete any
+              copies you have.
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+              If something is technically wrong with a product — a corrupt file, a missing page, a
+              template that will not open — contact us first and we will fix it or refund you either
+              way.
             </p>
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">5. Intellectual Property</h2>

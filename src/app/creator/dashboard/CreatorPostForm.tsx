@@ -141,7 +141,7 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
             required
-            className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+            className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500"
           />
         </div>
         <div>
@@ -150,7 +150,7 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
             value={slug}
             onChange={(e) => { setSlug(e.target.value); setSlugTouched(true); }}
             placeholder={t("blog.slug_placeholder")}
-            className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+            className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500"
           />
         </div>
         <div>
@@ -158,7 +158,7 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+            className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500"
           >
             <option value="">—</option>
             {BLOG_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -170,7 +170,7 @@ export default function CreatorPostForm({ post, onSaved }: CreatorPostFormProps)
             value={excerpt}
             onChange={(e) => { setExcerpt(e.target.value); setExcerptTouched(true); }}
             rows={2}
-            className="mt-1.5 block w-full resize-none rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+            className="mt-1.5 block w-full resize-none rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500"
           />
           {!excerptTouched && (
             <span className="mt-1.5 block text-xs text-neutral-400">{t("blog.excerpt_auto")}</span>

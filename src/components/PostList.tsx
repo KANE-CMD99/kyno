@@ -50,7 +50,7 @@ export default function PostList({ posts }: { posts: BlogListItem[] }) {
 
       {!featured ? (
         <div className="mt-12 rounded-xl border border-dashed border-neutral-300 bg-white py-16 text-center">
-          <p className="text-sm text-neutral-400">No posts in this category yet.</p>
+          <p className="text-sm text-neutral-500">No posts in this category yet.</p>
           <button
             type="button"
             onClick={() => setCategory(null)}
@@ -109,7 +109,7 @@ function FeaturedCard({ post }: { post: BlogListItem }) {
           <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-neutral-500">{post.excerpt}</p>
         )}
         {post.publishedAt && (
-          <p className="mt-4 text-xs text-neutral-400">
+          <p className="mt-4 text-xs text-neutral-500">
             <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
           </p>
         )}

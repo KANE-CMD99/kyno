@@ -55,6 +55,13 @@ export default function LicensePage() {
               physical products. The end product must be significantly different from the original
               asset and not simply repackaged.
             </p>
+            {/* Some product pages state a narrower scope (menu templates, for
+                instance, are licensed to one business). Saying which wins stops
+                the two pages from reading as a contradiction. */}
+            <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+              Where a product page states narrower terms — for example, menu templates licensed for
+              use in one business you own — the product page takes precedence over this page.
+            </p>
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">Questions</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">

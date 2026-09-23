@@ -90,28 +90,28 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
               {title.length}/60
             </span>
           </div>
-          <input value={title} onChange={(e) => handleTitleChange(e.target.value)} required className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
+          <input value={title} onChange={(e) => handleTitleChange(e.target.value)} required className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" />
         </div>
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <label className="block text-xs font-medium text-neutral-700">Slug</label>
-            <input value={slug} onChange={(e) => { setSlug(e.target.value); setSlugTouched(true); }} placeholder="auto-from-title" className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
+            <input value={slug} onChange={(e) => { setSlug(e.target.value); setSlugTouched(true); }} placeholder="auto-from-title" className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-neutral-700">Author</label>
-            <input value={author} onChange={(e) => setAuthor(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
+            <input value={author} onChange={(e) => setAuthor(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" />
           </div>
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-700">Category</label>
-          <select value={category} onChange={(e) => setCategory(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500">
+          <select value={category} onChange={(e) => setCategory(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500">
             <option value="">—</option>
             {BLOG_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-700">Excerpt (shown on cards)</label>
-          <textarea value={excerpt} onChange={(e) => { setExcerpt(e.target.value); setExcerptTouched(true); }} rows={2} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-none" />
+          <textarea value={excerpt} onChange={(e) => { setExcerpt(e.target.value); setExcerptTouched(true); }} rows={2} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500 resize-none" />
           {!excerptTouched && (
             <span className="mt-1.5 block text-xs text-neutral-400">Auto-generated from the post body — edit freely</span>
           )}
@@ -142,7 +142,7 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-700">Status</label>
-          <select value={status} onChange={(e) => setStatus(e.target.value as BlogStatus)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500">
+          <select value={status} onChange={(e) => setStatus(e.target.value as BlogStatus)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500">
             <option value="draft">Draft</option>
             <option value="pending">Pending review</option>
             <option value="published">Published</option>

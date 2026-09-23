@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { SITE } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "About",
@@ -51,9 +52,9 @@ export default function AboutPage() {
                 the same quality we&apos;d want for our own projects.
               </p>
               <p className="mt-3 text-sm leading-relaxed text-neutral-600">
-                We&apos;re a small team of designers and developers who believe great tools
-                make great work possible. No investors, no boardroom, just a commitment
-                to building things people love to use.
+                We&apos;re an independent studio, and every template in the shop is designed
+                in-house and checked by hand before it goes up. We&apos;d rather ship one
+                product we stand behind than fifty we don&apos;t.
               </p>
             </div>
             <div>
@@ -91,6 +92,29 @@ export default function AboutPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Company details — someone who has never heard of Kyno should be able
+            to see who they are paying before they hand over money. */}
+        <section className="bg-neutral-50 px-6 py-16">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-xl font-bold text-neutral-900">Who you&apos;re buying from</h2>
+            <p className="mt-4 text-sm leading-relaxed text-neutral-600">
+              Kyno is operated by Kyno Technology Limited, registered in Hong Kong SAR.
+              Questions about an order, a licence or a product? Email{" "}
+              <a href={`mailto:${SITE.contactEmail}`} className="text-blue-600 hover:underline">
+                {SITE.contactEmail}
+              </a>{" "}
+              and you&apos;ll get a reply from the people who made the product.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-neutral-600">
+              Every purchase is refundable within 7 days — see our{" "}
+              <Link href="/terms" className="text-blue-600 hover:underline">
+                Terms of Service
+              </Link>
+              .
+            </p>
           </div>
         </section>
       </main>

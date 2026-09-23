@@ -52,7 +52,7 @@ export default function BlogCard({ post }: { post: BlogListItem }) {
         </h3>
         <p className="mt-1.5 line-clamp-2 text-xs text-neutral-500">{post.excerpt}</p>
         {post.publishedAt && (
-          <p className="mt-auto pt-3 text-[11px] text-neutral-400">
+          <p className="mt-auto pt-3 text-[11px] text-neutral-500">
             <time dateTime={post.publishedAt}>{formatPostDate(post.publishedAt)}</time>
           </p>
         )}

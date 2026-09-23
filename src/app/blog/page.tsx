@@ -8,7 +8,7 @@ import PostList from "@/components/PostList";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com";
 
 export const metadata: Metadata = {
-  title: "Blog",
+  title: "Design, Career & Home Guides",
   description: "Design tips, resume advice, and creative resources from Kyno.",
   alternates: { canonical: `${SITE_URL}/blog` },
 };

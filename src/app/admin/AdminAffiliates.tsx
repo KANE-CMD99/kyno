@@ -62,19 +62,19 @@ export default function AdminAffiliates() {
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-xs font-medium text-neutral-700">Name</label>
-              <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
+              <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">Email</label>
-              <input value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
+              <input value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">Referral Code (letters only)</label>
-              <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ""))} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm font-mono outline-none focus:border-blue-500" placeholder="e.g. SARAH20" />
+              <input value={code} onChange={(e) => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ""))} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base font-mono outline-none focus:border-blue-500" placeholder="e.g. SARAH20" />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">Commission %</label>
-              <input type="number" value={commission} onChange={(e) => setCommission(Number(e.target.value))} min={5} max={50} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
+              <input type="number" value={commission} onChange={(e) => setCommission(Number(e.target.value))} min={5} max={50} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" />
             </div>
           </div>
           {msg && <p className="mt-3 text-xs text-red-600">{msg}</p>}

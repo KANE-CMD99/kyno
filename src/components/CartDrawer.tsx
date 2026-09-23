@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useCart, type CartItem } from "./CartContext";
@@ -16,6 +17,19 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const { items, removeItem, updateQuantity, subtotal, itemCount, clearCart } = useCart();
   const { t } = useLang();
   const { format } = useCurrency();
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Escape closes the drawer, and focus moves into the panel on open so the
+  // role="dialog" below is not a claim the markup cannot back up.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    panelRef.current?.focus();
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
@@ -32,7 +46,12 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
           {/* Drawer */}
           <motion.div
-            className="relative flex h-full w-full max-w-md flex-col bg-white shadow-2xl"
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("nav.cart")}
+            tabIndex={-1}
+            className="relative flex h-full w-full max-w-md flex-col bg-white shadow-2xl outline-none"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -46,7 +65,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               </div>
               <button
                 onClick={onClose}
-                className="rounded-md p-1.5 text-neutral-400 transition-colors hover:text-neutral-600"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-md text-neutral-500 transition-colors hover:text-neutral-900"
                 aria-label="Close cart"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -142,17 +161,22 @@ function CartItemRow({
         <h4 className="text-sm font-semibold text-neutral-900 truncate">{item.name}</h4>
         <p className="text-xs text-neutral-500">{categoryFull(item.category)}</p>
         <div className="mt-1.5 flex items-center gap-3">
+          {/* 36px steppers rather than the 24px they were: three of them in a row
+              have to fit beside a 64px thumbnail on a 360px screen, so this is
+              the widest that keeps the row intact. */}
           <div className="flex items-center rounded-md border border-neutral-300">
             <button
               onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-              className="px-2 py-0.5 text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
+              aria-label={`Decrease quantity of ${item.name}`}
+              className="flex h-9 w-9 items-center justify-center text-base text-neutral-500 transition-colors hover:text-neutral-900"
             >
               &minus;
             </button>
-            <span className="px-2 py-0.5 text-sm font-medium text-neutral-900">{item.quantity}</span>
+            <span className="w-6 text-center text-sm font-medium text-neutral-900">{item.quantity}</span>
             <button
               onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-              className="px-2 py-0.5 text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
+              aria-label={`Increase quantity of ${item.name}`}
+              className="flex h-9 w-9 items-center justify-center text-base text-neutral-500 transition-colors hover:text-neutral-900"
             >
               +
             </button>
@@ -162,7 +186,7 @@ function CartItemRow({
       </div>
       <button
         onClick={() => onRemove(item.id)}
-        className="shrink-0 self-start rounded p-1 text-neutral-300 transition-colors hover:text-red-500"
+        className="flex h-11 w-11 shrink-0 items-center justify-center self-start text-neutral-400 transition-colors hover:text-red-500"
         aria-label={`Remove ${item.name}`}
       >
         <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">

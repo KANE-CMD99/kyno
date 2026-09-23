@@ -92,7 +92,7 @@ export default function ContactPage() {
                     <label htmlFor="contact-name" className="block text-xs font-medium text-neutral-700">Name</label>
                     <input
                       id="contact-name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)}
-                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-base text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       placeholder="Your name"
                     />
                   </div>
@@ -100,7 +100,7 @@ export default function ContactPage() {
                     <label htmlFor="contact-email" className="block text-xs font-medium text-neutral-700">Email</label>
                     <input
                       id="contact-email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-base text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       placeholder="you@example.com"
                     />
                   </div>
@@ -108,7 +108,7 @@ export default function ContactPage() {
                     <label htmlFor="contact-subject" className="block text-xs font-medium text-neutral-700">Subject</label>
                     <input
                       id="contact-subject" type="text" value={subject} onChange={(e) => setSubject(e.target.value)}
-                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-base text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       placeholder="How can we help?"
                     />
                   </div>
@@ -116,7 +116,7 @@ export default function ContactPage() {
                     <label htmlFor="contact-message" className="block text-xs font-medium text-neutral-700">Message</label>
                     <textarea
                       id="contact-message" rows={5} value={message} onChange={(e) => setMessage(e.target.value)}
-                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-base text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
                       placeholder="Tell us what you need..."
                     />
                   </div>

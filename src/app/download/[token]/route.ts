@@ -16,12 +16,14 @@ export async function GET(
     return NextResponse.json({ error: "Invalid or expired download link" }, { status: 404 });
   }
 
-  if (order.downloadClaimed) {
-    return NextResponse.json({ error: "This download link has already been used" }, { status: 410 });
-  }
+  // Links are not consumed on use: a customer who loses the email, switches
+  // device or reinstalls can be re-sent the same link from /orders and it still
+  // works. `downloadClaimed` now records only whether the first download
+  // happened, for stats.
+  const claimOnce = async () => {
+    if (!order.downloadClaimed) await markOrderClaimed(order.id);
+  };
 
-  // Resolve the file location BEFORE marking claimed, so a missing file
-  // doesn't burn the user's one-time download token.
   const product = await getProductById(order.productId);
   const fileUrl = product?.downloadFile?.url;
 
@@ -35,7 +37,7 @@ export async function GET(
   }
 
   if (filePath && fs.existsSync(filePath)) {
-    await markOrderClaimed(order.id);
+    await claimOnce();
     recordDownload();
     const fileBuffer = fs.readFileSync(filePath);
     const fileName = product?.downloadFile?.name || `${order.productName}.zip`;
@@ -50,12 +52,12 @@ export async function GET(
   if (filePath) console.error(`[Download] File not found: ${filePath}`);
 
   if (fileUrl?.startsWith("http")) {
-    await markOrderClaimed(order.id);
+    await claimOnce();
     recordDownload();
     return NextResponse.redirect(fileUrl);
   }
 
-  // No file attached or file missing — redirect WITHOUT claiming so the user can retry
+  // No file attached or file missing — send them to the product page
   const productPageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/products/${order.productId}`;
   return NextResponse.redirect(productPageUrl);
 }

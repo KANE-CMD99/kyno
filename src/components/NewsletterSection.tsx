@@ -62,7 +62,7 @@ export default function NewsletterSection() {
                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
                 placeholder="your@email.com"
                 required
-                className="flex-1 rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="flex-1 rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-3 text-base text-white placeholder-neutral-500 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
               <button
                 type="submit"
@@ -76,15 +76,16 @@ export default function NewsletterSection() {
               <p className="rounded-lg bg-red-950 px-4 py-2.5 text-left text-xs text-red-300">{error}</p>
             )}
             <label className="flex items-center gap-2 text-left cursor-pointer">
-              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="h-3.5 w-3.5 rounded border-neutral-600 text-blue-600" />
-              <span className="text-xs text-neutral-500">I agree to receive product updates and marketing emails.{" "}
+              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="h-4 w-4 rounded border-neutral-600 text-blue-600" />
+              <span className="text-xs text-neutral-400">I agree to receive product updates and marketing emails.{" "}
                 <a href="/privacy" className="text-blue-400 underline hover:text-blue-300">Privacy Policy</a>
               </span>
             </label>
           </form>
         )}
 
-        <p className="mt-3 text-xs text-neutral-600">
+        {/* On the neutral-900 band, neutral-600 is ~2.4:1 — unreadable. */}
+        <p className="mt-3 text-xs text-neutral-400">
           No spam. Unsubscribe anytime.
         </p>
       </motion.div>

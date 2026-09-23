@@ -66,7 +66,7 @@ export default function CreatorSettings({ onBack }: Props) {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   required
-                  className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 pr-10 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 pr-10 text-base outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
                 <button type="button" onClick={() => setShowCurrent(!showCurrent)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-neutral-400 hover:text-neutral-600">
                   {showCurrent ? (
@@ -86,7 +86,7 @@ export default function CreatorSettings({ onBack }: Props) {
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 pr-10 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 pr-10 text-base outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   placeholder={t("settings.min_chars")}
                 />
                 <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-neutral-400 hover:text-neutral-600">

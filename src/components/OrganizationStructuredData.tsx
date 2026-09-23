@@ -1,3 +1,5 @@
+import { SITE } from "@/lib/site-config";
+
 const SITE_URL = "https://www.kynocreative.com";
 
 /**
@@ -13,6 +15,9 @@ export default function OrganizationStructuredData() {
         "@type": "Organization",
         "@id": `${SITE_URL}/#organization`,
         name: "Kyno",
+        // The trading name and the registered entity are not the same thing;
+        // declaring both lets search engines tie the storefront to the company.
+        legalName: "Kyno Technology Limited",
         url: SITE_URL,
         // Google requires a raster logo (favicon.svg does not qualify).
         logo: {
@@ -27,9 +32,13 @@ export default function OrganizationStructuredData() {
         // page links here. Naming it tells search engines the two sites are one
         // organisation rather than unrelated sites trading links.
         sameAs: ["https://www.kyno.top"],
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: "HK",
+        },
         contactPoint: {
           "@type": "ContactPoint",
-          email: "33429296@qq.com",
+          email: SITE.contactEmail,
           contactType: "customer service",
           availableLanguage: ["English", "Chinese"],
         },

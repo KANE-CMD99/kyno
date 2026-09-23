@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getProductById } from "@/db/products-store";
-import { recordOrder } from "@/db/stats";
+import { isEmail } from "@/lib/validation";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder", {
   timeout: 8000,
@@ -31,6 +31,9 @@ export async function POST(req: Request) {
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ error: "No items in cart" }, { status: 400 });
     }
+    if (email && !isEmail(email)) {
+      return NextResponse.json({ error: "Please enter a valid email address" }, { status: 400 });
+    }
 
     // Server-side validation: resolve every item from the DB and discard
     // any client-supplied price/name. Unknown product → 400. Quantity capped.
@@ -52,15 +55,12 @@ export async function POST(req: Request) {
       });
     }
 
-    // Analytics (server-computed total)
-    const totalRevenue = resolvedItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    if (email) recordOrder(email, totalRevenue);
-
     const origin = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const affCode = req.headers.get("cookie")?.match(/kyno_affiliate=([^;]+)/)?.[1] || "";
 
-    // Create the Stripe session ONLY — no order/token is issued here.
-    // Download tokens are minted in the webhook after payment is confirmed.
+    // Create the Stripe session ONLY — no order/token is issued here, and no
+    // analytics are recorded: an abandoned or declined checkout is not revenue.
+    // Both happen in the webhook once Stripe confirms payment.
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       success_url: `${origin}/checkout/success`,
@@ -69,7 +69,10 @@ export async function POST(req: Request) {
       metadata: {
         customer_name: name || "",
         customer_email: email || "",
-        items: JSON.stringify(resolvedItems),
+        // Compact [id, quantity, price] triples: Stripe caps a metadata value at
+        // 500 characters, and JSON objects blow past that once a cart holds
+        // roughly six products. The webhook re-resolves the display name.
+        items: JSON.stringify(resolvedItems.map((i) => [i.id, i.quantity, i.price])),
         aff_code: affCode,
       },
       line_items: resolvedItems.map((i) => ({

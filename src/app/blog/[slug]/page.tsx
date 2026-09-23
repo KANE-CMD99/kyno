@@ -90,6 +90,11 @@ export default async function BlogPostPage({ params }: PageProps) {
     image: coverPath.startsWith("http") ? coverPath : `${SITE_URL}${coverPath}`,
     datePublished: post.publishedAt,
     author: { "@type": "Person", name: post.author },
+    // Google reads publisher as a recommended field for Article rich results.
+    // Pointing at the Organization node the root layout already emits keeps
+    // this a reference rather than a second, conflicting copy of the brand.
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/blog/${post.slug}` },
     // 空字符串同样会被判为无效标注，所以没有分类时整个字段不输出。
     ...(post.category ? { articleSection: post.category } : {}),
   };

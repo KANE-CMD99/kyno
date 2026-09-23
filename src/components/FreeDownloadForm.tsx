@@ -45,7 +45,7 @@ export default function FreeDownloadForm({ productId }: Props) {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
           required
-          className="min-w-0 flex-1 rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          className="min-w-0 flex-1 rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base text-neutral-900 placeholder-neutral-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
         />
         <button
           type="submit"
@@ -58,8 +58,8 @@ export default function FreeDownloadForm({ productId }: Props) {
       {status === "error" && (
         <p className="text-xs text-red-600">Failed to send. Please try again.</p>
       )}
-      <p className="text-xs text-neutral-400">
-        No signup required. We&apos;ll email you a one-time download link.
+      <p className="text-xs text-neutral-500">
+        No signup required. We&apos;ll email you the download link — it stays valid.
       </p>
     </form>
   );

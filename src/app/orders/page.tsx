@@ -8,7 +8,7 @@ import { SITE } from "@/lib/site-config";
 export default function OrdersPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: "success" | "error" | "none"; text: string } | null>(null);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const handleLookup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,13 +21,13 @@ export default function OrdersPage() {
         body: JSON.stringify({ email: email.trim() }),
       });
       const data = await res.json();
-      if (data.sent) {
+      if (res.ok && data.ok) {
         setMessage({
           type: "success",
-          text: "Download links have been sent to your email. Check your inbox (and spam folder).",
+          text: "If we found orders for that email, the download links are on their way. Check your inbox (and spam folder).",
         });
       } else {
-        setMessage({ type: "none", text: "No purchases found for that email." });
+        setMessage({ type: "error", text: "Something went wrong. Please try again." });
       }
     } catch {
       setMessage({ type: "error", text: "Something went wrong. Please try again." });
@@ -54,7 +54,7 @@ export default function OrdersPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="flex-1 rounded-lg border border-neutral-300 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="flex-1 rounded-lg border border-neutral-300 px-4 py-2.5 text-base outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             />
             <button
               type="submit"
@@ -70,18 +70,12 @@ export default function OrdersPage() {
               className={`mt-6 rounded-xl border p-5 ${
                 message.type === "success"
                   ? "border-emerald-200 bg-emerald-50"
-                  : message.type === "error"
-                    ? "border-red-200 bg-red-50"
-                    : "border-neutral-200 bg-white"
+                  : "border-red-200 bg-red-50"
               }`}
             >
               <p
                 className={`text-sm ${
-                  message.type === "error"
-                    ? "text-red-600"
-                    : message.type === "success"
-                      ? "text-emerald-800"
-                      : "text-neutral-600"
+                  message.type === "error" ? "text-red-600" : "text-emerald-800"
                 }`}
               >
                 {message.text}

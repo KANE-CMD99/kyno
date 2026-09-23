@@ -140,7 +140,7 @@ export default function CheckoutPage() {
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       placeholder={t("checkout.name_placeholder")}
                     />
                   </div>
@@ -153,7 +153,7 @@ export default function CheckoutPage() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base text-neutral-900 placeholder-neutral-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       placeholder={t("checkout.email_placeholder")}
                     />
                     <p className="mt-1 text-xs text-neutral-400">{t("checkout.email_hint")}</p>

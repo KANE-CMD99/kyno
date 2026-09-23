@@ -15,37 +15,42 @@ export default function MobileBuyBar({ id, name, price, originalPrice, category 
   const isFree = price === 0;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex shrink-0 items-center gap-2">
+    <>
+      {/* The bar is fixed, so it takes no layout space and used to sit on top of
+          the last footer row. This spacer reserves the same height below lg. */}
+      <div aria-hidden className="h-[72px] lg:hidden" />
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200 bg-white/95 px-4 py-3 backdrop-blur lg:hidden">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex shrink-0 items-center gap-2">
+            {isFree ? (
+              <span className="text-lg font-bold text-emerald-600">Free</span>
+            ) : (
+              <PriceDisplay
+                price={price}
+                originalPrice={originalPrice}
+                className="text-lg font-bold text-neutral-900"
+                originalClassName="text-sm text-neutral-500 line-through"
+              />
+            )}
+          </div>
           {isFree ? (
-            <span className="text-lg font-bold text-emerald-600">Free</span>
+            <a
+              href="#free-download"
+              className="flex-1 rounded-lg bg-emerald-600 px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
+            >
+              Get Free
+            </a>
           ) : (
-            <PriceDisplay
+            <AddToCartButton
+              id={id}
+              name={name}
               price={price}
-              originalPrice={originalPrice}
-              className="text-lg font-bold text-neutral-900"
-              originalClassName="text-sm text-neutral-400 line-through"
+              category={category}
+              className="flex-1 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
             />
           )}
         </div>
-        {isFree ? (
-          <a
-            href="#free-download"
-            className="flex-1 rounded-lg bg-emerald-600 px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
-          >
-            Get Free
-          </a>
-        ) : (
-          <AddToCartButton
-            id={id}
-            name={name}
-            price={price}
-            category={category}
-            className="flex-1 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-          />
-        )}
       </div>
-    </div>
+    </>
   );
 }

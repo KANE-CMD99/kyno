@@ -26,6 +26,12 @@
   --color-kyno-border-hover: var(--color-border-hover);
 }
 
+/* The nav plus the category pill bar are fixed and together about 94px tall, so
+   an in-page jump (#products, #free-download) otherwise lands underneath them. */
+html {
+  scroll-padding-top: 110px;
+}
+
 body {
   background-color: var(--color-bg);
   color: var(--color-text-secondary);

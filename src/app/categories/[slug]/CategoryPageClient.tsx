@@ -87,9 +87,9 @@ export default function CategoryPageClient({ slug, category, categoryData, produ
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-                {sorted.map((product, i) => (
+                {sorted.map((product) => (
                   <div key={product.id} className="w-full">
-                    <ProductCard product={product} index={i} />
+                    <ProductCard product={product} />
                   </div>
                 ))}
               </div>

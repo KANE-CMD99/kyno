@@ -97,7 +97,12 @@ export default function ProductComments({ productId }: Props) {
               </span>
             </>
           ) : (
-            <span>No reviews yet — be the first to rate this product.</span>
+            // Kyno is new and has no reviews yet. Rather than leave a bare gap,
+            // say so plainly and point at the thing that removes the risk.
+            <span>
+              No reviews yet — we&apos;re a new shop. Every purchase is covered by a 7-day
+              refund, so you can try it without the risk.
+            </span>
           )}
         </div>
 
@@ -110,7 +115,7 @@ export default function ProductComments({ productId }: Props) {
             onChange={(e) => setName(e.target.value)}
             placeholder="Your name"
             required
-            className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
 
           <div className="flex items-center gap-2">
@@ -141,7 +146,7 @@ export default function ProductComments({ productId }: Props) {
             placeholder="Share your thoughts..."
             required
             rows={3}
-            className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+            className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
           />
           <div className="flex items-center gap-3">
             <button
@@ -164,9 +169,7 @@ export default function ProductComments({ productId }: Props) {
         <div className="mt-8 space-y-4">
           {loading ? (
             <p className="text-sm text-neutral-400">Loading reviews...</p>
-          ) : comments.length === 0 ? (
-            <p className="text-sm text-neutral-400">No reviews yet. Be the first!</p>
-          ) : (
+          ) : comments.length === 0 ? null : (
             displayed.map((c) => (
               <div key={c.id} className="rounded-lg border border-neutral-200 bg-white p-4">
                 <div className="flex items-center gap-2">

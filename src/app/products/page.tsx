@@ -9,16 +9,13 @@ import ProductCard from "@/components/ProductCard";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com";
 
 export const metadata: Metadata = {
-  title: "All Products",
+  title: "Shop Resume, Menu & Printable Templates",
   description:
     "Browse every resume template, printable and menu template on Kyno — pay once, own forever, from $4.",
   alternates: { canonical: `${SITE_URL}/products` },
   openGraph: {
-    title: "All Products — Kyno",
-    description:
-      "Browse every resume template, printable and menu template on Kyno — pay once, own forever, from $4.",
-    type: "website",
     url: `${SITE_URL}/products`,
+    type: "website",
   },
 };
 
@@ -65,10 +62,9 @@ export default async function ProductsIndexPage() {
               <section key={cat}>
                 <h2 className="text-2xl font-bold text-neutral-900">{categoryFull(cat)}</h2>
                 <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
-                  {items.map((p, i) => (
+                  {items.map((p) => (
                     <ProductCard
                       key={p.id}
-                      index={i}
                       product={{
                         id: p.id,
                         name: p.name,

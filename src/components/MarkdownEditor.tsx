@@ -165,7 +165,7 @@ export default function MarkdownEditor({ value, onChange, uploadUrl }: Props) {
           // this field — and a placeholder is not a durable accessible name.
           aria-label="Markdown source"
           placeholder="Write your post in Markdown…"
-          className={`min-h-[280px] w-full resize-y px-3.5 py-3 font-mono text-sm leading-relaxed outline-none ${
+          className={`min-h-[280px] w-full resize-y px-3.5 py-3 font-mono text-base leading-relaxed outline-none ${
             previewOpen ? "hidden lg:block" : "block"
           }`}
         />

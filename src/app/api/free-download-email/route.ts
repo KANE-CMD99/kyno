@@ -21,13 +21,17 @@ export async function POST(req: Request) {
     }
 
     const product = await getProductById(productId);
-    if (!product) {
+    // Paid products must not be claimable here: this route mints a $0 order and
+    // a live download token, and the download route serves whatever file the
+    // order's product carries. Same 404 as an unknown id so the response does
+    // not reveal which ids are paid.
+    if (!product || Number(product.price) > 0) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Create a free order with a one-time download token (same as paid checkout)
+    // Free order + download token, same shape as a paid one.
     const order = await createOrder({
       userId: 0,
       productId: product.id,

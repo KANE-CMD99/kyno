@@ -52,7 +52,7 @@ export default function LoginPage() {
           <div>
             <label htmlFor="email" className="block text-xs font-medium text-neutral-700">Email</label>
             <input id="email" name="email" type="email" required autoComplete="email"
-              className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base text-neutral-900 placeholder-neutral-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               placeholder="you@example.com" />
           </div>
           <div>
@@ -60,7 +60,7 @@ export default function LoginPage() {
             <div className="relative mt-1.5">
               <input id="password" name="password" type={showPassword ? "text" : "password"} required minLength={6}
                 autoComplete="current-password"
-                className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 pr-10 text-sm text-neutral-900 placeholder-neutral-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 pr-10 text-base text-neutral-900 placeholder-neutral-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 placeholder="••••••••" />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-neutral-400 hover:text-neutral-600"

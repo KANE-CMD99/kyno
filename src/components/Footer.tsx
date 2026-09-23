@@ -1,5 +1,6 @@
 import Logo from "./Logo";
 import { footerColumns } from "@/data/site";
+import { SITE } from "@/lib/site-config";
 
 export default function Footer() {
   return (
@@ -36,8 +37,20 @@ export default function Footer() {
           ))}
         </div>
 
+        {/* A buyer who has never heard of Kyno should be able to see who they
+            are paying and how to reach them without hunting for /contact. */}
         <div className="mt-12 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-400">
-          &copy; {new Date().getFullYear()} Kyno. All rights reserved.
+          <p>&copy; {new Date().getFullYear()} Kyno Technology Limited. All rights reserved.</p>
+          <p className="mt-1.5">
+            Registered in Hong Kong SAR
+            <span aria-hidden className="mx-1.5 text-neutral-500">·</span>
+            <a
+              href={`mailto:${SITE.contactEmail}`}
+              className="transition-colors hover:text-white"
+            >
+              {SITE.contactEmail}
+            </a>
+          </p>
         </div>
       </div>
     </footer>

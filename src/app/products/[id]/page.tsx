@@ -197,20 +197,29 @@ export default async function ProductPage({ params }: PageProps) {
                 )}
               </div>
 
-              {/* Trust badges */}
-              <div className="mt-6 grid grid-cols-3 gap-3 border-t border-neutral-100 pt-5">
-                <div className="flex flex-col items-center gap-1.5 text-center">
-                  <span className="text-xl">⚡</span>
-                  <span className="text-[11px] font-medium leading-tight text-neutral-600">Instant delivery</span>
-                </div>
-                <div className="flex flex-col items-center gap-1.5 text-center">
-                  <span className="text-xl">🔒</span>
-                  <span className="text-[11px] font-medium leading-tight text-neutral-600">Secure payment</span>
-                </div>
-                <div className="flex flex-col items-center gap-1.5 text-center">
-                  <span className="text-xl">∞</span>
-                  <span className="text-[11px] font-medium leading-tight text-neutral-600">Lifetime access</span>
-                </div>
+              {/* Trust badges. What is actually true depends on the price: a free
+                  download has no payment to secure and nothing to refund, and
+                  telling a visitor otherwise reads as boilerplate they ignore. */}
+              <div className="mt-6 grid grid-cols-2 gap-3 border-t border-neutral-100 pt-5 sm:grid-cols-4">
+                {(detail.price === 0
+                  ? [
+                      { icon: "⚡", label: "Instant download" },
+                      { icon: "🔑", label: "No signup needed" },
+                      { icon: "∞", label: "Yours to keep" },
+                      { icon: "✉️", label: "Sent to your email" },
+                    ]
+                  : [
+                      { icon: "⚡", label: "Instant delivery" },
+                      { icon: "🔒", label: "Secure payment" },
+                      { icon: "∞", label: "Lifetime access" },
+                      { icon: "↩️", label: "7-day refund" },
+                    ]
+                ).map((badge) => (
+                  <div key={badge.label} className="flex flex-col items-center gap-1.5 text-center">
+                    <span className="text-xl">{badge.icon}</span>
+                    <span className="text-[11px] font-medium leading-tight text-neutral-600">{badge.label}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -289,7 +298,7 @@ export default async function ProductPage({ params }: PageProps) {
                 You might also like
               </p>
               <div className="mt-8 grid gap-4 sm:gap-5 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
-                {relatedProducts.map((product, i) => {
+                {relatedProducts.map((product) => {
                   const cardProduct = {
                     id: product.id,
                     name: product.name,
@@ -299,7 +308,7 @@ export default async function ProductPage({ params }: PageProps) {
                     thumbnail: product.previewImages?.[0],
                   };
                   return (
-                    <ProductCard key={product.id} product={cardProduct} index={i} />
+                    <ProductCard key={product.id} product={cardProduct} />
                   );
                 })}
               </div>

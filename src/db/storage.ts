@@ -19,7 +19,7 @@ function writeJSON(file: string, data: unknown) {
 }
 
 export interface UserRecord { id: number; name: string; email: string; passwordHash: string; createdAt: string; }
-export interface OrderRecord { id: number; userId: number; productId: string; productName: string; price: number; customerEmail?: string; customerName?: string; downloadToken: string; downloadClaimed: boolean; createdAt: string; }
+export interface OrderRecord { id: number; userId: number; productId: string; productName: string; price: number; customerEmail?: string; customerName?: string; downloadToken: string; downloadClaimed: boolean; createdAt: string; stripeSessionId?: string; emailSentAt?: string; }
 
 // ====== USERS ======
 export async function getUsers(): Promise<UserRecord[]> {
@@ -53,6 +53,18 @@ export async function createUser(user: Omit<UserRecord, "id">): Promise<UserReco
 }
 
 // ====== ORDERS ======
+function mapOrderRow(o: Record<string, unknown>): OrderRecord {
+  return {
+    id: o.id as number, userId: (o.user_id as number) || 0,
+    productId: o.product_id as string, productName: o.product_name as string,
+    price: o.price as number, customerEmail: (o.customer_email as string) || "",
+    customerName: (o.customer_name as string) || "", downloadToken: o.download_token as string,
+    downloadClaimed: o.download_claimed as boolean, createdAt: o.created_at as string,
+    stripeSessionId: (o.stripe_session_id as string) || undefined,
+    emailSentAt: (o.email_sent_at as string) || undefined,
+  };
+}
+
 export async function getOrders(userId: number): Promise<OrderRecord[]> {
   if (hasSupabase) { const { data } = await supabaseAdmin().from("orders").select("*").eq("user_id", userId); return data || []; }
   return readJSON<OrderRecord[]>("orders.json", []).filter(o => o.userId === userId);
@@ -62,13 +74,7 @@ export async function getOrdersByEmail(email: string): Promise<OrderRecord[]> {
   const normalized = email.toLowerCase().trim();
   if (hasSupabase) {
     const { data } = await supabaseAdmin().from("orders").select("*").eq("customer_email", normalized);
-    return (data || []).map((o: Record<string, unknown>) => ({
-      id: o.id as number, userId: (o.user_id as number) || 0,
-      productId: o.product_id as string, productName: o.product_name as string,
-      price: o.price as number, customerEmail: o.customer_email as string || "",
-      customerName: o.customer_name as string || "", downloadToken: o.download_token as string,
-      downloadClaimed: o.download_claimed as boolean, createdAt: o.created_at as string,
-    }));
+    return (data || []).map(mapOrderRow);
   }
   return readJSON<OrderRecord[]>("orders.json", []).filter(o => o.customerEmail === normalized);
 }
@@ -94,6 +100,7 @@ export async function createOrder(order: Omit<OrderRecord, "id" | "downloadToken
       user_id: order.userId, product_id: order.productId, product_name: order.productName,
       price: order.price, customer_email: order.customerEmail || "", customer_name: order.customerName || "",
       download_token: token, download_claimed: false, created_at: order.createdAt,
+      stripe_session_id: order.stripeSessionId || null, email_sent_at: order.emailSentAt || null,
     }).select().single();
     return { ...order, id: data.id, downloadToken: token, downloadClaimed: false };
   }
@@ -102,6 +109,25 @@ export async function createOrder(order: Omit<OrderRecord, "id" | "downloadToken
   const no: OrderRecord = { ...order, id, downloadToken: token, downloadClaimed: false };
   all.push(no); writeJSON("orders.json", all);
   return no;
+}
+
+// Orders already written for a Stripe Checkout Session. A webhook retry after a
+// partial failure must resume from here rather than re-create every line item.
+export async function getOrdersBySession(sessionId: string): Promise<OrderRecord[]> {
+  if (hasSupabase) {
+    const { data } = await supabaseAdmin().from("orders").select("*").eq("stripe_session_id", sessionId);
+    return (data || []).map(mapOrderRow);
+  }
+  return readJSON<OrderRecord[]>("orders.json", []).filter(o => o.stripeSessionId === sessionId);
+}
+
+// Records that the delivery email for this order actually left the building, so
+// a Stripe retry can tell "email failed last time" from "already delivered".
+export async function markOrderEmailed(orderId: number, sentAt: string): Promise<void> {
+  if (hasSupabase) { await supabaseAdmin().from("orders").update({ email_sent_at: sentAt }).eq("id", orderId); return; }
+  const all = readJSON<OrderRecord[]>("orders.json", []);
+  const o = all.find(x => x.id === orderId);
+  if (o) { o.emailSentAt = sentAt; writeJSON("orders.json", all); }
 }
 
 export async function getOrderByToken(token: string): Promise<OrderRecord | undefined> {

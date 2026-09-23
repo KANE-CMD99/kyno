@@ -105,26 +105,26 @@ export default function CreatorProductForm({ product, onSaved }: Props) {
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
             <label className="block text-xs font-medium text-neutral-700">{t("admin.product_name")}</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} required className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
+            <input value={name} onChange={(e) => setName(e.target.value)} required className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-neutral-700">{t("admin.category")}</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+            <select value={category} onChange={(e) => setCategory(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
               {CATEGORIES.map((c) => (<option key={c} value={c}>{categoryFull(c)}</option>))}
             </select>
           </div>
           <div>
             <label className="block text-xs font-medium text-neutral-700">{t("admin.price")} ($)</label>
-            <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required min="0" step="0.01" disabled={category === "Free"} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:bg-neutral-100 disabled:text-neutral-400" />
+            <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required min="0" step="0.01" disabled={category === "Free"} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:bg-neutral-100 disabled:text-neutral-400" />
           </div>
           <div>
             <label className="block text-xs font-medium text-neutral-700">Original Price ($) — optional</label>
-            <input type="number" value={originalPrice} onChange={(e) => setOriginalPrice(e.target.value)} min="0" step="0.01" className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
+            <input type="number" value={originalPrice} onChange={(e) => setOriginalPrice(e.target.value)} min="0" step="0.01" className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
           </div>
         </div>
         <div>
           <label className="block text-xs font-medium text-neutral-700">{t("admin.description")}</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none" />
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none" />
         </div>
       </div>
 
@@ -174,7 +174,7 @@ export default function CreatorProductForm({ product, onSaved }: Props) {
         <div className="flex items-center justify-between"><h3 className="text-sm font-semibold text-neutral-900">{t("admin.features")}</h3><button type="button" onClick={() => addLine(setFeatures)} className="text-xs text-blue-600 hover:text-blue-700">{t("common.add")}</button></div>
         {features.map((f, i) => (
           <div key={i} className="flex gap-2">
-            <input value={f} onChange={(e) => updateLine(i, e.target.value, setFeatures, features)} className="flex-1 rounded-lg border border-neutral-300 px-3.5 py-2 text-sm outline-none focus:border-blue-500" />
+            <input value={f} onChange={(e) => updateLine(i, e.target.value, setFeatures, features)} className="flex-1 rounded-lg border border-neutral-300 px-3.5 py-2 text-base outline-none focus:border-blue-500" />
             {features.length > 1 && <button type="button" onClick={() => removeLine(i, setFeatures, features)} className="shrink-0 text-xs text-red-500 hover:text-red-600">{t("common.remove")}</button>}
           </div>
         ))}
@@ -185,7 +185,7 @@ export default function CreatorProductForm({ product, onSaved }: Props) {
         <div className="flex items-center justify-between"><h3 className="text-sm font-semibold text-neutral-900">{t("admin.includes")}</h3><button type="button" onClick={() => addLine(setIncludes)} className="text-xs text-blue-600 hover:text-blue-700">{t("common.add")}</button></div>
         {includes.map((item, i) => (
           <div key={i} className="flex gap-2">
-            <input value={item} onChange={(e) => updateLine(i, e.target.value, setIncludes, includes)} className="flex-1 rounded-lg border border-neutral-300 px-3.5 py-2 text-sm outline-none focus:border-blue-500" />
+            <input value={item} onChange={(e) => updateLine(i, e.target.value, setIncludes, includes)} className="flex-1 rounded-lg border border-neutral-300 px-3.5 py-2 text-base outline-none focus:border-blue-500" />
             {includes.length > 1 && <button type="button" onClick={() => removeLine(i, setIncludes, includes)} className="shrink-0 text-xs text-red-500 hover:text-red-600">{t("common.remove")}</button>}
           </div>
         ))}

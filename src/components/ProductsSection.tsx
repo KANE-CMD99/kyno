@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
-import AnimatedSection from "./AnimatedSection";
 import SearchBar from "./SearchBar";
 import { categoryFull } from "@/data/site";
 
@@ -40,7 +39,7 @@ export default function ProductsSection({ initialProducts }: { initialProducts: 
   }, [products, query, sort]);
 
   return (
-    <AnimatedSection id="products" className="bg-[#FAFAFA] px-4 sm:px-6 py-14 sm:py-20">
+    <section id="products" className="bg-[#FAFAFA] px-4 sm:px-6 py-14 sm:py-20">
       <div className="mx-auto max-w-7xl space-y-12">
         {/* Search + Sort */}
         <div className="mx-auto max-w-2xl">
@@ -51,7 +50,7 @@ export default function ProductsSection({ initialProducts }: { initialProducts: 
         </div>
 
         {query.trim() && filtered.length === 0 ? (
-          <p className="py-12 text-center text-sm text-neutral-400">
+          <p className="py-12 text-center text-sm text-neutral-500">
             No products found for &ldquo;{query}&rdquo;
           </p>
         ) : (
@@ -69,9 +68,9 @@ export default function ProductsSection({ initialProducts }: { initialProducts: 
                     Curated {cat.toLowerCase()} for your next project
                   </p>
                   <div className="mt-6 sm:mt-8 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-                    {items.map((product, i) => (
+                    {items.map((product) => (
                       <div key={product.id} className="w-full">
-                        <ProductCard product={product} index={i} />
+                        <ProductCard product={product} />
                       </div>
                     ))}
                   </div>
@@ -81,6 +80,6 @@ export default function ProductsSection({ initialProducts }: { initialProducts: 
           </>
         )}
       </div>
-    </AnimatedSection>
+    </section>
   );
 }

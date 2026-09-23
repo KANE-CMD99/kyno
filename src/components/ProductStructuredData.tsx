@@ -44,11 +44,14 @@ export default function ProductStructuredData({ name, description, image, price,
       availability: "https://schema.org/InStock",
       url: productUrl,
       shippingDetails,
-      // Matches /terms: "all sales are final. We do not offer refunds".
+      // Matches /terms: a refund is available for 7 days after purchase, free
+      // of charge. This is machine-readable, so it has to track the real policy.
       hasMerchantReturnPolicy: {
         "@type": "MerchantReturnPolicy",
         applicableCountry: SELLS_TO,
-        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 7,
+        returnFees: "https://schema.org/FreeReturn",
       },
     },
     category,

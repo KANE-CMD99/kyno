@@ -109,35 +109,35 @@ export default function AdminCreators() {
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-xs font-medium text-neutral-700">Full Name</label>
-              <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" placeholder="Sarah Chen" />
+              <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" placeholder="Sarah Chen" />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">English Name <span className="text-red-500">*</span></label>
-              <input value={englishName} onChange={(e) => setEnglishName(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" placeholder="Sarah" required />
+              <input value={englishName} onChange={(e) => setEnglishName(e.target.value)} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" placeholder="Sarah" required />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">Username</label>
-              <input value={username} onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9]/g, ""))} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm font-mono outline-none focus:border-blue-500" placeholder="Sarah" />
+              <input value={username} onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9]/g, ""))} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base font-mono outline-none focus:border-blue-500" placeholder="Sarah" />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">Email</label>
-              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" placeholder="sarah@example.com" />
+              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" placeholder="sarah@example.com" />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">{editingId ? "New Password (leave blank to keep)" : "Password"}</label>
-              <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" placeholder={editingId ? "••••••••" : "min 6 characters"} required={!editingId} />
+              <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" placeholder={editingId ? "••••••••" : "min 6 characters"} required={!editingId} />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">Bio</label>
-              <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={2} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-none" placeholder="A short bio for their profile page" />
+              <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={2} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500 resize-none" placeholder="A short bio for their profile page" />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">Kyno Commission %</label>
-              <input type="number" value={commission} onChange={(e) => setCommission(Number(e.target.value))} min={10} max={50} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
+              <input type="number" value={commission} onChange={(e) => setCommission(Number(e.target.value))} min={10} max={50} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500" />
             </div>
             <div>
               <label className="block text-xs font-medium text-neutral-700">Status</label>
-              <select value={status} onChange={(e) => setStatus(e.target.value as "active" | "suspended")} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500">
+              <select value={status} onChange={(e) => setStatus(e.target.value as "active" | "suspended")} className="mt-1.5 block w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-base outline-none focus:border-blue-500">
                 <option value="active">Active</option>
                 <option value="suspended">Suspended</option>
               </select>

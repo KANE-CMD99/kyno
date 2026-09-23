@@ -28,10 +28,14 @@ export async function POST(req: Request) {
   const normalized = email.toLowerCase().trim();
   const orders = await getOrdersByEmail(normalized);
 
-  if (orders.length === 0) {
-    return NextResponse.json({ sent: false });
+  // The response is identical whether or not that address has ever ordered.
+  // Reporting "nothing found" makes this endpoint an oracle for testing whether
+  // a given email is a customer, which is worth more to an attacker than the
+  // small amount of feedback we lose here.
+  if (orders.length > 0) {
+    const sent = await sendDownloadEmail(orders, normalized);
+    if (!sent) console.error(`Resend of download links failed for ${normalized} (${orders.length} order(s))`);
   }
 
-  const sent = await sendDownloadEmail(orders, normalized);
-  return NextResponse.json({ sent });
+  return NextResponse.json({ ok: true });
 }

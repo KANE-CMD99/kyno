@@ -42,10 +42,11 @@ export default function Nav() {
           <Logo dark />
 
           <div className="flex items-center gap-3">
-            {/* Mobile cart */}
+            {/* Mobile cart — min-h/min-w keep the tap target at 44px even though
+                the icon is only 20px. */}
             <button
               onClick={() => openCart()}
-              className="relative rounded-md p-1.5 text-neutral-300 transition-colors hover:text-white md:hidden"
+              className="relative flex min-h-11 min-w-11 items-center justify-center rounded-md text-neutral-300 transition-colors hover:text-white md:hidden"
               aria-label="Open cart"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -61,9 +62,10 @@ export default function Nav() {
 
             {/* Hamburger */}
             <button
-              className="flex flex-col gap-1.5 p-2 md:hidden"
+              className="flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5 md:hidden"
               onClick={() => setMenuOpen((prev) => !prev)}
               aria-label="Toggle menu"
+              aria-expanded={menuOpen}
             >
               <span
                 className={`block h-0.5 w-6 bg-white transition-transform ${

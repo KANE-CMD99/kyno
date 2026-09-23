@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { useCart } from "./CartContext";
 import { useCurrency } from "./CurrencyContext";
@@ -9,7 +8,6 @@ import { categoryFull } from "@/data/site";
 
 interface ProductCardProps {
   product: ProductItem;
-  index: number;
 }
 
 const categoryEmoji: Record<string, string> = {
@@ -21,7 +19,7 @@ const categoryEmoji: Record<string, string> = {
   Free: "🎁",
 };
 
-export default function ProductCard({ product, index }: ProductCardProps) {
+export default function ProductCard({ product }: ProductCardProps) {
   const priceNum = parseFloat(String(product.price || "$0").replace(/\$/g, "")) || 0;
   const hasSale = !!(product.originalPrice && priceNum > 0);
   const isFree = priceNum === 0;
@@ -41,13 +39,10 @@ export default function ProductCard({ product, index }: ProductCardProps) {
   };
 
   return (
-    <motion.div
-      className="group"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.1 }}
-    >
+    // Deliberately not an entrance-animated element: these cards are the main
+    // content of the storefront, and an opacity:0 initial state hides every
+    // product until the client bundle hydrates.
+    <div className="group">
       {/* Image / Placeholder — wraps in a Link to product detail */}
       <a href={`/products/${product.id}`} target="_blank" rel="noopener noreferrer" className="block cursor-pointer">
         {/* Gives the link a descriptive anchor text for crawlers and screen
@@ -127,6 +122,6 @@ export default function ProductCard({ product, index }: ProductCardProps) {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

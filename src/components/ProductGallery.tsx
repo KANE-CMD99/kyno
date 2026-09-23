@@ -91,11 +91,16 @@ export default function ProductGallery({ images, name }: Props) {
             </svg>
           </button>
 
-          <img
+          {/* next/image rather than a raw <img>: the lightbox is the one place
+              a phone can otherwise be handed the full-size upload. */}
+          <Image
             src={current}
             alt={`${name} — preview ${active + 1}`}
+            width={1600}
+            height={1200}
+            sizes="90vw"
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[85vh] max-w-[90vw] object-contain"
+            className="h-auto max-h-[85vh] w-auto max-w-[90vw] object-contain"
           />
 
           {safe.length > 1 && (
