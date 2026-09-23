@@ -32,13 +32,9 @@ export default function NewsletterSection() {
 
   return (
     <section className="bg-neutral-900 px-6 py-20">
-      <motion.div
-        className="mx-auto max-w-xl text-center"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.4 }}
-      >
+      {/* Not entrance-animated: opacity:0 in the server HTML would hide the
+          signup form until the client bundle hydrates. */}
+      <div className="mx-auto max-w-xl text-center">
         <h2 className="text-2xl font-bold text-white">Stay in the loop</h2>
         <p className="mt-2 text-sm text-neutral-400">
           Get notified about new products, freebies, and exclusive discounts.
@@ -88,7 +84,7 @@ export default function NewsletterSection() {
         <p className="mt-3 text-xs text-neutral-400">
           No spam. Unsubscribe anytime.
         </p>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { useCurrency } from "./CurrencyContext";
@@ -61,15 +60,10 @@ export default function ProductCarousel() {
         </p>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((product, i) => (
-            <motion.div
-              key={product.id}
-              className="group"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: i * 0.08 }}
-            >
+          {/* Not entrance-animated: these are product cards, and opacity:0 in
+              the server HTML hides them until the client bundle hydrates. */}
+          {featured.map((product) => (
+            <div key={product.id} className="group">
               <Link href={`/products/${product.id}`} target="_blank" rel="noopener noreferrer" className="block">
                 <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100">
                   {product.thumbnail && (product.thumbnail.startsWith("/") || product.thumbnail.startsWith("http")) ? (
@@ -107,7 +101,7 @@ export default function ProductCarousel() {
                   <PriceLabel product={product} />
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
