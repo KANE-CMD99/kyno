@@ -1,0 +1,77 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import { SITE } from "@/lib/site-config";
+
+export const metadata: Metadata = {
+  title: "License",
+  description:
+    "What you can and cannot do with a Kyno product — personal and commercial use, unlimited projects, no resale of the files.",
+  alternates: { canonical: "/license" },
+};
+
+export default function LicensePage() {
+  return (
+    <>
+      <Nav />
+      <main className="bg-white pt-[105px]">
+        <div className="border-b border-neutral-200">
+          <div className="mx-auto max-w-7xl px-6 py-4">
+            <p className="text-sm text-neutral-400">
+              <Link href="/" className="hover:text-neutral-600 transition-colors">Home</Link>
+              <span className="mx-2">/</span>
+              <span className="text-neutral-900">License</span>
+            </p>
+          </div>
+        </div>
+
+        <section className="px-6 py-16">
+          <div className="mx-auto max-w-3xl">
+            <h1 className="text-3xl font-extrabold text-neutral-900">Product License</h1>
+            <p className="mt-2 text-sm text-neutral-500">Applies to all Kyno digital products</p>
+
+            <h2 className="mt-10 text-lg font-bold text-neutral-900">What You Can Do</h2>
+            <ul className="mt-2 space-y-1.5 text-sm text-neutral-600">
+              <li>Use purchased products in personal and commercial projects</li>
+              <li>Use products in client work (the license transfers to the client&apos;s end product)</li>
+              <li>Modify and customize products to fit your needs</li>
+              <li>Use products in unlimited projects with no expiration</li>
+            </ul>
+
+            <h2 className="mt-8 text-lg font-bold text-neutral-900">What You Cannot Do</h2>
+            <ul className="mt-2 space-y-1.5 text-sm text-neutral-600">
+              <li>Resell, redistribute, or sublicense the original product files</li>
+              <li>Share or transfer the license to another person or entity</li>
+              <li>Use product files to create competing products for resale</li>
+              <li>Claim ownership or authorship of the original product</li>
+              <li>Use products in trademark, logo, or branding for resale as a standalone asset</li>
+            </ul>
+
+            <h2 className="mt-8 text-lg font-bold text-neutral-900">Commercial Use</h2>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+              All products include a standard commercial license at no extra cost. You may use them
+              in client projects, marketing materials, websites, social media, presentations, and
+              physical products. The end product must be significantly different from the original
+              asset and not simply repackaged.
+            </p>
+            {/* Some product pages state a narrower scope (menu templates, for
+                instance, are licensed to one business). Saying which wins stops
+                the two pages from reading as a contradiction. */}
+            <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+              Where a product page states narrower terms — for example, menu templates licensed for
+              use in one business you own — the product page takes precedence over this page.
+            </p>
+
+            <h2 className="mt-8 text-lg font-bold text-neutral-900">Questions</h2>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+              Need a custom license or enterprise terms? Contact{" "}
+              <a href={`mailto:${SITE.contactEmail}`} className="text-blue-600 hover:text-blue-700">{SITE.contactEmail}</a>.
+            </p>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}

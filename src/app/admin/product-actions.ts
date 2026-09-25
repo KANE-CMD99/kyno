@@ -1,0 +1,67 @@
+"use server";
+
+import { createProduct, updateProduct, deleteProduct, getAllProducts } from "@/db/products-store";
+import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/admin-auth";
+
+// Every surface below renders product data under `revalidate = 3600`, so one
+// left out here keeps serving the old record for up to an hour while checkout,
+// which reads the store directly, uses the new one. On a price edit that shows
+// the buyer a lower figure than they are charged; on a delete it offers a
+// product that checkout then rejects as not found.
+function revalidateProductSurfaces() {
+  revalidatePath("/");
+  revalidatePath("/products");
+  revalidatePath("/products/[id]", "page");
+  revalidatePath("/categories/[slug]", "page");
+  revalidatePath("/[username]", "page");
+  revalidatePath("/free-downloads");
+  revalidatePath("/admin/dashboard");
+}
+
+export async function adminGetProducts() {
+  await requireAdmin();
+  return await getAllProducts();
+}
+
+export async function adminCreateProduct(input: {
+  name: string; category: string; price: number; originalPrice?: number;
+  creator: string; description: string; features: string[]; includes: string[];
+}) {
+  await requireAdmin();
+  try {
+    const finalCategory = input.price === 0 ? "Free" : input.category;
+    const product = await createProduct({ ...input, category: finalCategory, previewImages: [] });
+    revalidateProductSurfaces();
+    return { success: true, id: product.id };
+  } catch (e) {
+    return { success: false, error: String(e) };
+  }
+}
+
+export async function adminUpdateProduct(id: string, input: {
+  name: string; category: string; price: number; originalPrice?: number;
+  creator: string; description: string; features: string[]; includes: string[];
+}) {
+  await requireAdmin();
+  try {
+    const finalCategory = input.price === 0 ? "Free" : input.category;
+    const result = await updateProduct(id, { ...input, category: finalCategory, previewImages: [] });
+    if (!result) return { success: false, error: "Product not found" };
+    revalidateProductSurfaces();
+    return { success: true };
+  } catch (e) {
+    return { success: false, error: String(e) };
+  }
+}
+
+export async function adminDeleteProduct(id: string) {
+  await requireAdmin();
+  try {
+    await deleteProduct(id);
+    revalidateProductSurfaces();
+    return { success: true };
+  } catch (e) {
+    return { success: false, error: String(e) };
+  }
+}
