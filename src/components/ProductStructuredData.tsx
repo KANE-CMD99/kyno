@@ -52,6 +52,17 @@ export default function ProductStructuredData({ name, description, image, price,
         returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
         merchantReturnDays: 7,
         returnFees: "https://schema.org/FreeReturn",
+        // `KeepProduct`, and deliberately not one of the three values Google's
+        // own documentation lists. Those are ReturnByMail, ReturnInStore and
+        // ReturnAtKiosk — every one of them a physical act that cannot happen
+        // to a download. Declaring one would be a false statement in
+        // machine-readable data that Google may render, which is worse than the
+        // non-critical "missing field" warning this replaces. `KeepProduct` is
+        // the schema.org value for "the customer keeps it and is refunded",
+        // which is exactly what a digital refund is. Google's docs do not list
+        // it; the downside of that is bounded — an unrecognised value leaves us
+        // no worse off than omitting it, since neither is a critical issue.
+        returnMethod: "https://schema.org/KeepProduct",
       },
     },
     category,
