@@ -1,0 +1,112 @@
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
+import { getProductById } from "@/db/products-store";
+import { sourceLabel, type VisitContext } from "@/db/stats";
+import { isEmail } from "@/lib/validation";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_placeholder", {
+  timeout: 8000,
+});
+
+const RATE_WINDOW = 60000; // 1 minute
+const MAX_QUANTITY = 10;
+const ipCounts = new Map<string, { count: number; resetAt: number }>();
+
+export async function POST(req: Request) {
+  // IP-based rate limiting
+  const ip = (req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown").split(",")[0].trim();
+  const now = Date.now();
+  const entry = ipCounts.get(ip);
+  if (entry && entry.resetAt > now) {
+    if (entry.count >= 5) {
+      return NextResponse.json({ error: "Too many requests. Please try again in a minute." }, { status: 429 });
+    }
+    entry.count++;
+  } else {
+    ipCounts.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
+  }
+
+  try {
+    const { items, email, name, referral } = await req.json();
+
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return NextResponse.json({ error: "No items in cart" }, { status: 400 });
+    }
+    if (email && !isEmail(email)) {
+      return NextResponse.json({ error: "Please enter a valid email address" }, { status: 400 });
+    }
+
+    // Server-side validation: resolve every item from the DB and discard
+    // any client-supplied price/name. Unknown product → 400. Quantity capped.
+    const resolvedItems: { id: string; name: string; price: number; quantity: number }[] = [];
+    for (const item of items) {
+      if (!item || typeof item.id !== "string") {
+        return NextResponse.json({ error: "Invalid item" }, { status: 400 });
+      }
+      const product = await getProductById(item.id);
+      if (!product) {
+        return NextResponse.json({ error: "Product not found" }, { status: 400 });
+      }
+      const qty = Math.min(Math.max(1, Number(item.quantity) || 1), MAX_QUANTITY);
+      resolvedItems.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: qty,
+      });
+    }
+
+    const origin = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const affCode = req.headers.get("cookie")?.match(/kyno_affiliate=([^;]+)/)?.[1] || "";
+
+    // Create the Stripe session ONLY — no order/token is issued here, and no
+    // analytics are recorded: an abandoned or declined checkout is not revenue.
+    // Both happen in the webhook once Stripe confirms payment.
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      success_url: `${origin}/checkout/success`,
+      cancel_url: `${origin}/checkout`,
+      customer_email: email || undefined,
+      metadata: {
+        customer_name: name || "",
+        customer_email: email || "",
+        // Compact [id, quantity, price] triples: Stripe caps a metadata value at
+        // 500 characters, and JSON objects blow past that once a cart holds
+        // roughly six products. The webhook re-resolves the display name.
+        items: JSON.stringify(resolvedItems.map((i) => [i.id, i.quantity, i.price])),
+        aff_code: affCode,
+        // Which channel this order came from, using the same label the visit
+        // counter uses so the two can be read against each other.
+        ref_label: sourceLabel((referral || {}) as VisitContext),
+      },
+      line_items: resolvedItems.map((i) => ({
+        price_data: {
+          currency: "usd",
+          product_data: { name: i.name },
+          unit_amount: Math.round(i.price * 100),
+        },
+        quantity: i.quantity,
+      })),
+      // The configuration decides which methods are *enabled*, not which ones
+      // Stripe actually renders: it additionally gates on presentment currency
+      // (WeChat Pay only appears for CNY/HKD on this account), amount minimums
+      // and the customer's location, so a method can be on here and still never
+      // show. Referenced explicitly instead of relying on the account default,
+      // which this store does not control. Note: passing payment_method_types
+      // as well is an error — the configuration already determines the list.
+      payment_method_configuration: "pmc_1TmNhvHKmhLcv5FtOcwDxnIo",
+      billing_address_collection: "auto",
+      ...(process.env.STRIPE_AUTOMATIC_TAX === "true"
+        ? {
+            automatic_tax: { enabled: true },
+            tax_id_collection: { enabled: true },
+          }
+        : {}),
+    });
+
+    return NextResponse.json({ url: session.url });
+  } catch (err) {
+    console.error("Checkout error:", err);
+    return NextResponse.json({ error: "Checkout failed. Please try again." }, { status: 500 });
+  }
+}

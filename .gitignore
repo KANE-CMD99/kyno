@@ -23,3 +23,26 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# user-uploaded content
+/public/uploads/
+
+# local runtime data — VPS writes to these, do NOT deploy from repo
+/data/*.json
+
+# claude local settings (machine-specific permissions)
+.claude/settings.local.json
+
+# typescript incremental build cache
+tsconfig.tsbuildinfo
+
+# strategy docs — MUST NOT be pushed.
+# This repo is PUBLIC (github.com/KANE-CMD99/kyno). The files under
+# docs/strategy/ contain employer-identifying details and an IP-ownership
+# strategy relative to the founder's employer. Publishing them would be
+# both a confidentiality breach and evidence in exactly the kind of
+# dispute they discuss. Keep them local only; back up outside git.
+/docs/strategy/
+
+# deploy scratch — the tarball staged for scp to the VPS
+/.deploy-tmp/
