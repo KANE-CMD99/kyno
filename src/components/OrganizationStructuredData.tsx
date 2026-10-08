@@ -26,21 +26,35 @@ export default function OrganizationStructuredData() {
           width: 512,
           height: 512,
         },
-        description:
-          "Ready-made resume templates, printables and menu templates — pay once, own forever.",
+        description: SITE.description,
         // Same operator, second property: a free font-pairing tool whose every
         // page links here. Naming it tells search engines the two sites are one
         // organisation rather than unrelated sites trading links.
         sameAs: ["https://www.kyno.top"],
+        // The full registered office, not just the country. A US buyer checking
+        // whether this shop is a real company — and a search engine tying this
+        // storefront to the Hong Kong entity — both need the address and the
+        // company number, which are printed on the incorporation documents.
         address: {
           "@type": "PostalAddress",
+          streetAddress: "Unit 1603, 16/F, The L. Plaza, 367-375 Queen's Road Central",
+          addressLocality: "Sheung Wan",
+          addressRegion: "Hong Kong",
           addressCountry: "HK",
+        },
+        identifier: {
+          "@type": "PropertyValue",
+          propertyID: "Hong Kong Company Number",
+          value: SITE.companyNumber,
         },
         contactPoint: {
           "@type": "ContactPoint",
           email: SITE.contactEmail,
           contactType: "customer service",
-          availableLanguage: ["English", "Chinese"],
+          // English only. The shop sells to US buyers in English; declaring
+          // Chinese here advertised "overseas seller" to exactly the audience
+          // the store is trying not to look foreign to.
+          availableLanguage: ["English"],
         },
       },
       {
@@ -48,8 +62,7 @@ export default function OrganizationStructuredData() {
         "@id": `${SITE_URL}/#website`,
         url: SITE_URL,
         name: "Kyno Studio",
-        description:
-          "Ready-made resume templates, printables and menu templates — pay once, own forever.",
+        description: SITE.description,
         publisher: { "@id": `${SITE_URL}/#organization` },
         inLanguage: "en",
       },

@@ -31,11 +31,11 @@ export default function AboutPage() {
         <section className="px-6 py-20">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 md:text-5xl">
-              Premium digital assets for creators
+              {SITE.tagline}
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-neutral-500">
-              Kyno Studio is an independent studio crafting high-quality resume templates,
-              printables, and menu templates for job seekers, small businesses, and creators worldwide.
+              Pay once, own forever — no subscription, no account, nothing to ship.
+              An independent studio making files that are ready to use the day you buy them.
             </p>
           </div>
         </section>
