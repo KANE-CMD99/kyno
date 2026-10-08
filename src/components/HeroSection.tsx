@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { BlogPost } from "@/db/blog-posts";
+import { SITE } from "@/lib/site-config";
 
 export default function HeroSection({ posts }: { posts: BlogPost[] }) {
   return (
@@ -17,7 +18,7 @@ export default function HeroSection({ posts }: { posts: BlogPost[] }) {
           </h1>
 
           <p className="mx-auto mt-6 max-w-lg text-lg leading-relaxed text-neutral-500 md:mx-0">
-            Resume templates, printables &amp; menu templates — yours forever, from $4.
+            Resume templates, printables &amp; menu templates — yours forever, from {SITE.priceFrom}.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row md:justify-start">

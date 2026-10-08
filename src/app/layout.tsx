@@ -3,6 +3,7 @@ import ClientLayout from "@/components/ClientLayout";
 import CookieBanner from "@/components/CookieBanner";
 import AdSenseScript from "@/components/AdSenseScript";
 import OrganizationStructuredData from "@/components/OrganizationStructuredData";
+import { SITE } from "@/lib/site-config";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s — Kyno Studio",
   },
   description:
-    "Premium resume templates, printables, and menu templates. Pay once, own forever — from $4.",
+    `Premium resume templates, printables, and menu templates. Pay once, own forever — from ${SITE.priceFrom}.`,
   openGraph: {
     type: "website",
     locale: "en_US",

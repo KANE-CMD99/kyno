@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Kyno Studio is an independent studio selling ready-made resume templates, printables and menu templates — pay once, own forever, from $4.",
+    `Kyno Studio is an independent studio selling ready-made resume templates, printables and menu templates — pay once, own forever, from ${SITE.priceFrom}.`,
   alternates: { canonical: "/about" },
 };
 

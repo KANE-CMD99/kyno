@@ -5,13 +5,14 @@ import { categoryFull } from "@/data/site";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import { SITE } from "@/lib/site-config";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.com";
 
 export const metadata: Metadata = {
   title: "Shop Resume, Menu & Printable Templates",
   description:
-    "Browse every resume template, printable and menu template on Kyno Studio — pay once, own forever, from $4.",
+    `Browse every resume template, printable and menu template on Kyno Studio — pay once, own forever, from ${SITE.priceFrom}.`,
   alternates: { canonical: `${SITE_URL}/products` },
   openGraph: {
     url: `${SITE_URL}/products`,
