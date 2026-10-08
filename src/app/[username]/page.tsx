@@ -29,12 +29,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${name} — Creator`,
-    description: `Browse digital products by ${name} on Kyno — templates, printables and menu templates, delivered instantly.`,
+    description: `Browse digital products by ${name} on Kyno Studio — templates, printables and menu templates, delivered instantly.`,
     alternates: { canonical: `/${creator.username}` },
     ...(hasProducts ? {} : { robots: { index: false, follow: true } }),
     openGraph: {
-      title: `${name} — Kyno`,
-      description: `Browse digital products by ${name} on Kyno.`,
+      title: `${name} — Kyno Studio`,
+      description: `Browse digital products by ${name} on Kyno Studio.`,
       type: "profile",
       images: [{ url: "/og-default.png", width: 1200, height: 630 }],
     },

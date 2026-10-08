@@ -19,7 +19,7 @@ export default function AdminProductForm({ product, defaultCategory, onSaved }: 
   const [category, setCategory] = useState(product?.category || defaultCategory || "Photos");
   const [price, setPrice] = useState(product?.price?.toString() || "");
   const [originalPrice, setOriginalPrice] = useState(product?.originalPrice?.toString() || "");
-  const [creator, setCreator] = useState(product?.creator || "Kyno");
+  const [creator, setCreator] = useState(product?.creator || "Kyno Studio");
   const [description, setDescription] = useState(product?.description || "");
   const [features, setFeatures] = useState<string[]>(product?.features || [""]);
   const [includes, setIncludes] = useState<string[]>(product?.includes || [""]);

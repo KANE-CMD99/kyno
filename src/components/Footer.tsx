@@ -37,7 +37,7 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* A buyer who has never heard of Kyno should be able to see who they
+        {/* A buyer who has never heard of Kyno Studio should be able to see who they
             are paying and how to reach them without hunting for /contact. */}
         <div className="mt-12 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-400">
           <p>&copy; {new Date().getFullYear()} Kyno Technology Limited. All rights reserved.</p>

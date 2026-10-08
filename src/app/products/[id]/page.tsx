@@ -48,12 +48,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // a price change, and the price is already in the snippet/price meta.
     // pageTitle drops the template's brand suffix when the name is long enough
     // that the two together would run past what Google displays. (Previously
-    // adding the brand here produced "… — Kyno — Kyno".)
+    // adding the brand here produced "… — Kyno Studio — Kyno Studio".)
     title: pageTitle(detail.name),
     description,
     alternates: { canonical: url },
     openGraph: {
-      title: `${detail.name} — Kyno`,
+      title: `${detail.name} — Kyno Studio`,
       description,
       // "website", not "article" — a product page is not editorial content.
       // Next's OpenGraph type union doesn't include OG's "product" type.

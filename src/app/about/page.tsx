@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Kyno is an independent studio selling ready-made resume templates, printables and menu templates — pay once, own forever, from $4.",
+    "Kyno Studio is an independent studio selling ready-made resume templates, printables and menu templates — pay once, own forever, from $4.",
   alternates: { canonical: "/about" },
 };
 
@@ -34,7 +34,7 @@ export default function AboutPage() {
               Premium digital assets for creators
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-neutral-500">
-              Kyno is an independent studio crafting high-quality resume templates,
+              Kyno Studio is an independent studio crafting high-quality resume templates,
               printables, and menu templates for job seekers, small businesses, and creators worldwide.
             </p>
           </div>
@@ -46,7 +46,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-xl font-bold text-neutral-900">Our story</h2>
               <p className="mt-4 text-sm leading-relaxed text-neutral-600">
-                Kyno started with a simple idea: creators should have access to premium
+                Kyno Studio started with a simple idea: creators should have access to premium
                 design resources without the premium price tag or confusing licensing.
                 Every product we ship is made with obsessive attention to detail —
                 the same quality we&apos;d want for our own projects.
@@ -95,13 +95,13 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Company details — someone who has never heard of Kyno should be able
+        {/* Company details — someone who has never heard of Kyno Studio should be able
             to see who they are paying before they hand over money. */}
         <section className="bg-neutral-50 px-6 py-16">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-xl font-bold text-neutral-900">Who you&apos;re buying from</h2>
             <p className="mt-4 text-sm leading-relaxed text-neutral-600">
-              Kyno is operated by Kyno Technology Limited, registered in Hong Kong SAR.
+              Kyno Studio is operated by Kyno Technology Limited, registered in Hong Kong SAR.
               Questions about an order, a licence or a product? Email{" "}
               <a href={`mailto:${SITE.contactEmail}`} className="text-blue-600 hover:underline">
                 {SITE.contactEmail}

@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "The terms that apply when you buy from Kyno — digital delivery, payment, refunds and acceptable use.",
+    "The terms that apply when you buy from Kyno Studio — digital delivery, payment, refunds and acceptable use.",
   alternates: { canonical: "/terms" },
 };
 
@@ -33,13 +33,13 @@ export default function TermsPage() {
 
             <h2 className="mt-10 text-lg font-bold text-neutral-900">1. Acceptance of Terms</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-              By accessing or purchasing from Kyno (&quot;the Site&quot;), you agree to these Terms of Service.
+              By accessing or purchasing from Kyno Studio (&quot;the Site&quot;), you agree to these Terms of Service.
               If you do not agree, do not use the Site.
             </p>
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">2. Digital Products &amp; License</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-              All products sold on Kyno are digital goods. Upon purchase, you receive a non-exclusive,
+              All products sold on Kyno Studio are digital goods. Upon purchase, you receive a non-exclusive,
               perpetual, worldwide license to use the product in personal and commercial projects. You may
               not resell, redistribute, or sublicense the products as standalone assets. Each product page
               may specify additional license terms.
@@ -73,14 +73,14 @@ export default function TermsPage() {
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">5. Intellectual Property</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-              All products, images, templates, and content on Kyno are protected by copyright
-              and owned by Kyno or its licensors. Purchasing a product grants you a license to use it;
+              All products, images, templates, and content on Kyno Studio are protected by copyright
+              and owned by Kyno Studio or its licensors. Purchasing a product grants you a license to use it;
               it does not transfer ownership or copyright.
             </p>
 
             <h2 className="mt-8 text-lg font-bold text-neutral-900">6. Limitation of Liability</h2>
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-              Kyno provides products &quot;as is&quot; without warranty of any kind. We are not liable for any
+              Kyno Studio provides products &quot;as is&quot; without warranty of any kind. We are not liable for any
               damages arising from the use or inability to use our products. Our total liability for any
               claim shall not exceed the amount paid for the specific product in question.
             </p>

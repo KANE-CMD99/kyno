@@ -68,7 +68,7 @@ export default function ProductStructuredData({ name, description, image, price,
     category,
     brand: {
       "@type": "Brand",
-      name: "Kyno",
+      name: "Kyno Studio",
     },
     sku: productUrl.split("/").pop() || "",
   };

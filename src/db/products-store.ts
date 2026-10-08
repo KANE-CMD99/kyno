@@ -46,7 +46,7 @@ function mapRow(r: Record<string, unknown>): ProductRecord {
     category: r.category as string,
     price: r.price as number,
     originalPrice: r.original_price as number | undefined,
-    creator: (r.creator as string) || "Kyno",
+    creator: (r.creator as string) || "Kyno Studio",
     description: (r.description as string) || "",
     features: (r.features as string[]) || [],
     includes: (r.includes as string[]) || [],

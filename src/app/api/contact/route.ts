@@ -48,7 +48,7 @@ export async function POST(req: Request) {
         // Set the sender as reply-to so hitting Reply answers the customer
         // directly, rather than the no-reply address the mail is sent from.
         replyTo: email.trim(),
-        subject: `[Kyno Contact] ${subject.trim()}`,
+        subject: `[Kyno Studio Contact] ${subject.trim()}`,
         text: body,
       });
       if (error) {

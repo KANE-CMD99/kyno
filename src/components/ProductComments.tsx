@@ -97,7 +97,7 @@ export default function ProductComments({ productId }: Props) {
               </span>
             </>
           ) : (
-            // Kyno is new and has no reviews yet. Rather than leave a bare gap,
+            // Kyno Studio is new and has no reviews yet. Rather than leave a bare gap,
             // say so plainly and point at the thing that removes the risk.
             <span>
               No reviews yet — we&apos;re a new shop. Every purchase is covered by a 7-day

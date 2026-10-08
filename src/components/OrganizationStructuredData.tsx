@@ -14,7 +14,7 @@ export default function OrganizationStructuredData() {
       {
         "@type": "Organization",
         "@id": `${SITE_URL}/#organization`,
-        name: "Kyno",
+        name: "Kyno Studio",
         // The trading name and the registered entity are not the same thing;
         // declaring both lets search engines tie the storefront to the company.
         legalName: "Kyno Technology Limited",
@@ -47,7 +47,7 @@ export default function OrganizationStructuredData() {
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
         url: SITE_URL,
-        name: "Kyno",
+        name: "Kyno Studio",
         description:
           "Ready-made resume templates, printables and menu templates — pay once, own forever.",
         publisher: { "@id": `${SITE_URL}/#organization` },

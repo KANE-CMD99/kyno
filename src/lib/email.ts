@@ -27,7 +27,7 @@ function buildOrderEmail(orders: OrderRecord[], origin: string): string {
 <html>
 <head><meta charset="utf-8"></head>
 <body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:480px;margin:0 auto;padding:32px 16px;color:#171717">
-  <h1 style="font-size:20px;margin:0 0 8px">Your Kyno downloads</h1>
+  <h1 style="font-size:20px;margin:0 0 8px">Your Kyno Studio downloads</h1>
   <p style="color:#737373;font-size:14px;line-height:1.6;margin:0 0 24px">
     Thanks for your purchase! Your download links are below. They stay active, so keep this
     email — if you lose it, you can have them sent again any time from the Orders page.

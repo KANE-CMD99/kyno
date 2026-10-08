@@ -24,7 +24,7 @@ export default function AdminPostForm({ post, onSaved }: AdminPostFormProps) {
   const [coverImage, setCoverImage] = useState(post?.coverImage || "");
   const [content, setContent] = useState(post?.content || "");
   const [status, setStatus] = useState<BlogStatus>(post?.status || "draft");
-  const [author, setAuthor] = useState(post?.author || "Kyno");
+  const [author, setAuthor] = useState(post?.author || "Kyno Studio");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");

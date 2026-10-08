@@ -12,7 +12,7 @@ export function metaDescription(text: string, max = 160): string {
 }
 
 // Must match the root layout's title.template.
-const BRAND_SUFFIX = " — Kyno";
+const BRAND_SUFFIX = " — Kyno Studio";
 const SERP_TITLE_BUDGET = 60;
 // Segments shorter than this identify nothing on their own, so they are never
 // worth keeping as the whole title — better to fall back to cutting the name.
@@ -47,7 +47,7 @@ function shortenName(name: string, budget: number): string {
 }
 
 /**
- * The root layout renders child titles through a "%s — Kyno" template. On pages
+ * The root layout renders child titles through a "%s — Kyno Studio" template. On pages
  * whose name is already long, appending the brand pushes the title past what
  * Google displays and truncates the part that actually carries the keywords.
  * Returning an absolute title drops the redundant brand instead — the domain

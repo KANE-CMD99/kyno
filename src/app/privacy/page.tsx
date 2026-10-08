@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "What data Kyno collects, why we collect it, and how to exercise your rights — GDPR and CCPA information included.",
+    "What data Kyno Studio collects, why we collect it, and how to exercise your rights — GDPR and CCPA information included.",
   alternates: { canonical: "/privacy" },
 };
 
@@ -82,7 +82,7 @@ export default function PrivacyPage() {
             <p className="mt-2 text-sm leading-relaxed text-neutral-600">
               <strong>CCPA (California):</strong> You have the right to know what personal information we have
               collected about you, request deletion of your data, and opt out of the sale of your personal
-              information. Kyno does not sell personal information.{" "}
+              information. Kyno Studio does not sell personal information.{" "}
               <strong>GDPR (EU/EEA):</strong> You have the right to access, rectify, erase, restrict processing,
               and data portability. Our lawful basis for processing is contract performance (orders) and consent
               (newsletter). To exercise any of these rights, email us at {SITE.contactEmail}. We respond within 30 days.

@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const cat = slugToCategory(slug);
   const label = categoryFull(cat);
   const data = categories.find((c) => c.id === slug);
-  const description = data?.description || `Browse ${label} on Kyno — premium digital assets for creators.`;
+  const description = data?.description || `Browse ${label} on Kyno Studio — premium digital assets for creators.`;
 
   // Empty categories are thin content. Keep the page reachable (it's linked in
   // the nav for when products land) but keep it out of the index until it has
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     alternates: { canonical: `${SITE_URL}/categories/${slug}` },
     ...(isEmpty ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
-      title: `${label} — Kyno`,
+      title: `${label} — Kyno Studio`,
       description,
       type: "website",
       images: [{ url: `${SITE_URL}/og-default.png`, width: 1200, height: 630 }],

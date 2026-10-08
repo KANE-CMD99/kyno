@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "License",
   description:
-    "What you can and cannot do with a Kyno product — personal and commercial use, unlimited projects, no resale of the files.",
+    "What you can and cannot do with a Kyno Studio product — personal and commercial use, unlimited projects, no resale of the files.",
   alternates: { canonical: "/license" },
 };
 
@@ -29,7 +29,7 @@ export default function LicensePage() {
         <section className="px-6 py-16">
           <div className="mx-auto max-w-3xl">
             <h1 className="text-3xl font-extrabold text-neutral-900">Product License</h1>
-            <p className="mt-2 text-sm text-neutral-500">Applies to all Kyno digital products</p>
+            <p className="mt-2 text-sm text-neutral-500">Applies to all Kyno Studio digital products</p>
 
             <h2 className="mt-10 text-lg font-bold text-neutral-900">What You Can Do</h2>
             <ul className="mt-2 space-y-1.5 text-sm text-neutral-600">

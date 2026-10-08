@@ -9,7 +9,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kynocreative.c
 
 export const metadata: Metadata = {
   title: "Design, Career & Home Guides",
-  description: "Design tips, resume advice, and creative resources from Kyno.",
+  description: "Design tips, resume advice, and creative resources from Kyno Studio.",
   alternates: { canonical: `${SITE_URL}/blog` },
 };
 

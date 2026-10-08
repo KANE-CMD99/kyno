@@ -72,7 +72,7 @@ const translations: Record<Lang, Record<string, string>> = {
     "admin.creators_email": "Email",
     "admin.creators_password": "Password",
     "admin.creators_bio": "Bio",
-    "admin.creators_commission": "Kyno Commission %",
+    "admin.creators_commission": "Kyno Studio Commission %",
     "admin.creators_create": "Create Account",
     "admin.creators_profile": "Profile",
     "admin.creators_sales": "Sales",
